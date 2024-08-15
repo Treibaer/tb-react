@@ -1,0 +1,12 @@
+{
+  "editor.tabSize": 2,
+  "files.exclude": {
+    "node_modules/": true,
+    "dist/": true,
+    "build/": true,
+    "coverage/": true,
+    "package-lock.json": true,
+    "backend/dist/": true,
+    "backend/node_modules/": true
+  }
+}
