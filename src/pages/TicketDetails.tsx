@@ -1,8 +1,8 @@
-import { LoaderFunction, useLoaderData } from "react-router-dom";
-import ProjectService from "../services/ProjectService";
 import { useState } from "react";
+import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { Project } from "../models/project";
 import { Ticket } from "../models/ticket";
+import ProjectService from "../services/ProjectService";
 import { FormatType, formatUnixTimestamp } from "../utils/dataUtils";
 
 const projectService = ProjectService.shared;
@@ -33,13 +33,13 @@ export default function TicketDetails() {
 
 export const loader: LoaderFunction<{
   projectSlug: string;
-  ticketId: number;
+  ticketSlug: string;
 }> = async ({ params }) => {
-  const slug = params.projectSlug ?? "";
-  const ticketId = parseInt(params.ticketId ?? "0");
+  const projectSlug = params.projectSlug ?? "";
+  const ticketSlug = params.ticketSlug ?? "";
 
-  const project = await projectService.loadProjectBySlug(slug);
-  const ticket = await projectService.loadTicket(project.id, ticketId);
+  const project = await projectService.loadProjectBySlug(projectSlug);
+  const ticket = await projectService.loadTicket(projectSlug, ticketSlug);
 
   return { ticket, project };
 };

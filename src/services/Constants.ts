@@ -7,7 +7,7 @@ const prod: Config = {
 };
 
 const dev: Config = {
-  backendUrl: `http://localhost:3052`,
+  backendUrl: `https://mac.treibaer.de`,
 };
 
 export default process.env.NODE_ENV === `development` ? dev : prod;

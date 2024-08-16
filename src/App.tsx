@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         loader: ticketsLoader,
       },
       {
-        path: "/projects/:projectSlug/tickets/:ticketId",
+        path: "/projects/:projectSlug/tickets/:ticketSlug",
         element: <TicketDetails />,
         loader: ticketDetailsLoader,
       },

@@ -12,13 +12,13 @@ export default function LoginView({ setIsLoggedIn }) {
     setIsSubmitting(true);
     setError("");
 
-    const response = await fetch(`${Constants.backendUrl}/api/v1/login`, {
+    const response = await fetch(`${Constants.backendUrl}/api/v2/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: email,
+        username: email,
         password: password,
         client: "tb-react",
       }),

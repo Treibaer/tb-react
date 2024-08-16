@@ -3,7 +3,7 @@ import Constants from "./Constants";
 export default class Client {
   static shared = new Client();
 
-  private api = `${Constants.backendUrl}/api`;
+  private api = `${Constants.backendUrl}/api/v3`;
 
   private getAuthToken() {
     return localStorage.getItem("token");
@@ -13,7 +13,7 @@ export default class Client {
     const response = await fetch(this.api + url, {
       headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${this.getAuthToken()}`,
+        Authorization: `Bearer ${this.getAuthToken()}`,
       },
     });
 
@@ -35,7 +35,7 @@ export default class Client {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${this.getAuthToken()}`,
+        Authorization: `Bearer ${this.getAuthToken()}`,
       },
       body: data,
     });

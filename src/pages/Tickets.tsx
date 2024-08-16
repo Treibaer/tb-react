@@ -35,6 +35,7 @@ const Tickets: React.FC = () => {
     const ticket: Ticket = {
       id: 0,
       ticketId: 0,
+      slug: "",
       title,
       description: descriptionRef.current?.value ?? "",
       createdAt: 0,
@@ -42,7 +43,6 @@ const Tickets: React.FC = () => {
       status: "open",
       creator: null,
       assignee: null,
-      
     };
     await projectService.createTicket(project.id, ticket);
     const tickets = await projectService.loadTickets(project.id);
@@ -84,10 +84,11 @@ const Tickets: React.FC = () => {
       <div className="tickets-wrapper">
         {tickets.map((ticket) => (
           <NavLink
-          to={`/projects/${project.slug}/tickets/${ticket.ticketId}`}
-          key={ticket.id}
+            to={`/projects/${project.slug}/tickets/${ticket.slug}`}
+            key={ticket.id}
           >
-            {ticket.title}
+            <div>{ticket.slug}</div>
+            <div>{ticket.title}</div>
           </NavLink>
         ))}
       </div>
@@ -97,10 +98,12 @@ const Tickets: React.FC = () => {
 
 export default Tickets;
 
-export const loader: LoaderFunction<{ projectSlug: string }> = async ({ params }) => {
+export const loader: LoaderFunction<{ projectSlug: string }> = async ({
+  params,
+}) => {
   const slug = params.projectSlug ?? "";
 
   const project = await projectService.loadProjectBySlug(slug);
   const tickets = await projectService.loadTickets(project.id);
   return { tickets, project };
-}
+};

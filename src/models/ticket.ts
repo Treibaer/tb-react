@@ -1,6 +1,7 @@
 export interface Ticket {
   id: number;
   ticketId: number;
+  slug: string;
   title: string;
   description: string;
   status: "open" | "inProgress" | "done";

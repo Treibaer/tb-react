@@ -165,22 +165,27 @@
   color: #63667b;
 }
 
-
 a {
   text-decoration: none;
-  color: var(--color-primary-400);
+  color: white;
 }
-
-:root {
-  --color-primary-400: #fbd997;
-  --color-primary-800: #fab833;
-  --color-background: #242424;
-}
-
-a:hover,
-a.active {
-  color: var(--color-primary-800);
-  text-decoration: underline;
+nav {
+  a {
+    text-decoration: none;
+    color: var(--color-primary-400);
+  }
+  
+  :root {
+    --color-primary-400: #fbd997;
+    --color-primary-800: #fab833;
+    --color-background: #242424;
+  }
+  
+  a:hover,
+  a.active {
+    color: var(--color-primary-800);
+    text-decoration: underline;
+  }
 }
 .tb-list {
   color: #eeeffc;

@@ -18,7 +18,7 @@ export default function RootLayout() {
         return;
       }
 
-      const result = await fetch(`${Constants.backendUrl}/api/v1/app`, {
+      const result = await fetch(`${Constants.backendUrl}/api/v2/app`, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -35,8 +35,7 @@ export default function RootLayout() {
         setCheckingLogin(false);
       }
     }
-    // checkLogin();
-    setIsLoggedIn(true);
+    checkLogin();
   }, []);
 
   return (

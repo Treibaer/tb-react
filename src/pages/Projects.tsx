@@ -9,7 +9,7 @@ const projectService = ProjectService.shared;
 
 export default function Projects() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
@@ -71,16 +71,14 @@ export default function Projects() {
       </button>
       <div className="tb-card-wrapper">
         {projects.map((project: any) => (
-          <>
-            <NavLink
-              to={`/projects/${project.slug}`}
-              key={project.id}
-              className="tb-card"
-            >
-              <div className="icon">📒</div>
-              <div className="title">{project.title}</div>
-            </NavLink>
-          </>
+          <NavLink
+            to={`/projects/${project.slug}`}
+            key={project.slug}
+            className="tb-card"
+          >
+            <div className="icon">📒</div>
+            <div className="title">{project.title}</div>
+          </NavLink>
         ))}
       </div>
     </div>

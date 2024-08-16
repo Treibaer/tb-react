@@ -15,6 +15,10 @@ export const ProjectDetails: React.FC = () => {
       </nav>
       <div>
         <NavLink to={`/projects/${project.slug}/tickets`}>View Tickets</NavLink>
+        <br></br>
+        <NavLink to={`/projects/${project.slug}/tickets/all`}>All Tickets</NavLink>
+        <br></br>
+        <NavLink to={`/projects/${project.slug}/boards`}>Boards</NavLink>
       </div>
       <div className="project-details-wrapper">
         <h2>Title: {project.title}</h2>
