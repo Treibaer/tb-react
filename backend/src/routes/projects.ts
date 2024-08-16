@@ -11,6 +11,16 @@ router.get("/", async (_, res) => {
   res.status(200).json(projects);
 });
 
+router.get("/bySlug/:slug", async (req, res) => {
+  const projectSlug = req.params.slug;
+  const project = await projectsService.loadProjectBySlug(projectSlug);
+  if (!project) {
+    res.status(404).json({ message: "Project not found" });
+    return;
+  }
+  res.status(200).json(project);
+});
+
 router.get("/:id", async (req, res) => {
   const projectId = parseInt(req.params.id);
   const project = await projectsService.loadProject(projectId);
@@ -21,17 +31,18 @@ router.get("/:id", async (req, res) => {
   res.status(200).json(project);
 });
 router.post("/", async (req, res) => {
-  const rawDeck = req.body;
-
-  if (!rawDeck.title) {
+  const rawProject = req.body;
+  
+  if (!rawProject.title) {
     res.status(400).json({ message: "Invalid project" });
     return;
   }
 
   const project: Project = {
-    id: rawDeck.id,
-    title: rawDeck.title,
-    description: rawDeck.description,
+    id: rawProject.id,
+    slug: rawProject.slug,
+    title: rawProject.title,
+    description: rawProject.description,
   };
 
   try {
@@ -50,24 +61,25 @@ router.get("/:id/tickets", async (req, res) => {
   res.status(200).json(tickets);
 });
 router.post("/:id/tickets", async (req, res) => {
-  const rawDeck = req.body;
+  const rawTicket = req.body;
 
-  if (!rawDeck.title) {
+  if (!rawTicket.title) {
     res.status(400).json({ message: "title is missing" });
     return;
   }
-  if (!rawDeck.state) {
-    res.status(400).json({ message: "state is missing" });
+  if (!rawTicket.status) {
+    res.status(400).json({ message: "status is missing" });
     return;
   }
 
   const ticket: Ticket = {
-    id: rawDeck.id,
-    title: rawDeck.title,
+    id: rawTicket.id,
+    ticketId: rawTicket.localId,
+    title: rawTicket.title,
     createdAt: 0,
     updatedAt: 0,
-    state: rawDeck.state,
-    description: rawDeck.description,
+    status: rawTicket.status,
+    description: rawTicket.description,
     projectId: parseInt(req.params.id),
   };
 

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { Project, Ticket } from "../Models";
+import { Ticket } from "../Models";
 
 // Directory path
 const dir: string = path.join(process.cwd(), "data");
@@ -19,19 +19,18 @@ export default class TicketsService {
   async saveTicket(ticket: Ticket): Promise<Ticket> {
     const tickets = await this.loadTickets(ticket.projectId);
 
-    const existingTicket = tickets.find((d) => d.id === ticket.id);
+    const existingTicket = tickets.find((d) => d.ticketId === ticket.ticketId);
     console.log("existingTicket", existingTicket);
-    
 
     if (existingTicket) {
       existingTicket.title = ticket.title;
       existingTicket.description = ticket.description;
       existingTicket.updatedAt = Math.floor(new Date().getTime() / 1000);
-      existingTicket.state = ticket.state;
-    } else if (ticket.id !== undefined) {
+      existingTicket.status = ticket.status;
+    } else if (ticket.ticketId !== undefined && ticket.ticketId !== 0) {
       throw new Error("Ticket not found");
     } else {
-      ticket.id = tickets.length + 1;
+      ticket.ticketId = tickets.length + 1;
       ticket.createdAt = Math.floor(new Date().getTime() / 1000);
       ticket.updatedAt = Math.floor(new Date().getTime() / 1000);
       tickets.push(ticket);

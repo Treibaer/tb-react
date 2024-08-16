@@ -1,17 +1,21 @@
 export interface Project {
   id: number;
+  slug: string;
   title: string;
   description: string;
 }
 
 export interface Ticket {
   id: number;
+  projectId: number;
+  ticketId: number;
   title: string;
   description: string;
+  status: "open" | "inProgress" | "done";
+  creator: number | null;
+  assignee: number | null;
   createdAt: number;
   updatedAt: number;
-  state: "open" | "inProgress" | "done";
-  projectId: number;
 }
 
 export interface ScryfallCard {

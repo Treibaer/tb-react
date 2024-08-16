@@ -1,10 +1,10 @@
 import fs from "fs";
-import path from 'path';
+import path from "path";
 import { Project } from "../Models";
 
 // Directory path
-const dir: string = path.join(process.cwd(), 'data');
-const projectsPath = path.join(dir, 'projects.json');
+const dir: string = path.join(process.cwd(), "data");
+const projectsPath = path.join(dir, "projects.json");
 
 export default class ProjectsService {
   static shared = new ProjectsService();
@@ -15,6 +15,10 @@ export default class ProjectsService {
     const projects = await this.loadProjects();
     return projects.find((d) => d.id === id);
   }
+  async loadProjectBySlug(slug: string): Promise<Project | undefined> {
+    const projects = await this.loadProjects();
+    return projects.find((d) => d.slug === slug);
+  }
 
   async saveProject(project: Project): Promise<void> {
     const projects = await this.loadProjects();
@@ -23,7 +27,7 @@ export default class ProjectsService {
     if (existingProject) {
       existingProject.title = project.title;
       existingProject.description = project.description;
-    } else if (project.id !== undefined) {
+    } else if (project.id !== undefined && project.id !== 0) {
       throw new Error("Project not found");
     } else {
       project.id = projects.length + 1;

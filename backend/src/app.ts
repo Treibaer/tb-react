@@ -15,9 +15,9 @@ app.use((_, res, next) => {
 
 const port = 3052;
 
-app.get("/", (_, res) => {
-  res.status(200).json({ message: "Hello from express" });
-});
+// app.get("/", (_, res) => {
+//   res.status(200).json({ message: "Hello from express" });
+// });
 app.use("/api/projects", projectsRoutes);
 
 app.listen(port);

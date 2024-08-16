@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
+import Dialog from "../components/common/Dialog";
 import ProjectService from "../services/ProjectService";
 import "./Projects.css";
-import Dialog from "../components/common/Dialog";
-import { NavLink } from "react-router-dom";
+import { Project } from "../models/project";
 
 const projectService = ProjectService.shared;
 
@@ -31,7 +32,15 @@ export default function Projects() {
     if (!title) {
       return;
     }
-    await projectService.createProject(title);
+    // get two first chars of title
+    const slug = title.toLowerCase().replace(/\s/g, "").substring(0, 2);
+    const project: Project = {
+      id: 0,
+      slug: slug,
+      description: "",
+      title,
+    };
+    await projectService.createProject(project);
     const projects = await projectService.loadProjects();
     setProjects(projects);
     setIsCreating(false);
@@ -62,14 +71,16 @@ export default function Projects() {
       </button>
       <div className="tb-card-wrapper">
         {projects.map((project: any) => (
-          <NavLink
-            to={`/projects/${project.id}/tickets`}
-            key={project.id}
-            className="tb-card"
-          >
-            <div className="icon">📒</div>
-            <div className="title">{project.title}</div>
-          </NavLink>
+          <>
+            <NavLink
+              to={`/projects/${project.slug}`}
+              key={project.id}
+              className="tb-card"
+            >
+              <div className="icon">📒</div>
+              <div className="title">{project.title}</div>
+            </NavLink>
+          </>
         ))}
       </div>
     </div>

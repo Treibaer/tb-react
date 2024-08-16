@@ -1,38 +1,38 @@
-export default class ProjectService {
-  private api = "http://localhost:3052/api";
+import { Project } from "../models/project";
+import { Ticket } from "../models/ticket";
+import Client from "./Client";
 
+export default class ProjectService {
   static shared = new ProjectService();
+  private client = Client.shared;
   private constructor() {}
 
-  async createProject(title: string) {
-    const response = await fetch(`${this.api}/projects`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title }),
-    });
-    return await response.json();
+  async createProject(project: Project) {
+    return await this.client.post("/projects", JSON.stringify(project));
   }
 
+  async loadProject(projectId: number) {
+    return await this.client.get(`/projects/${projectId}`);
+  }
+
+  async loadProjectBySlug(slug: string) {
+    return await this.client.get(`/projects/bySlug/${slug}`);
+  }
 
   async loadProjects() {
-    const response = await fetch(`${this.api}/projects`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return await response.json();
+    return await this.client.get("/projects");
   }
 
   async loadTickets(projectId: number) {
-    const response = await fetch(`${this.api}/projects/${projectId}/tickets`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return await response.json();
+    return await this.client.get(`/projects/${projectId}/tickets`);
+  }
+
+  async loadTicket(projectId: number, ticketId: number) {
+    const tickets = await this.client.get(`/projects/${projectId}/tickets`);
+    return tickets.find((d: Ticket) => d.ticketId === ticketId);
+  }
+  
+  async createTicket(projectId: number, ticket: Ticket) {
+    return await this.client.post(`/projects/${projectId}/tickets`, JSON.stringify(ticket));
   }
 }
