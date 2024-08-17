@@ -1,46 +1,86 @@
-# Getting Started with Create React App
+# Game Project App (Modern Version)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This project is a modern rewrite of a tool originally developed using PHP and JavaScript. The tool's primary goal is to combine multiple systems required for managing software projects into one streamlined application. It focuses on delivering the most essential features from platforms like Notion and Jira but in a faster, more lightweight, and highly connected manner.
 
-In the project directory, you can run:
+### Features
 
-### `npm start`
+- **Project Creation**: Quickly and easily create new projects with a minimal setup process.
+- **Lightweight Ticket System**: Manage tasks and issues efficiently with a user-friendly ticketing system.
+- **Integrated Wiki**: Maintain project documentation within a built-in wiki that’s easy to use and search.
+- **User Management**: Simple and effective user system with role-based access control.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Tech Stack
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This modern version of the application is built using a state-of-the-art tech stack to ensure scalability, maintainability, and performance.
 
-### `npm test`
+- **Frontend**: 
+  - [React](https://reactjs.org/) - A JavaScript library for building user interfaces.
+  - [Next.js](https://nextjs.org/) - A React framework for production, providing server-side rendering and static site generation.
+  - [Redux](https://redux.js.org/) - A predictable state container for JavaScript apps, used to manage the application state.
+  - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework for rapidly building custom user interfaces.
+  - [TypeScript](https://www.typescriptlang.org/) - A strongly typed programming language that builds on JavaScript.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Backend**:
+  - **Current**: 
+    - [PHP](https://www.php.net/) - A popular general-purpose scripting language that is especially suited to web development.
+    - [Symfony](https://symfony.com/) - A set of reusable PHP components and a PHP framework for web projects.
+  - **Planned**: 
+    - [Node.js](https://nodejs.org/) - A JavaScript runtime built on Chrome's V8 JavaScript engine.
+    - [Express](https://expressjs.com/) - A minimal and flexible Node.js web application framework for building APIs.
 
-### `npm run build`
+- **Database**: 
+  - [MariaDB](https://mariadb.org/) - An open-source relational database management system, a fork of MySQL.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Ensure you have the following installed:
 
-### `npm run eject`
+- Node.js (>=14.x)
+- npm
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Installation
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/Treibaer/tb-react
+    cd tb-react
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+2. **Install dependencies for the frontend**:
+    ```bash
+    npm install
+    ```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+3. **Run the development server for the frontend**:
+    ```bash
+    npm run dev
+    ```
 
-## Learn More
+    The app will be available at `http://localhost:3051`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Usage
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Project Creation
+
+- Navigate to the "Projects" section to create and manage your projects.
+
+### Ticket System
+
+- Manage tickets through the "Tickets" section. Create, assign, and track progress effortlessly.
+
+### Wiki
+
+- Use the integrated wiki to keep all project documentation organized and easily accessible.
+
+### User Management
+
+- Admins can manage users and roles under the "User Management" section.
+
+## Acknowledgements
+
+- The original version of this tool was developed using PHP 8, Symfony 6.3, jQuery, and Bootstrap.
+- Inspired by tools like Notion and Jira for feature ideas.

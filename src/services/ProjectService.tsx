@@ -2,6 +2,7 @@ import { title } from "process";
 import { Project } from "../models/project";
 import { Ticket } from "../models/ticket";
 import Client from "./Client";
+import { BoardStructure } from "../models/board-structure";
 
 export default class ProjectService {
   static shared = new ProjectService();
@@ -16,7 +17,7 @@ export default class ProjectService {
     return await this.client.get(`/projects/${projectId}`);
   }
 
-  async loadProjectBySlug(slug: string) {
+  async loadProjectBySlug(slug: string): Promise<Project> {
     return await this.client.get(`/projects/bySlug/${slug}`);
   }
 
@@ -38,6 +39,10 @@ export default class ProjectService {
     return await this.client.get(`/projects/${projectId}/tickets`);
   }
 
+  async loadBoardStructure(projectSlug: string): Promise<BoardStructure> {
+    return await this.client.get(`/projects/${projectSlug}/tickets-board-structure`);
+  }
+
   async loadTicket(projectSlug: string, ticketSlug: string) {
     return await this.client.get(`/projects/${projectSlug}/tickets/${ticketSlug}`);
     // const tickets = await this.client.get(`/projects/${projectId}/tickets`);
@@ -46,5 +51,13 @@ export default class ProjectService {
   
   async createTicket(projectId: number, ticket: Ticket) {
     return await this.client.post(`/projects/${projectId}/tickets`, JSON.stringify(ticket));
+  }
+
+  async openBoard(boardId: number) {
+    return await this.client.post(`/projects/boards/${boardId}/open`, "{}");
+  }
+
+  async closeBoard(boardId: number) {
+    return await this.client.post(`/projects/boards/${boardId}/close`, "{}");
   }
 }
