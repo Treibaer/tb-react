@@ -3,29 +3,36 @@ import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
 import Constants from "../../services/Constants";
 
-export const TicketRow: React.FC<{ project: Project; ticket: Ticket, onContextMenu: any }> = ({
+interface TicketRowProps {
+  project: Project;
+  ticket: Ticket;
+  onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
+}
+
+export const TicketRow: React.FC<TicketRowProps> = ({
   project,
   ticket,
   onContextMenu,
 }) => {
-  function handleContextMenu(e: React.MouseEvent, ticket: Ticket) {
+  const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
-    onContextMenu(e, ticket); 
-  }
-
-  console.log("ticket", ticket);
-  
+    onContextMenu(e, ticket);
+  };
 
   return (
     <NavLink
       to={`/projects/${project.slug}/tickets/${ticket.slug}`}
       key={ticket.id}
-      onContextMenu={(e) => handleContextMenu(e, ticket)}
+      onContextMenu={handleContextMenu}
     >
       <div>{ticket.slug}</div>
       <div>{ticket.title}</div>
       <div className="tb-list">
-        <img className="avatar small" src={`${Constants.backendUrl}${ticket.assignee?.avatar}`} alt="arrow-right" />
+        <img
+          className="avatar small"
+          src={`${Constants.backendUrl}${ticket.assignee?.avatar}`}
+          alt={`${ticket.assignee?.firstName || 'Assignee'}'s avatar`}
+        />
       </div>
     </NavLink>
   );

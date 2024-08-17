@@ -51,7 +51,7 @@ const Tickets: React.FC = () => {
     if (!title) {
       return;
     }
-    const ticket: Ticket = {
+    const newTicket: Ticket = {
       id: 0,
       ticketId: 0,
       slug: "",
@@ -63,7 +63,7 @@ const Tickets: React.FC = () => {
       creator: null,
       assignee: null,
     };
-    await projectService.createTicket(project.id, ticket);
+    await projectService.createTicket(project.id, newTicket);
     const tickets = await projectService.loadTickets(project.id);
     const updatedProject = await projectService.loadProject(project.id);
     setTickets(tickets);
@@ -103,7 +103,7 @@ const Tickets: React.FC = () => {
 
   // derive boards
   const activeBoards = boardStructure.activeBoards.filter(
-    (b: Board) => b.tickets.length > 0
+    (b) => b.tickets.length > 0
   );
   // merge with boardStructure.backlog
   if (boardStructure.backlog.tickets.length > 0) {
@@ -144,7 +144,7 @@ const Tickets: React.FC = () => {
         <a href={`/projects/${project.slug}/boards`}>Boards</a>
       </button>
       <button className="tb-button">
-      <a href={`/projects/${project.slug}/tickets/all`}>All Tickets</a>
+        <a href={`/projects/${project.slug}/tickets/all`}>All Tickets</a>
       </button>
       <div>
         <input

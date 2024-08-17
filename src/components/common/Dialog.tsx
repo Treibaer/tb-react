@@ -4,26 +4,26 @@ const Dialog: React.FC<{
   onClose: () => void;
   onSubmit: () => void;
   children?: React.ReactNode;
-}> = (props) => {
+}> = ({ title, submitTitle = "Create", onClose, onSubmit, children }) => {
   return (
-    <div className="blurredBackground" onClick={props.onClose}>
+    <div className="blurredBackground" onClick={onClose}>
       <div
         className="tb-dialog tb-transparent-menu"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="title-bar">
-          <div>{props.title}</div>
+          <div>{title}</div>
           <div className="closeButton">
-            <button className="tb-button" onClick={props.onClose}>
+            <button className="tb-button" onClick={onClose}>
               X
             </button>
           </div>
         </div>
 
-        {props.children}
+        {children}
         <div className="action-bar">
-          <button className="tb-button" onClick={props.onSubmit}>
-            {props.submitTitle ?? "Create"}
+          <button className="tb-button" onClick={onSubmit}>
+            {submitTitle ?? "Create"}
           </button>
         </div>
       </div>

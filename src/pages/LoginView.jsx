@@ -1,53 +1,27 @@
-import { useState } from "react";
-import Constants from "../services/Constants";
+import { useLogin } from "../hooks/auth/useLogin";
 
 export default function LoginView({ setIsLoggedIn }) {
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { email, setEmail, password, setPassword, error, isSubmitting, handleLogin } = useLogin();
 
-  async function handleLogin(event) {
-    event.preventDefault();
-    setIsSubmitting(true);
-    setError("");
-
-    const response = await fetch(`${Constants.backendUrl}/api/v2/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: email,
-        password: password,
-        client: "tb-react",
-      }),
-    });
-    const data = await response.json();
-    
-    if (response.ok && data.token) {
-      localStorage.setItem("token", data.token);
-      setIsLoggedIn(true);
-    } else {
-      setError("Invalid credentials");
-      setIsSubmitting(false);
-    }
-  }
   return (
     <div>
       <h1>Login</h1>
-      <form>
+      <form onSubmit={handleLogin}>
         <input
           type="text"
           placeholder="Email"
+          value={email}
           onChange={(event) => setEmail(event.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
+          value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <button onClick={handleLogin} disabled={isSubmitting ? "disabled": undefined}>Login</button>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Logging in..." : "Login"}
+        </button>
       </form>
       {error && <p>{error}</p>}
     </div>

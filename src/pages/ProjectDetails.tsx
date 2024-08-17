@@ -16,7 +16,9 @@ export const ProjectDetails: React.FC = () => {
       <div>
         <NavLink to={`/projects/${project.slug}/tickets`}>View Tickets</NavLink>
         <br></br>
-        <NavLink to={`/projects/${project.slug}/tickets/all`}>All Tickets</NavLink>
+        <NavLink to={`/projects/${project.slug}/tickets/all`}>
+          All Tickets
+        </NavLink>
         <br></br>
         <NavLink to={`/projects/${project.slug}/boards`}>Boards</NavLink>
       </div>
@@ -31,9 +33,11 @@ export const ProjectDetails: React.FC = () => {
 export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,
 }) => {
-  return await ProjectService.shared.loadProjectBySlug(
-    params.projectSlug ?? ""
-  );
+  const { projectSlug } = params as { projectSlug: string };
+  if (!projectSlug) {
+    throw new Error("Project slug is missing");
+  }
+  return await ProjectService.shared.loadProjectBySlug(projectSlug);
 };
 
 export default ProjectDetails;

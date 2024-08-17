@@ -8,12 +8,10 @@ import { FormatType, formatUnixTimestamp } from "../utils/dataUtils";
 const projectService = ProjectService.shared;
 
 export default function TicketDetails() {
-  const data = useLoaderData() as {
+  const { ticket, project } = useLoaderData() as {
     ticket: Ticket;
     project: Project;
   };
-
-  const [ticket, setTicket] = useState<Ticket>(data.ticket);
 
   return (
     <div>

@@ -9,58 +9,52 @@ export default class ProjectService {
   private constructor() {}
 
   async createProject(project: Project) {
-    return await this.client.post("/projects", JSON.stringify(project));
+    return this.client.post("/projects", project);
   }
 
   async loadProject(projectId: number) {
-    return await this.client.get(`/projects/${projectId}`);
+    return this.client.get<Project>(`/projects/${projectId}`);
   }
 
-  async loadProjectBySlug(slug: string): Promise<Project> {
-    return await this.client.get(`/projects/bySlug/${slug}`);
+  async loadProjectBySlug(slug: string) {
+    return this.client.get<Project>(`/projects/bySlug/${slug}`);
   }
 
-  async loadProjects(): Promise<Project[]> {
-    return await this.client.get("/projects");
+  async loadProjects() {
+    return this.client.get<Project[]>("/projects");
   }
 
   async loadTickets(projectId: number) {
-    return await this.client.get(`/projects/${projectId}/tickets`);
+    return this.client.get<Ticket[]>(`/projects/${projectId}/tickets`);
   }
 
-  async loadBoardStructure(projectSlug: string): Promise<BoardStructure> {
-    return await this.client.get(
+  async loadBoardStructure(projectSlug: string) {
+    return this.client.get<BoardStructure>(
       `/projects/${projectSlug}/tickets-board-structure`
     );
   }
 
   async loadTicket(projectSlug: string, ticketSlug: string) {
-    return await this.client.get(
+    return this.client.get<Ticket>(
       `/projects/${projectSlug}/tickets/${ticketSlug}`
     );
-    // const tickets = await this.client.get(`/projects/${projectId}/tickets`);
-    // return tickets.find((d: Ticket) => d.ticketId === ticketId);
   }
 
   async createTicket(projectId: number, ticket: Ticket) {
-    return await this.client.post(
-      `/projects/${projectId}/tickets`,
-      JSON.stringify(ticket)
-    );
+    return this.client.post(`/projects/${projectId}/tickets`, ticket);
   }
 
   async openBoard(boardId: number) {
-    return await this.client.post(`/projects/boards/${boardId}/open`, "{}");
+    return this.client.post(`/projects/boards/${boardId}/open`, {});
   }
 
   async closeBoard(boardId: number) {
-    return await this.client.post(`/projects/boards/${boardId}/close`, "{}");
+    return this.client.post(`/projects/boards/${boardId}/close`, {});
   }
 
   async toggleHideDone(projectSlug: string, value: boolean) {
-    return await this.client.post(
-      `/projects/${projectSlug}/settings`,
-      JSON.stringify({ hideDone: value })
-    );
+    return this.client.post(`/projects/${projectSlug}/settings`, {
+      hideDone: value,
+    });
   }
 }

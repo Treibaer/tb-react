@@ -9,14 +9,19 @@ export default class Client {
     return localStorage.getItem("token");
   }
 
-  async get(url: string) {
+  private async request<T>(url: string, options: RequestInit): Promise<T> {
     const response = await fetch(this.api + url, {
+      ...options,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.getAuthToken()}`,
+        ...options.headers,
       },
     });
+    return this.handleResponse(response);
+  }
 
+  private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       if (response.status === 401) {
         throw new Error("Unauthorized");
@@ -25,67 +30,32 @@ export default class Client {
       if (responseJson.error) {
         throw new Error(responseJson.error);
       }
-      throw new Error("Error creating deck");
+      throw new Error("An error occurred");
     }
-    return await response.json();
+    return response.json();
   }
 
-  async post(url: string, data: string) {
-    const response = await fetch(this.api + url, {
+  async get<T>(url: string) {
+    return this.request<T>(url, { method: "GET" });
+  }
+
+  async post(url: string, data: any): Promise<any> {
+    return this.request(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.getAuthToken()}`,
-      },
-      body: data,
+      body: JSON.stringify(data),
     });
-
-    if (!response.ok) {
-      const responseJson = await response.json();
-      if (responseJson.error) {
-        throw new Error(responseJson.error);
-      }
-      throw new Error("Error creating deck");
-    }
-    return await response.json();
   }
 
-  async put(url: string, data: string) {
-    const response = await fetch(this.api + url, {
+  async put(url: string, data: any): Promise<any> {
+    return this.request(url, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.getAuthToken()}`,
-      },
-      body: data,
+      body: JSON.stringify(data),
     });
-
-    if (!response.ok) {
-      const responseJson = await response.json();
-      if (responseJson.error) {
-        throw new Error(responseJson.error);
-      }
-      throw new Error("Error creating deck");
-    }
-    return await response.json();
   }
 
-  async delete(url: string) {
-    const response = await fetch(this.api + url, {
+  async delete(url: string): Promise<any> {
+    return this.request(url, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.getAuthToken()}`,
-      },
     });
-
-    if (!response.ok) {
-      const responseJson = await response.json();
-      if (responseJson.error) {
-        throw new Error(responseJson.error);
-      }
-      throw new Error("Error creating deck");
-    }
-    return await response.json();
   }
 }
