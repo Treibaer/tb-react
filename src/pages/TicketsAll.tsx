@@ -10,7 +10,7 @@ import { data as data2 } from "../components/contextmenu/data";
 
 const projectService = ProjectService.shared;
 
-const Tickets: React.FC = () => {
+const TicketsAll: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -108,7 +108,7 @@ const Tickets: React.FC = () => {
   );
 };
 
-export default Tickets;
+export default TicketsAll;
 
 export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,

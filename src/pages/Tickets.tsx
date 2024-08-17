@@ -4,10 +4,10 @@ import Dialog from "../components/common/Dialog";
 import { ContextMenu } from "../components/contextmenu/ContextMenu";
 import { data as data2 } from "../components/contextmenu/data";
 import { TicketRow } from "../components/tickets/TicketRow";
+import { Board, BoardStructure } from "../models/board-structure";
 import { Project } from "../models/project";
 import { Ticket } from "../models/ticket";
 import ProjectService from "../services/ProjectService";
-import { Board, BoardStructure } from "../models/board-structure";
 
 const projectService = ProjectService.shared;
 
@@ -37,6 +37,7 @@ const Tickets: React.FC = () => {
   const [closedBoardIds, setClosedBoardIds] = useState<string[]>(
     data.boardStructure.closed
   );
+  const [hideDone, setHideDone] = useState(data.boardStructure.hideDone);
 
   function openDialog() {
     setIsCreating(true);
@@ -91,8 +92,22 @@ const Tickets: React.FC = () => {
     }
   }
 
+  async function toggleHideDone() {
+    await projectService.toggleHideDone(project.slug, !hideDone);
+    setHideDone(!hideDone);
+  }
+
   function isBoardVisible(boardId: number) {
     return !closedBoardIds.includes("" + boardId);
+  }
+
+  // derive boards
+  const activeBoards = boardStructure.activeBoards.filter(
+    (b: Board) => b.tickets.length > 0
+  );
+  // merge with boardStructure.backlog
+  if (boardStructure.backlog.tickets.length > 0) {
+    activeBoards.push(boardStructure.backlog);
   }
 
   return (
@@ -125,6 +140,21 @@ const Tickets: React.FC = () => {
       <button className="tb-button" onClick={openDialog}>
         Create
       </button>
+      <button className="tb-button">
+        <a href={`/projects/${project.slug}/boards`}>Boards</a>
+      </button>
+      <button className="tb-button">
+      <a href={`/projects/${project.slug}/tickets/all`}>All Tickets</a>
+      </button>
+      <div>
+        <input
+          type="checkbox"
+          id="hide-done"
+          onChange={toggleHideDone}
+          defaultChecked={hideDone}
+        />
+        <label htmlFor="hide-done">Hide done tickets</label>
+      </div>
       <div className="tickets-wrapper" style={{ display: "none" }}>
         {tickets.map((ticket) => (
           <TicketRow
@@ -136,33 +166,31 @@ const Tickets: React.FC = () => {
         ))}
       </div>
       <div className="board-structure">
-        {boardStructure.activeBoards
-          .filter((b: Board) => b.tickets.length > 0)
-          .map((board: Board) => (
-            <div key={board.id} className="column">
-              <h2>{board.title}</h2>
+        {activeBoards.map((board: Board) => (
+          <div key={board.id} className="column">
+            <h2>{board.title}</h2>
+            {board.title !== "backlog" && (
               <button onClick={toggleBoard.bind(null, board.id)}>
                 {isBoardVisible(board.id) ? "Hide" : "Show"}
               </button>
-              <div
-                className="tickets-wrapper"
-                style={{
-                  display: isBoardVisible(board.id)
-                    ? "block"
-                    : "none",
-                }}
-              >
-                {board.tickets.map((ticket: Ticket) => (
-                  <TicketRow
-                    key={ticket.id}
-                    project={project}
-                    ticket={ticket}
-                    onContextMenu={onContextMenu}
-                  />
-                ))}
-              </div>
+            )}
+            <div
+              className="tickets-wrapper"
+              style={{
+                display: isBoardVisible(board.id) ? "block" : "none",
+              }}
+            >
+              {board.tickets.map((ticket: Ticket) => (
+                <TicketRow
+                  key={ticket.id}
+                  project={project}
+                  ticket={ticket}
+                  onContextMenu={onContextMenu}
+                />
+              ))}
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </>
   );

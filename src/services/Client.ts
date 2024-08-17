@@ -55,7 +55,7 @@ export default class Client {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${this.getAuthToken()}`,
+        Authorization: `Bearer ${this.getAuthToken()}`,
       },
       body: data,
     });
@@ -75,7 +75,7 @@ export default class Client {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${this.getAuthToken()}`,
+        Authorization: `Bearer ${this.getAuthToken()}`,
       },
     });
 

@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface Ticket {
   id: number;
   ticketId: number;
@@ -5,8 +7,8 @@ export interface Ticket {
   title: string;
   description: string;
   status: "open" | "inProgress" | "done";
-  creator: number | null;
-  assignee: number | null;
+  creator: User | null;
+  assignee: User | null;
   createdAt: number;
   updatedAt: number;
 }
