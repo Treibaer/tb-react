@@ -8,7 +8,7 @@ import { useLoginCheck } from "../hooks/auth/useLoginCheck";
 export default function RootLayout() {
   const navigation = useNavigation();
   const { checkingLogin, isLoggedIn, setIsLoggedIn } = useLoginCheck();
-
+  
   return (
     <>
       {navigation.state === "loading" && <DelayedLoadingSpinner />}

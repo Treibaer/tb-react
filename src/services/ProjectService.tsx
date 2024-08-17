@@ -1,4 +1,4 @@
-import { BoardStructure } from "../models/board-structure";
+import { Board, BoardStructure } from "../models/board-structure";
 import { Project } from "../models/project";
 import { Ticket } from "../models/ticket";
 import Client from "./Client";
@@ -26,6 +26,14 @@ export default class ProjectService {
 
   async loadTickets(projectId: number) {
     return this.client.get<Ticket[]>(`/projects/${projectId}/tickets`);
+  }
+
+  async loadBoards(projectSlug: string) {
+    return this.client.get<Board[]>(`/projects/${projectSlug}/boards`);
+  }
+
+  async loadBoard(projectSlug: string, boardId: number) {
+    return this.client.get<Board[]>(`/projects/${projectSlug}/boards/${boardId}`);
   }
 
   async loadBoardStructure(projectSlug: string) {

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
-import { Project } from "../models/project";
-import { Ticket } from "../models/ticket";
-import ProjectService from "../services/ProjectService";
-import { FormatType, formatUnixTimestamp } from "../utils/dataUtils";
+import { Project } from "../../models/project";
+import { Ticket } from "../../models/ticket";
+import ProjectService from "../../services/ProjectService";
+import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 
 const projectService = ProjectService.shared;
 

@@ -8,6 +8,7 @@ export default function MainNavigation() {
         <ul className={classes.list}>
           <NavigationLink to="/" title="Home" />
           <NavigationLink to="/projects" title="Projects" />
+          
           {/* <NavigationLink to="/tickets" title="Tickets" /> */}
         </ul>
       </nav>

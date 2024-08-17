@@ -25,14 +25,28 @@ export const TicketRow: React.FC<TicketRowProps> = ({
       key={ticket.id}
       onContextMenu={handleContextMenu}
     >
+      <div
+        style={
+          {
+            border: "1px solid black",
+            margin: "5px",
+            padding: "4px",
+            borderRadius: "10px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }
+        }
+      >
       <div>{ticket.slug}</div>
       <div>{ticket.title}</div>
       <div className="tb-list">
         <img
           className="avatar small"
-          src={`${Constants.backendUrl}${ticket.assignee?.avatar}`}
+          src={`${ticket.assignee?.avatar}`}
           alt={`${ticket.assignee?.firstName || 'Assignee'}'s avatar`}
         />
+      </div>
       </div>
     </NavLink>
   );

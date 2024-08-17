@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Constants from "../../services/Constants";
 
-export function useLogin() {
+export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,7 +29,7 @@ export function useLogin() {
 
       if (response.ok && data.token) {
         localStorage.setItem("token", data.token);
-        // setIsLoggedIn(true);
+        setIsLoggedIn(true);
       } else {
         setError("Invalid credentials");
         setIsSubmitting(false);

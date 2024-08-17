@@ -10,7 +10,7 @@ export const formatUnixTimestamp = (timestamp: number, type: FormatType): string
     case FormatType.DAY:
       return date.toLocaleDateString("de-DE", {
         year: "numeric",
-        month: "long",
+        month: "2-digit",
         day: "numeric",
       });
     case FormatType.DAY_TIME:

@@ -1,17 +1,19 @@
 import { useRef, useState } from "react";
-import { LoaderFunction, useLoaderData } from "react-router-dom";
-import Dialog from "../components/common/Dialog";
-import { ContextMenu } from "../components/contextmenu/ContextMenu";
-import { data as data2 } from "../components/contextmenu/data";
-import { TicketRow } from "../components/tickets/TicketRow";
-import { Board, BoardStructure } from "../models/board-structure";
-import { Project } from "../models/project";
-import { Ticket } from "../models/ticket";
-import ProjectService from "../services/ProjectService";
+import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
+import { Button } from "../../components/Button";
+import Dialog from "../../components/common/Dialog";
+import { ContextMenu } from "../../components/contextmenu/ContextMenu";
+import { data as data2 } from "../../components/contextmenu/data";
+import { TicketRow } from "../../components/tickets/TicketRow";
+import { Board, BoardStructure } from "../../models/board-structure";
+import { Project } from "../../models/project";
+import { Ticket } from "../../models/ticket";
+import { ROUTES } from "../../routes";
+import ProjectService from "../../services/ProjectService";
 
 const projectService = ProjectService.shared;
 
-const Tickets: React.FC = () => {
+const TicketsBoardView: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -107,7 +109,9 @@ const Tickets: React.FC = () => {
   );
   // merge with boardStructure.backlog
   if (boardStructure.backlog.tickets.length > 0) {
-    activeBoards.push(boardStructure.backlog);
+    const backlogBoard = boardStructure.backlog as Board;
+    backlogBoard.creator = { id: 0, firstName: "system", avatar: "" };
+    activeBoards.push(backlogBoard);
   }
 
   return (
@@ -137,15 +141,15 @@ const Tickets: React.FC = () => {
         </>
       )}
       <h1>Tickets</h1>
-      <button className="tb-button" onClick={openDialog}>
-        Create
-      </button>
-      <button className="tb-button">
-        <a href={`/projects/${project.slug}/boards`}>Boards</a>
-      </button>
-      <button className="tb-button">
-        <a href={`/projects/${project.slug}/tickets/all`}>All Tickets</a>
-      </button>
+      <Button onClick={openDialog} title="Create" />
+
+      <NavLink to={ROUTES.BOARDS(project.slug)}>
+        <Button title="Boards" />
+      </NavLink>
+
+      <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
+        <Button title="All Tickets" />
+      </NavLink>
       <div>
         <input
           type="checkbox"
@@ -168,14 +172,16 @@ const Tickets: React.FC = () => {
       <div className="board-structure">
         {activeBoards.map((board: Board) => (
           <div key={board.id} className="column">
-            <h2>{board.title}</h2>
+            <NavLink to={ROUTES.BOARD_DETAILS(project.slug, board.id)}>
+              <h2>{board.title}</h2>
+            </NavLink>
             {board.title !== "backlog" && (
-              <button onClick={toggleBoard.bind(null, board.id)}>
-                {isBoardVisible(board.id) ? "Hide" : "Show"}
-              </button>
+              <Button
+                onClick={toggleBoard.bind(null, board.id)}
+                title={isBoardVisible(board.id) ? "Hide" : "Show"}
+              />
             )}
             <div
-              className="tickets-wrapper"
               style={{
                 display: isBoardVisible(board.id) ? "block" : "none",
               }}
@@ -196,7 +202,7 @@ const Tickets: React.FC = () => {
   );
 };
 
-export default Tickets;
+export default TicketsBoardView;
 
 export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,

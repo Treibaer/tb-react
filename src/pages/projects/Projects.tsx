@@ -1,10 +1,14 @@
 import { useRef } from "react";
-import { NavLink } from "react-router-dom";
-import Dialog from "../components/common/Dialog";
-import { useProjects } from "../hooks/projects/useProjects";
+import { Button } from "../../components/Button";
+import Dialog from "../../components/common/Dialog";
+import ProjectCard from "../../components/projects/ProjectCard";
+import { useProjects } from "../../hooks/projects/useProjects";
 import "./Projects.css";
-import ProjectCard from "../components/projects/ProjectCard";
-import { Button } from "../components/Button";
+import {
+  PencilSquareIcon,
+  PlusCircleIcon,
+  PlusIcon,
+} from "@heroicons/react/24/solid";
 
 export default function Projects() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,11 +46,19 @@ export default function Projects() {
           </Dialog>
         </>
       )}
-      <h1>Projects</h1>
-      <Button onClick={openDialog} title="Create" />
+      <div className="flex justify-start items-center gap-4">
+        <div className="cursor-default">Projects</div>
+        {/* <Button onClick={openDialog} title="Create" /> */}
+        <button
+          className="text-gray-400 rounded p-2 hover:bg-slate-700 "
+          onClick={openDialog}
+        >
+          <PencilSquareIcon className="size-5" />
+        </button>
+      </div>
       <div className="tb-card-wrapper">
         {projects.map((project: any) => (
-          <ProjectCard project={project} />
+          <ProjectCard key={project.id} project={project} />
         ))}
       </div>
     </div>

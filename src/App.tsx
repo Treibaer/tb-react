@@ -1,16 +1,18 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
+import Boards, { loader as boardsLoader } from "./pages/projects/Boards";
+import BoardDetails, { loader as boardDetailsLoader } from "./pages/projects/BoardDetails";
 import ProjectDetails, {
   loader as projectDetailsLoader,
-} from "./pages/ProjectDetails";
-import Projects from "./pages/Projects";
-import RootLayout from "./pages/RootLayout";
+} from "./pages/projects/ProjectDetails";
+import Projects from "./pages/projects/Projects";
 import TicketDetails, {
   loader as ticketDetailsLoader,
-} from "./pages/TicketDetails";
-import Tickets, { loader as ticketsLoader } from "./pages/Tickets";
-import TicketsAll, { loader as ticketsAllLoader } from "./pages/TicketsAll";
+} from "./pages/projects/TicketDetails";
+import TicketsBoardView, { loader as ticketsLoader } from "./pages/projects/TicketsBoardView";
+import TicketsList, { loader as ticketsAllLoader } from "./pages/projects/TicketsList";
+import RootLayout from "./pages/RootLayout";
 
 const router = createBrowserRouter([
   {
@@ -21,16 +23,25 @@ const router = createBrowserRouter([
       {
         path: "/projects",
         element: <Projects />,
-        // loader: searchCardLoader,
       },
       {
         path: "/projects/:projectSlug/tickets",
-        element: <Tickets />,
+        element: <TicketsBoardView />,
         loader: ticketsLoader,
       },
       {
+        path: "/projects/:projectSlug/boards",
+        element: <Boards />,
+        loader: boardsLoader,
+      },
+      {
+        path: "/projects/:projectSlug/boards/:boardId",
+        element: <BoardDetails />,
+        loader: boardDetailsLoader,
+      },
+      {
         path: "/projects/:projectSlug/tickets/all",
-        element: <TicketsAll />,
+        element: <TicketsList />,
         loader: ticketsAllLoader,
       },
       {

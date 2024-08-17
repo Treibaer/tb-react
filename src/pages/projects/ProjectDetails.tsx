@@ -1,26 +1,30 @@
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
-import { Project } from "../models/project";
-import ProjectService from "../services/ProjectService";
+import { Project } from "../../models/project";
+import ProjectService from "../../services/ProjectService";
+import { ROUTES } from "../../routes";
+import { Button } from "../../components/Button";
 
 export const ProjectDetails: React.FC = () => {
   const project = useLoaderData() as Project;
   return (
     <>
       <nav>
-        <NavLink to={`/`}>Home</NavLink>
+        <NavLink to={ROUTES.HOME}>Home</NavLink>
         {" > "}
-        <NavLink to={`/projects`}>Projects</NavLink>
+        <NavLink to={ROUTES.PROJECTS}>Projects</NavLink>
         {" > "}
         {project.title}
       </nav>
       <div>
-        <NavLink to={`/projects/${project.slug}/tickets`}>View Tickets</NavLink>
-        <br></br>
-        <NavLink to={`/projects/${project.slug}/tickets/all`}>
-          All Tickets
+        <NavLink to={ROUTES.TICKETS_BOARD_VIEW(project.slug)}>
+          <Button title="View Tickets" />
         </NavLink>
-        <br></br>
-        <NavLink to={`/projects/${project.slug}/boards`}>Boards</NavLink>
+        <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
+          <Button title="All Tickets" />
+        </NavLink>
+        <NavLink to={ROUTES.BOARDS(project.slug)}>
+          <Button title="Boards" />
+        </NavLink>
       </div>
       <div className="project-details-wrapper">
         <h2>Title: {project.title}</h2>

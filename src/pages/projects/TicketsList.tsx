@@ -1,16 +1,16 @@
 import { useRef, useState } from "react";
-import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
-import Dialog from "../components/common/Dialog";
-import { Project } from "../models/project";
-import { Ticket } from "../models/ticket";
-import ProjectService from "../services/ProjectService";
-import { TicketRow } from "../components/tickets/TicketRow";
-import { ContextMenu } from "../components/contextmenu/ContextMenu";
-import { data as data2 } from "../components/contextmenu/data";
+import { LoaderFunction, useLoaderData } from "react-router-dom";
+import Dialog from "../../components/common/Dialog";
+import { ContextMenu } from "../../components/contextmenu/ContextMenu";
+import { data as data2 } from "../../components/contextmenu/data";
+import { TicketRow } from "../../components/tickets/TicketRow";
+import { Project } from "../../models/project";
+import { Ticket } from "../../models/ticket";
+import ProjectService from "../../services/ProjectService";
 
 const projectService = ProjectService.shared;
 
-const TicketsAll: React.FC = () => {
+const TicketsList: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -99,7 +99,7 @@ const TicketsAll: React.FC = () => {
       <button className="tb-button" onClick={openDialog}>
         Create
       </button>
-      <div className="tickets-wrapper">
+      <div className="">
         {tickets.map((ticket) => (
           <TicketRow key={ticket.id} project={project} ticket={ticket} onContextMenu={onContextMenu} />
         ))}
@@ -108,7 +108,7 @@ const TicketsAll: React.FC = () => {
   );
 };
 
-export default TicketsAll;
+export default TicketsList;
 
 export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,

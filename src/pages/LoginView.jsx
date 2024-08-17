@@ -1,7 +1,15 @@
 import { useLogin } from "../hooks/auth/useLogin";
 
 export default function LoginView({ setIsLoggedIn }) {
-  const { email, setEmail, password, setPassword, error, isSubmitting, handleLogin } = useLogin();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    isSubmitting,
+    handleLogin,
+  } = useLogin(setIsLoggedIn);
 
   return (
     <div>
