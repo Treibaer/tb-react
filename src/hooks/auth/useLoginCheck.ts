@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Constants from "../../services/Constants";
+import { UserSettings } from "../../models/user-settings";
+import { AppResponse } from "../../models/app-response";
 
 export function useLoginCheck() {
   const [checkingLogin, setCheckingLogin] = useState(true);
@@ -16,7 +18,7 @@ export function useLoginCheck() {
       }
 
       try {
-        const result = await fetch(`${Constants.backendUrl}/api/v2/app`, {
+        const result = await fetch(`${Constants.backendUrl}/api/v3/app`, {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
@@ -27,7 +29,7 @@ export function useLoginCheck() {
         if (result.status === 401) {
           setIsLoggedIn(false);
         } else {
-          const data = await result.json();
+          const data: AppResponse = await result.json();
           setIsLoggedIn(data.allowed);
         }
       } catch (error) {

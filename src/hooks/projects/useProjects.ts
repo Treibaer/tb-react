@@ -21,6 +21,7 @@ export function useProjects() {
     const newProject: Project = {
       id: 0,
       slug,
+      icon: "📒",
       description: "",
       title,
     };

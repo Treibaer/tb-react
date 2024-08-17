@@ -7,6 +7,10 @@ import { TicketRow } from "../../components/tickets/TicketRow";
 import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
 import ProjectService from "../../services/ProjectService";
+import { Button } from "../../components/Button";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { ButtonIcon } from "../../components/ButtonIcon";
+import TitleView from "../../components/TitleView";
 
 const projectService = ProjectService.shared;
 
@@ -14,7 +18,13 @@ const TicketsList: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [config, setConfig] = useState({ top: 0, left: 0, right: 0, bottom: 0, show: false });
+  const [config, setConfig] = useState({
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    show: false,
+  });
 
   const data = useLoaderData() as {
     tickets: Ticket[];
@@ -95,13 +105,15 @@ const TicketsList: React.FC = () => {
           </Dialog>
         </>
       )}
-      <h1>Tickets</h1>
-      <button className="tb-button" onClick={openDialog}>
-        Create
-      </button>
+      <TitleView title="Tickets" openDialog={openDialog} />
       <div className="">
         {tickets.map((ticket) => (
-          <TicketRow key={ticket.id} project={project} ticket={ticket} onContextMenu={onContextMenu} />
+          <TicketRow
+            key={ticket.id}
+            project={project}
+            ticket={ticket}
+            onContextMenu={onContextMenu}
+          />
         ))}
       </div>
     </>

@@ -1,7 +1,12 @@
+import {
+  CheckCircleIcon,
+  EllipsisHorizontalCircleIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/solid";
 import { NavLink } from "react-router-dom";
 import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
-import Constants from "../../services/Constants";
+import UserView from "../../pages/projects/UserView";
 
 interface TicketRowProps {
   project: Project;
@@ -25,28 +30,23 @@ export const TicketRow: React.FC<TicketRowProps> = ({
       key={ticket.id}
       onContextMenu={handleContextMenu}
     >
-      <div
-        style={
-          {
-            border: "1px solid black",
-            margin: "5px",
-            padding: "4px",
-            borderRadius: "10px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }
-        }
-      >
-      <div>{ticket.slug}</div>
-      <div>{ticket.title}</div>
-      <div className="tb-list">
-        <img
-          className="avatar small"
-          src={`${ticket.assignee?.avatar}`}
-          alt={`${ticket.assignee?.firstName || 'Assignee'}'s avatar`}
-        />
-      </div>
+      <div className="flex m-2 gap-4 border-solid border border-gray-800 rounded-md p-2 justify-start items-center hover:bg-slate-600">
+        <div className="flex-grow flex gap-4 items-center">
+          <div>
+            {ticket.status === "open" && (
+              <InformationCircleIcon className="h-6 w-6 text-gray-400" />
+            )}
+            {ticket.status === "inProgress" && (
+              <EllipsisHorizontalCircleIcon className="h-6 w-6 text-yellow-600" />
+            )}
+            {ticket.status === "done" && (
+              <CheckCircleIcon className="h-6 w-6 text-green-800" />
+            )}
+          </div>
+          <div className="text-gray-400 font-semibold w-16">{ticket.slug}</div>
+          <div>{ticket.title}</div>
+        </div>
+        <UserView user={ticket.assignee} />
       </div>
     </NavLink>
   );

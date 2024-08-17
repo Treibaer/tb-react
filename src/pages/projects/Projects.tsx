@@ -1,14 +1,9 @@
 import { useRef } from "react";
-import { Button } from "../../components/Button";
 import Dialog from "../../components/common/Dialog";
 import ProjectCard from "../../components/projects/ProjectCard";
+import TitleView from "../../components/TitleView";
 import { useProjects } from "../../hooks/projects/useProjects";
 import "./Projects.css";
-import {
-  PencilSquareIcon,
-  PlusCircleIcon,
-  PlusIcon,
-} from "@heroicons/react/24/solid";
 
 export default function Projects() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,16 +41,7 @@ export default function Projects() {
           </Dialog>
         </>
       )}
-      <div className="flex justify-start items-center gap-4">
-        <div className="cursor-default">Projects</div>
-        {/* <Button onClick={openDialog} title="Create" /> */}
-        <button
-          className="text-gray-400 rounded p-2 hover:bg-slate-700 "
-          onClick={openDialog}
-        >
-          <PencilSquareIcon className="size-5" />
-        </button>
-      </div>
+      <TitleView title="Projects" openDialog={openDialog} />
       <div className="tb-card-wrapper">
         {projects.map((project: any) => (
           <ProjectCard key={project.id} project={project} />

@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
+import UserView from "./UserView";
 
 export const BoardTicketRow: React.FC<{
   projectSlug: string;
@@ -17,14 +18,7 @@ export const BoardTicketRow: React.FC<{
         }}
       >
         <div>{`${ticket.slug}: ${ticket.title}`}</div>
-        <div>
-          <img
-            className="avatar small"
-            src={`${ticket.assignee?.avatar}`}
-            alt={`${ticket.assignee?.firstName || "Assignee"}'s avatar`}
-          />
-          <div>{ticket.assignee?.firstName}</div>
-        </div>
+        <UserView user={ticket.assignee} />
       </div>
     </NavLink>
   );

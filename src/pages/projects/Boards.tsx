@@ -5,6 +5,8 @@ import { Button } from "../../components/Button";
 import { useRef, useState } from "react";
 import Dialog from "../../components/common/Dialog";
 import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
+import { ButtonIcon } from "../../components/ButtonIcon";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 
 const projectService = ProjectService.shared;
 
@@ -50,20 +52,44 @@ export const Boards: React.FC = () => {
           </Dialog>
         </>
       )}
-      <h1>Boards</h1>
-      <Button onClick={openDialog} title="Create" />
-      <div>
+
+      <div className="flex justify-start items-center gap-4 mb-4">
+        <div className="cursor-default text-3xl font-semibold">Boards</div>
+        {/* <Button onClick={openDialog} title="Create" /> */}
+        <ButtonIcon onClick={openDialog}>
+          <PencilSquareIcon className="size-5" />
+        </ButtonIcon>
+      </div>
+      <div className="flex flex-col">
+        <div className="flex justify-between items-center gap-4 text-lg font-semibold">
+          <div className="flex-1">Title</div>
+          <div className="flex-1 text-center">Creator</div>
+          <div className="flex-1 text-center">Tickets</div>
+          <div className="flex-1 text-center">Start Date</div>
+          <div className="flex-1 text-center">End Date</div>
+        </div>
         {boards.map((board) => (
           <NavLink
             to={`/projects/${projectSlug}/boards/${board.id}`}
             key={board.id}
             style={{ display: "flex" }}
+            className="flex justify-between items-center gap-4 border-b-gray-700 border-b h-12"
           >
-            <div>{board.title}</div>
-            <div>{board.creator.avatar}</div>
-            <div>{board.tickets.length}</div>
-            <div>{formatUnixTimestamp(board.startDate, FormatType.DAY)}</div>
-            <div>{formatUnixTimestamp(board.endDate, FormatType.DAY)}</div>
+            <div className="flex-1">{board.title}</div>
+            <div className="flex-1 flex justify-center">
+              <img
+                className="h-7 w-7 rounded-full"
+                src={board.creator.avatar}
+                alt="avatar"
+              />
+            </div>
+            <div className="flex-1 text-center">{board.tickets.length}</div>
+            <div className="flex-1 text-center">
+              {formatUnixTimestamp(board.startDate, FormatType.DAY)}
+            </div>
+            <div className="flex-1 text-center">
+              {formatUnixTimestamp(board.endDate, FormatType.DAY)}
+            </div>
           </NavLink>
         ))}
       </div>

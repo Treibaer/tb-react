@@ -18,6 +18,7 @@ export const ProjectDetails: React.FC = () => {
       <div>
         <NavLink to={ROUTES.TICKETS_BOARD_VIEW(project.slug)}>
           <Button title="View Tickets" />
+          
         </NavLink>
         <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
           <Button title="All Tickets" />

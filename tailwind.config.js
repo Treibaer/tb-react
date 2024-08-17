@@ -2,7 +2,15 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customBlue: "rgb(38, 41, 57);",
+      },
+
+      borderRadius: {
+        'custom-tb': '4px',
+      },
+    },
   },
   plugins: [],
 };

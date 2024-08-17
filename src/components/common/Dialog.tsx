@@ -1,3 +1,5 @@
+import { Button } from "../Button";
+
 const Dialog: React.FC<{
   title: string;
   submitTitle?: string;
@@ -14,17 +16,13 @@ const Dialog: React.FC<{
         <div className="title-bar">
           <div>{title}</div>
           <div className="closeButton">
-            <button className="tb-button" onClick={onClose}>
-              X
-            </button>
+            <Button onClick={onClose} title="X" />
           </div>
         </div>
 
         {children}
         <div className="action-bar">
-          <button className="tb-button" onClick={onSubmit}>
-            {submitTitle ?? "Create"}
-          </button>
+          <Button title= {submitTitle ?? "Create"} onClick={onSubmit} />
         </div>
       </div>
     </div>
