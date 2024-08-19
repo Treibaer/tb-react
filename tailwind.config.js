@@ -6,7 +6,6 @@ module.exports = {
       colors: {
         customBlue: "rgb(38, 41, 57);",
       },
-
       borderRadius: {
         'custom-tb': '4px',
       },

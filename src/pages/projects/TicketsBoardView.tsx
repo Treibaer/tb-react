@@ -68,9 +68,9 @@ const TicketsBoardView: React.FC = () => {
       creator: null,
       assignee: null,
     };
-    await projectService.createTicket(project.id, newTicket);
-    const tickets = await projectService.loadTickets(project.id);
-    const updatedProject = await projectService.loadProject(project.id);
+    await projectService.createTicket(project.slug, newTicket);
+    const tickets = await projectService.getTickets(project.slug);
+    const updatedProject = await projectService.getProject(project.slug);
     setTickets(tickets);
     setProject(updatedProject);
     setIsCreating(false);
@@ -90,10 +90,10 @@ const TicketsBoardView: React.FC = () => {
   async function toggleBoard(boardId: number) {
     if (closedBoardIds.includes("" + boardId)) {
       setClosedBoardIds(closedBoardIds.filter((id) => id !== "" + boardId));
-      await projectService.openBoard(boardId);
+      await projectService.openBoard(project.slug, boardId);
     } else {
       setClosedBoardIds([...closedBoardIds, "" + boardId]);
-      await projectService.closeBoard(boardId);
+      await projectService.closeBoard(project.slug, boardId);
     }
   }
 
@@ -174,23 +174,17 @@ const TicketsBoardView: React.FC = () => {
         </div>
       </div>
 
-      <div className="tickets-wrapper" style={{ display: "none" }}>
-        {tickets.map((ticket) => (
-          <TicketRow
-            key={ticket.id}
-            project={project}
-            ticket={ticket}
-            onContextMenu={onContextMenu}
-          />
-        ))}
-      </div>
       <div className="board-structure">
         {activeBoards.map((board: Board) => (
-          <div key={board.id} className="mb-4">
-            <div className="flex gap-4">
+          <div key={board.id} className="">
+            <div className="flex gap-3 px-4 h-10 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)]">
               <NavLink to={ROUTES.BOARD_DETAILS(project.slug, board.id)}>
-                <div className=" text-xl font-semibold">{board.title}</div>
+                <div className="text-base font-semibold">{board.title}</div>
               </NavLink>
+              <div className="text-gray-400">
+                {board.tickets.filter((e) => e.status === "done").length}/
+                {board.tickets.length}
+              </div>
               {board.title !== "backlog" && (
                 <Button
                   onClick={toggleBoard.bind(null, board.id)}
@@ -232,8 +226,8 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const slug = params.projectSlug ?? "";
 
-  const project = await projectService.loadProjectBySlug(slug);
-  const tickets = await projectService.loadTickets(project.id);
-  const boardStructure = await projectService.loadBoardStructure(project.slug);
+  const project = await projectService.getProject(slug);
+  const tickets = await projectService.getTickets(project.slug);
+  const boardStructure = await projectService.getBoardStructure(project.slug);
   return { tickets, project, boardStructure };
 };

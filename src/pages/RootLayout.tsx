@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigation } from "react-router-dom";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import MainNavigation from "../components/Navigation/MainNavigation";
-import LoginView from "./LoginView";
 import { useLoginCheck } from "../hooks/auth/useLoginCheck";
+import LoginView from "./LoginView";
 
-export default function RootLayout() {
+export const RootLayout: React.FC = () => {
   const navigation = useNavigation();
   const { checkingLogin, isLoggedIn, setIsLoggedIn } = useLoginCheck();
-  
+
   return (
     <>
       {navigation.state === "loading" && <DelayedLoadingSpinner />}
@@ -25,7 +25,7 @@ export default function RootLayout() {
       )}
     </>
   );
-}
+};
 
 function DelayedLoadingSpinner() {
   const [isWaiting, setIsWaiting] = useState(true);
@@ -42,3 +42,5 @@ function DelayedLoadingSpinner() {
 
   return <LoadingSpinner />;
 }
+
+export default RootLayout;

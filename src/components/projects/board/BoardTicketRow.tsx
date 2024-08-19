@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { Ticket } from "../../models/ticket";
-import { ROUTES } from "../../routes";
-import UserView from "./UserView";
+import { Ticket } from "../../../models/ticket";
+import { ROUTES } from "../../../routes";
+import UserView from "../../UserView";
 
 export const BoardTicketRow: React.FC<{
   projectSlug: string;

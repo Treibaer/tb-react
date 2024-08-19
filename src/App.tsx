@@ -2,14 +2,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import Boards, { loader as boardsLoader } from "./pages/projects/Boards";
-import BoardDetails, { loader as boardDetailsLoader } from "./pages/projects/BoardDetails";
+import BoardDetails, { loader as boardDetailsLoader } from "./pages/projects/BoardView";
 import ProjectDetails, {
   loader as projectDetailsLoader,
 } from "./pages/projects/ProjectDetails";
 import Projects from "./pages/projects/Projects";
-import TicketDetails, {
+import TicketDetailView, {
   loader as ticketDetailsLoader,
-} from "./pages/projects/TicketDetails";
+} from "./pages/projects/TicketDetailView";
 import TicketsBoardView, { loader as ticketsLoader } from "./pages/projects/TicketsBoardView";
 import TicketsList, { loader as ticketsAllLoader } from "./pages/projects/TicketsList";
 import RootLayout from "./pages/RootLayout";
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/projects/:projectSlug/tickets/:ticketSlug",
-        element: <TicketDetails />,
+        element: <TicketDetailView />,
         loader: ticketDetailsLoader,
       },
       {

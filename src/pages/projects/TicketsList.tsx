@@ -4,13 +4,10 @@ import Dialog from "../../components/common/Dialog";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
 import { data as data2 } from "../../components/contextmenu/data";
 import { TicketRow } from "../../components/tickets/TicketRow";
+import TitleView from "../../components/TitleView";
 import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
 import ProjectService from "../../services/ProjectService";
-import { Button } from "../../components/Button";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import { ButtonIcon } from "../../components/ButtonIcon";
-import TitleView from "../../components/TitleView";
 
 const projectService = ProjectService.shared;
 
@@ -58,9 +55,9 @@ const TicketsList: React.FC = () => {
       creator: null,
       assignee: null,
     };
-    await projectService.createTicket(project.id, ticket);
-    const tickets = await projectService.loadTickets(project.id);
-    const updatedProject = await projectService.loadProject(project.id);
+    await projectService.createTicket(project.slug, ticket);
+    const tickets = await projectService.getTickets(project.slug);
+    const updatedProject = await projectService.getProject(project.slug);
     setTickets(tickets);
     setProject(updatedProject);
     setIsCreating(false);
@@ -106,7 +103,7 @@ const TicketsList: React.FC = () => {
         </>
       )}
       <TitleView title="Tickets" openDialog={openDialog} />
-      <div className="">
+      <div>
         {tickets.map((ticket) => (
           <TicketRow
             key={ticket.id}
@@ -127,7 +124,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const slug = params.projectSlug ?? "";
 
-  const project = await projectService.loadProjectBySlug(slug);
-  const tickets = await projectService.loadTickets(project.id);
+  const project = await projectService.getProject(slug);
+  const tickets = await projectService.getTickets(slug);
   return { tickets, project };
 };

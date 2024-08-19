@@ -1,7 +1,7 @@
 import { LoaderFunction, useLoaderData } from "react-router-dom";
+import BoardTicketRow from "../../components/projects/board/BoardTicketRow";
 import { Board } from "../../models/board-structure";
 import ProjectService from "../../services/ProjectService";
-import BoardTicketRow from "./BoardTicketRow";
 
 const projectService = ProjectService.shared;
 
@@ -67,6 +67,6 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const projectSlug = params.projectSlug ?? "";
   const boardId = parseInt(params.boardId ?? "0");
-  const board = await projectService.loadBoard(projectSlug, boardId);
+  const board = await projectService.getBoard(projectSlug, boardId);
   return { board, projectSlug };
 };

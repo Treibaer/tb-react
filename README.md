@@ -84,3 +84,4 @@ Ensure you have the following installed:
 
 - The original version of this tool was developed using PHP 8, Symfony 6.3, jQuery, and Bootstrap.
 - Inspired by tools like Notion and Jira for feature ideas.
+- The Ticket System is inspired by the clean and functional aesthetics of Linear.app.

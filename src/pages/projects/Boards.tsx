@@ -1,12 +1,11 @@
-import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
-import ProjectService from "../../services/ProjectService";
-import { Board } from "../../models/board-structure";
-import { Button } from "../../components/Button";
-import { useRef, useState } from "react";
-import Dialog from "../../components/common/Dialog";
-import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
-import { ButtonIcon } from "../../components/ButtonIcon";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { useRef, useState } from "react";
+import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
+import { ButtonIcon } from "../../components/ButtonIcon";
+import Dialog from "../../components/common/Dialog";
+import { Board } from "../../models/board-structure";
+import ProjectService from "../../services/ProjectService";
+import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 
 const projectService = ProjectService.shared;
 
@@ -105,6 +104,6 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   const projectSlug = params.projectSlug ?? "";
 
   // const project = await projectService.loadProjectBySlug(slug);
-  const boards = await projectService.loadBoards(projectSlug);
+  const boards = await projectService.getBoards(projectSlug);
   return { boards, projectSlug };
 };

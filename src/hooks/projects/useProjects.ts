@@ -10,7 +10,7 @@ export function useProjects() {
 
   useEffect(() => {
     async function fetchProjects() {
-      const loadedProjects = await projectService.loadProjects();
+      const loadedProjects = await projectService.getProjects();
       setProjects(loadedProjects);
     }
     fetchProjects();

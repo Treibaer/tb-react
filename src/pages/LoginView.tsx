@@ -1,6 +1,8 @@
 import { useLogin } from "../hooks/auth/useLogin";
 
-export default function LoginView({ setIsLoggedIn }) {
+export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
+  setIsLoggedIn,
+}) => {
   const {
     email,
     setEmail,
@@ -34,4 +36,6 @@ export default function LoginView({ setIsLoggedIn }) {
       {error && <p>{error}</p>}
     </div>
   );
-}
+};
+
+export default LoginView;

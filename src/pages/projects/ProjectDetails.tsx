@@ -42,7 +42,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   if (!projectSlug) {
     throw new Error("Project slug is missing");
   }
-  return await ProjectService.shared.loadProjectBySlug(projectSlug);
+  return await ProjectService.shared.getProject(projectSlug);
 };
 
 export default ProjectDetails;

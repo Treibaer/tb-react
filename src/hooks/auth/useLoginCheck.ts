@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
-import Constants from "../../services/Constants";
-import { UserSettings } from "../../models/user-settings";
+import { useEffect, useState } from "react";
 import { AppResponse } from "../../models/app-response";
+import Constants from "../../services/Constants";
 
 export function useLoginCheck() {
   const [checkingLogin, setCheckingLogin] = useState(true);

@@ -9,60 +9,67 @@ export default class ProjectService {
   private constructor() {}
 
   async createProject(project: Project) {
-    return this.client.post("/projects", project);
+    throw new Error("Method not implemented.");
+    // return this.client.post("/projects", project);
   }
 
-  async loadProject(projectId: number) {
-    return this.client.get<Project>(`/projects/${projectId}`);
-  }
-
-  async loadProjectBySlug(slug: string) {
-    return this.client.get<Project>(`/projects/bySlug/${slug}`);
-  }
-
-  async loadProjects() {
+  async getProjects() {
     return this.client.get<Project[]>("/projects");
   }
 
-  async loadTickets(projectId: number) {
-    return this.client.get<Ticket[]>(`/projects/${projectId}/tickets`);
+  async getProject(projectSlug: string) {
+    return this.client.get<Project>(`/projects/${projectSlug}`);
   }
 
-  async loadBoards(projectSlug: string) {
+  async updateProject(projectSlug: string, project: Project) {
+    throw new Error("Method not implemented.");
+    // return this.client.put(`/projects/${projectSlug}`, project);
+  }
+
+  async deleteProject(projectSlug: string) {
+    throw new Error("Method not implemented.");
+    // return this.client.delete(`/projects/${projectSlug}`);
+  }
+
+  async createTicket(projectSlug: string, ticket: Ticket) {
+    return this.client.post(`/projects/${projectSlug}/tickets`, ticket);
+  }
+
+  async getTickets(projectSlug: string) {
+    return this.client.get<Ticket[]>(`/projects/${projectSlug}/tickets`);
+  }
+
+  async getTicket(projectSlug: string, ticketSlug: string) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+    return this.client.get<Ticket>(url);
+  }
+
+  async getBoards(projectSlug: string) {
     return this.client.get<Board[]>(`/projects/${projectSlug}/boards`);
   }
 
-  async loadBoard(projectSlug: string, boardId: number) {
-    return this.client.get<Board[]>(`/projects/${projectSlug}/boards/${boardId}`);
+  async getBoard(projectSlug: string, boardId: number) {
+    const url = `/projects/${projectSlug}/boards/${boardId}`;
+    return this.client.get<Board[]>(url);
   }
 
-  async loadBoardStructure(projectSlug: string) {
-    return this.client.get<BoardStructure>(
-      `/projects/${projectSlug}/tickets-board-structure`
-    );
+  async getBoardStructure(projectSlug: string) {
+    const url = `/projects/${projectSlug}/tickets-board-structure`;
+    return this.client.get<BoardStructure>(url);
   }
 
-  async loadTicket(projectSlug: string, ticketSlug: string) {
-    return this.client.get<Ticket>(
-      `/projects/${projectSlug}/tickets/${ticketSlug}`
-    );
+  async openBoard(projectSlug: string, boardId: number) {
+    const url = `/projects/${projectSlug}/boards/${boardId}/open`;
+    return this.client.post(url, {});
   }
 
-  async createTicket(projectId: number, ticket: Ticket) {
-    return this.client.post(`/projects/${projectId}/tickets`, ticket);
-  }
-
-  async openBoard(boardId: number) {
-    return this.client.post(`/projects/boards/${boardId}/open`, {});
-  }
-
-  async closeBoard(boardId: number) {
-    return this.client.post(`/projects/boards/${boardId}/close`, {});
+  async closeBoard(projectSlug: string, boardId: number) {
+    const url = `/projects/${projectSlug}/boards/${boardId}/close`;
+    return this.client.post(url, {});
   }
 
   async toggleHideDone(projectSlug: string, value: boolean) {
-    return this.client.post(`/projects/${projectSlug}/settings`, {
-      hideDone: value,
-    });
+    const url = `/projects/${projectSlug}/settings`;
+    return this.client.post(url, { hideDone: value });
   }
 }

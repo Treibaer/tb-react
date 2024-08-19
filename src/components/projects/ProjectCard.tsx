@@ -1,8 +1,8 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Project } from '../../models/project';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { Project } from "../../models/project";
 
-const ProjectCard: React.FC<{project: Project}> = ({ project }) => {
+const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   return (
     <NavLink
       to={`/projects/${project.slug}`}

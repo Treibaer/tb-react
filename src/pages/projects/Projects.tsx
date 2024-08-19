@@ -3,7 +3,6 @@ import Dialog from "../../components/common/Dialog";
 import ProjectCard from "../../components/projects/ProjectCard";
 import TitleView from "../../components/TitleView";
 import { useProjects } from "../../hooks/projects/useProjects";
-import "./Projects.css";
 
 export default function Projects() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,7 +41,7 @@ export default function Projects() {
         </>
       )}
       <TitleView title="Projects" openDialog={openDialog} />
-      <div className="tb-card-wrapper">
+      <div className="flex flex-wrap">
         {projects.map((project: any) => (
           <ProjectCard key={project.id} project={project} />
         ))}
