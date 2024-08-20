@@ -2,17 +2,24 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import Boards, { loader as boardsLoader } from "./pages/projects/Boards";
-import BoardDetails, { loader as boardDetailsLoader } from "./pages/projects/BoardView";
+import BoardDetails, {
+  loader as boardDetailsLoader,
+} from "./pages/projects/BoardView";
 import ProjectDetails, {
   loader as projectDetailsLoader,
 } from "./pages/projects/ProjectDetails";
-import Projects from "./pages/projects/Projects";
+import Projects, { loader as projectsLoader } from "./pages/projects/Projects";
 import TicketDetailView, {
   loader as ticketDetailsLoader,
 } from "./pages/projects/TicketDetailView";
-import TicketsBoardView, { loader as ticketsLoader } from "./pages/projects/TicketsBoardView";
-import TicketsList, { loader as ticketsAllLoader } from "./pages/projects/TicketsList";
+import TicketsBoardView, {
+  loader as ticketsLoader,
+} from "./pages/projects/TicketsBoardView";
+import TicketsList, {
+  loader as ticketsAllLoader,
+} from "./pages/projects/TicketsList";
 import RootLayout from "./pages/RootLayout";
+import { Notifications } from "./notifications";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +30,7 @@ const router = createBrowserRouter([
       {
         path: "/projects",
         element: <Projects />,
+        loader: projectsLoader,
       },
       {
         path: "/projects/:projectSlug/tickets",
@@ -60,7 +68,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      {/* <Notifications /> */}
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;

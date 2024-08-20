@@ -4,10 +4,12 @@ import { Button } from "../../components/Button";
 import Dialog from "../../components/common/Dialog";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
 import { data as data2 } from "../../components/contextmenu/data";
+import HeaderView from "../../components/HeaderView";
 import { TicketRow } from "../../components/tickets/TicketRow";
 import TitleView from "../../components/TitleView";
 import { Toggle } from "../../components/Toggle";
 import { Board, BoardStructure } from "../../models/board-structure";
+import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
@@ -34,7 +36,7 @@ const TicketsBoardView: React.FC = () => {
     boardStructure: BoardStructure;
   };
 
-  const [tickets, setTickets] = useState<Ticket[]>(data.tickets);
+  // const [tickets, setTickets] = useState<Ticket[]>(data.tickets);
   const [project, setProject] = useState<Project>(data.project);
   const [boardStructure, setBoardStructure] = useState<BoardStructure>(
     data.boardStructure
@@ -69,9 +71,9 @@ const TicketsBoardView: React.FC = () => {
       assignee: null,
     };
     await projectService.createTicket(project.slug, newTicket);
-    const tickets = await projectService.getTickets(project.slug);
+    const boardStructure = await projectService.getBoardStructure(project.slug);
     const updatedProject = await projectService.getProject(project.slug);
-    setTickets(tickets);
+    setBoardStructure(boardStructure);
     setProject(updatedProject);
     setIsCreating(false);
   }
@@ -122,6 +124,12 @@ const TicketsBoardView: React.FC = () => {
     setSearchTerm(e.target.value);
   }
 
+  const breadcrumbs: Breadcrumb[] = [
+    { title: "Home", link: ROUTES.HOME },
+    { title: "Projects", link: ROUTES.PROJECTS },
+    { title: project.title, link: ROUTES.PROJECT_DETAILS(project.slug) },
+    { title: "Tickets", link: "" },
+  ];
   return (
     <>
       <ContextMenu data={data2} config={config} />
@@ -148,8 +156,10 @@ const TicketsBoardView: React.FC = () => {
           </Dialog>
         </>
       )}
+      <HeaderView breadcrumbs={breadcrumbs} />
+
       <div className="flex justify-between items-center gap-4">
-        <TitleView title="Tickets" openDialog={openDialog} />
+        <TitleView title="Board View" openDialog={openDialog} />
         <div className="flex items-center gap-4">
           <Toggle
             title="Hide done"
@@ -177,9 +187,9 @@ const TicketsBoardView: React.FC = () => {
       <div className="board-structure">
         {activeBoards.map((board: Board) => (
           <div key={board.id} className="">
-            <div className="flex gap-3 px-4 h-10 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)]">
+            <div className="flex gap-3 px-4 h-11 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)]">
               <NavLink to={ROUTES.BOARD_DETAILS(project.slug, board.id)}>
-                <div className="text-base font-semibold">{board.title}</div>
+                <div className="text-base">{board.title}</div>
               </NavLink>
               <div className="text-gray-400">
                 {board.tickets.filter((e) => e.status === "done").length}/
@@ -227,7 +237,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   const slug = params.projectSlug ?? "";
 
   const project = await projectService.getProject(slug);
-  const tickets = await projectService.getTickets(project.slug);
+  // const tickets = await projectService.getTickets(project.slug);
   const boardStructure = await projectService.getBoardStructure(project.slug);
-  return { tickets, project, boardStructure };
+  return { project, boardStructure };
 };

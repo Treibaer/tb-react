@@ -31,7 +31,7 @@ export const TicketRow: React.FC<TicketRowProps> = ({
       onContextMenu={handleContextMenu}
     >
       {/* <div className="flex m-2 gap-4 border-solid border border-gray-800 rounded-md p-2 justify-start items-center hover:bg-slate-600"> */}
-      <div className="flex gap-4 border-b border-b-[rgb(37,38,50)] p-2 justify-start items-center hover:bg-slate-600">
+      <div className="flex gap-4 border-b border-b-[rgb(37,38,50)] p-2 justify-start items-center bg:[rgb(25,26,35)] hover:bg-[rgb(28,29,42)]">
         <div className="flex-grow flex gap-4 items-center">
           <div>
             {ticket.status === "open" && (

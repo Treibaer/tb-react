@@ -2,13 +2,17 @@ import { LoaderFunction, useLoaderData } from "react-router-dom";
 import BoardTicketRow from "../../components/projects/board/BoardTicketRow";
 import { Board } from "../../models/board-structure";
 import ProjectService from "../../services/ProjectService";
+import { Breadcrumb } from "../../models/breadcrumb";
+import { ROUTES } from "../../routes";
+import { Project } from "../../models/project";
+import HeaderView from "../../components/HeaderView";
 
 const projectService = ProjectService.shared;
 
 export const BoardDetails: React.FC = () => {
-  const { board, projectSlug } = useLoaderData() as {
+  const { board, project } = useLoaderData() as {
     board: Board;
-    projectSlug: string;
+    project: Project;
   };
 
   const openTickets = board.tickets.filter(
@@ -21,8 +25,18 @@ export const BoardDetails: React.FC = () => {
     (ticket) => ticket.status === "done"
   );
 
+  const breadcrumbs: Breadcrumb[] = [
+    { title: "Home", link: ROUTES.HOME },
+    { title: "Projects", link: ROUTES.PROJECTS },
+    { title: project.title, link: ROUTES.PROJECT_DETAILS(project.slug) },
+    { title: "Boards", link: ROUTES.BOARDS(project.slug) },
+    { title: board.title, link: "" },
+  ];
+  document.title = board.title;
+
   return (
-    <div>
+    <>
+      <HeaderView breadcrumbs={breadcrumbs} />
       <h2>{board.title}</h2>
       <div style={{ display: "flex" }}>
         <div className="col" style={{ flex: 1 }}>
@@ -31,7 +45,7 @@ export const BoardDetails: React.FC = () => {
             <BoardTicketRow
               key={ticket.id}
               ticket={ticket}
-              projectSlug={projectSlug}
+              projectSlug={project.slug}
             />
           ))}
         </div>
@@ -41,7 +55,7 @@ export const BoardDetails: React.FC = () => {
             <BoardTicketRow
               key={ticket.id}
               ticket={ticket}
-              projectSlug={projectSlug}
+              projectSlug={project.slug}
             />
           ))}
         </div>
@@ -51,12 +65,12 @@ export const BoardDetails: React.FC = () => {
             <BoardTicketRow
               key={ticket.id}
               ticket={ticket}
-              projectSlug={projectSlug}
+              projectSlug={project.slug}
             />
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -67,6 +81,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const projectSlug = params.projectSlug ?? "";
   const boardId = parseInt(params.boardId ?? "0");
+  const project = await projectService.getProject(projectSlug);
   const board = await projectService.getBoard(projectSlug, boardId);
-  return { board, projectSlug };
+  return { board, project };
 };

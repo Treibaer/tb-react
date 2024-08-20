@@ -1,22 +1,26 @@
-import { useEffect, useState } from "react";
 import { Outlet, useNavigation } from "react-router-dom";
-import LoadingSpinner from "../components/common/LoadingSpinner";
+import DelayedLoadingSpinner from "../components/common/DelayedLoadingSpinner";
 import MainNavigation from "../components/Navigation/MainNavigation";
 import { useLoginCheck } from "../hooks/auth/useLoginCheck";
 import LoginView from "./LoginView";
 
 export const RootLayout: React.FC = () => {
-  const navigation = useNavigation();
+  const { state } = useNavigation();
   const { checkingLogin, isLoggedIn, setIsLoggedIn } = useLoginCheck();
 
   return (
     <>
-      {navigation.state === "loading" && <DelayedLoadingSpinner />}
+      {state === "loading" && <DelayedLoadingSpinner />}
       {isLoggedIn && (
         <>
-          <MainNavigation />
-          <main className="container">
-            <Outlet />
+          <main className="flex">
+            <div className="w-[250px] fixed ">
+              <MainNavigation />
+            </div>
+            <div className="w-[250px] bg-slate-700 px-2 pt-4"></div>
+            <div className="w-[calc(100%-250px)]">
+              <Outlet />
+            </div>
           </main>
         </>
       )}
@@ -26,21 +30,5 @@ export const RootLayout: React.FC = () => {
     </>
   );
 };
-
-function DelayedLoadingSpinner() {
-  const [isWaiting, setIsWaiting] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsWaiting(false);
-    }, 300);
-
-    return () => clearTimeout(timer); // Cleanup timer
-  }, []);
-
-  if (isWaiting) return null;
-
-  return <LoadingSpinner />;
-}
 
 export default RootLayout;

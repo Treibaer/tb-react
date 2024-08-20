@@ -8,6 +8,9 @@ import TitleView from "../../components/TitleView";
 import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
 import ProjectService from "../../services/ProjectService";
+import HeaderView from "../../components/HeaderView";
+import { Breadcrumb } from "../../models/breadcrumb";
+import { ROUTES } from "../../routes";
 
 const projectService = ProjectService.shared;
 
@@ -76,6 +79,13 @@ const TicketsList: React.FC = () => {
     });
   }
 
+  const breadcrumbs: Breadcrumb[] = [
+    { title: "Home", link: ROUTES.HOME },
+    { title: "Projects", link: ROUTES.PROJECTS },
+    { title: project.title, link: ROUTES.PROJECT_DETAILS(project.slug) },
+    { title: "All Tickets", link: "" },
+  ];
+
   return (
     <>
       <ContextMenu data={data2} config={config} />
@@ -102,6 +112,7 @@ const TicketsList: React.FC = () => {
           </Dialog>
         </>
       )}
+      <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Tickets" openDialog={openDialog} />
       <div>
         {tickets.map((ticket) => (

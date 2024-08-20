@@ -6,15 +6,13 @@ export const NavigationLink: React.FC<{ to: To; title: string }> = ({
   title,
 }) => {
   return (
-    <li>
-      <NavLink
-        to={to}
-        className={({ isActive }) => (isActive ? classes.active : undefined)}
-        end
-      >
-        {title}
-      </NavLink>
-    </li>
+    <NavLink
+      to={to}
+      className="hover:bg-[#262736] h-[27px] px-1 items-center flex rounded gap-2"
+      end
+    >
+      {title}
+    </NavLink>
   );
 };
 

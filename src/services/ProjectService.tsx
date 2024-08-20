@@ -9,8 +9,10 @@ export default class ProjectService {
   private constructor() {}
 
   async createProject(project: Project) {
-    throw new Error("Method not implemented.");
-    // return this.client.post("/projects", project);
+    console.log(project);
+    
+    // throw new Error("Method not implemented.");
+    return this.client.post("/projects", project);
   }
 
   async getProjects() {

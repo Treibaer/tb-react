@@ -1,45 +1,45 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Dialog from "../../components/common/Dialog";
 import ProjectCard from "../../components/projects/ProjectCard";
 import TitleView from "../../components/TitleView";
 import { useProjects } from "../../hooks/projects/useProjects";
+import HeaderView from "../../components/HeaderView";
+import { Breadcrumb } from "../../models/breadcrumb";
+import { ROUTES } from "../../routes";
+import ProjectCreationDialog from "./ProjectCreationDialog";
+import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { Project } from "../../models/project";
+import ProjectService from "../../services/ProjectService";
+
+const projectService = ProjectService.shared;
 
 export default function Projects() {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { projects, isCreating, setIsCreating, createProject } = useProjects();
+  const [isCreating, setIsCreating] = useState(false);
+  const data = useLoaderData() as Project[];
+  const [projects, setProjects] = useState<Project[]>(data);
+
+  const breadcrumbs: Breadcrumb[] = [
+    { title: "Home", link: ROUTES.HOME },
+    { title: "Projects", link: "" },
+  ];
+  document.title = "Projects";
 
   function openDialog() {
     setIsCreating(true);
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
   }
-  async function handleCreateProject() {
-    const title = inputRef.current?.value;
-    if (title) {
-      await createProject(title);
-    }
+
+  async function onClose() {
+    setIsCreating(false);
+    // refresh projects always
+    setProjects(await projectService.getProjects());
   }
 
   return (
     <div>
       {isCreating && (
-        <>
-          <Dialog
-            title="Create Project"
-            onClose={() => setIsCreating(false)}
-            onSubmit={handleCreateProject}
-          >
-            <input
-              type="text"
-              placeholder="Project title"
-              id="dialogTitle"
-              className="tb-textarea"
-              ref={inputRef}
-            />
-          </Dialog>
-        </>
+        <ProjectCreationDialog onClose={onClose} />
       )}
+      <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Projects" openDialog={openDialog} />
       <div className="flex flex-wrap">
         {projects.map((project: any) => (
@@ -48,4 +48,8 @@ export default function Projects() {
       </div>
     </div>
   );
+}
+
+export const loader: LoaderFunction = async () => {
+  return await projectService.getProjects();
 }

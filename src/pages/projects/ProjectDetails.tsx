@@ -1,24 +1,24 @@
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
-import { Project } from "../../models/project";
-import ProjectService from "../../services/ProjectService";
-import { ROUTES } from "../../routes";
 import { Button } from "../../components/Button";
+import { Project } from "../../models/project";
+import { ROUTES } from "../../routes";
+import ProjectService from "../../services/ProjectService";
+import HeaderView from "../../components/HeaderView";
+import { Breadcrumb } from "../../models/breadcrumb";
 
 export const ProjectDetails: React.FC = () => {
   const project = useLoaderData() as Project;
+  const breadcrumbs: Breadcrumb[] = [
+    { title: "Home", link: ROUTES.HOME },
+    { title: "Projects", link: ROUTES.PROJECTS },
+    { title: project.title, link: "" },
+  ];
   return (
     <>
-      <nav>
-        <NavLink to={ROUTES.HOME}>Home</NavLink>
-        {" > "}
-        <NavLink to={ROUTES.PROJECTS}>Projects</NavLink>
-        {" > "}
-        {project.title}
-      </nav>
+      <HeaderView breadcrumbs={breadcrumbs} />
       <div>
         <NavLink to={ROUTES.TICKETS_BOARD_VIEW(project.slug)}>
           <Button title="View Tickets" />
-          
         </NavLink>
         <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
           <Button title="All Tickets" />

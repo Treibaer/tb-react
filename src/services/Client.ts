@@ -24,9 +24,7 @@ export default class Client {
   }
 
   async delete(url: string): Promise<any> {
-    return this.request(url, {
-      method: "DELETE",
-    });
+    return this.request(url, { method: "DELETE" });
   }
 
   private getAuthToken() {
@@ -38,6 +36,7 @@ export default class Client {
       ...options,
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
         Authorization: `Bearer ${this.getAuthToken()}`,
         ...options.headers,
       },
@@ -51,8 +50,8 @@ export default class Client {
         throw new Error("Unauthorized");
       }
       const responseJson = await response.json();
-      if (responseJson.error) {
-        throw new Error(responseJson.error);
+      if (responseJson.message) {
+        throw new Error(responseJson.message);
       }
       throw new Error("An error occurred");
     }

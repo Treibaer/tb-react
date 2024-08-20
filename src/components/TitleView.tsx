@@ -6,7 +6,7 @@ export const TitleView: React.FC<{ title: string; openDialog: () => void }> = ({
   openDialog,
 }) => {
   return (
-    <div className="flex justify-start items-center gap-4 mb-4">
+    <div className="flex justify-start items-center gap-4 m-2">
       <div className="cursor-default text-3xl font-semibold">{title}</div>
       <ButtonIcon onClick={openDialog}>
         <PencilSquareIcon className="size-5" />

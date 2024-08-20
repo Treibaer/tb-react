@@ -4,7 +4,10 @@ export enum FormatType {
   DAY_TIME_SECONDS,
 }
 
-export const formatUnixTimestamp = (timestamp: number, type: FormatType): string => {
+export const formatUnixTimestamp = (
+  timestamp: number,
+  type: FormatType
+): string => {
   const date = new Date(timestamp * 1000); // Convert to milliseconds
   switch (type) {
     case FormatType.DAY:

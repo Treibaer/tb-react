@@ -1,0 +1,30 @@
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { Breadcrumb } from "../models/breadcrumb";
+
+export const HeaderView: React.FC<{ breadcrumbs: Breadcrumb[] }> = ({
+  breadcrumbs,
+}) => {
+  return (
+    <div className="flex gap-2 text-white border-b border-b-slate-600 p-4 h-14">
+      {breadcrumbs.map((item, index) => (
+        <React.Fragment key={item.link}>
+          {item.link && (
+            <NavLink className=" hover:text-[#ccccd7]" to={item.link}>
+              {item.title}
+            </NavLink>
+          )}
+          {!item.link && (
+            <NavLink className="cursor-default" to={""}>
+              {item.title}
+            </NavLink>
+          )}
+          {/* {!item.link && <div className="">{item.title}</div>} */}
+          {index < breadcrumbs.length - 1 && <div> {">"} </div>}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
+
+export default HeaderView;
