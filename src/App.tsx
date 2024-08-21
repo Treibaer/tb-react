@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
+import Logout from "./pages/Logout";
 import Boards, { loader as boardsLoader } from "./pages/projects/Boards";
 import BoardDetails, {
   loader as boardDetailsLoader,
@@ -19,7 +20,7 @@ import TicketsList, {
   loader as ticketsAllLoader,
 } from "./pages/projects/TicketsList";
 import RootLayout from "./pages/RootLayout";
-import { Notifications } from "./notifications";
+import Settings from "./pages/Settings";
 
 const router = createBrowserRouter([
   {
@@ -62,8 +63,16 @@ const router = createBrowserRouter([
         element: <ProjectDetails />,
         loader: projectDetailsLoader,
       },
+      {
+        path: "/settings",
+        element: <Settings />,
+      },
     ],
     // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />
   },
 ]);
 

@@ -1,16 +1,23 @@
+import { ReactNode } from "react";
 import { NavLink, To } from "react-router-dom";
-import classes from "./MainNavigation.module.css";
 
-export const NavigationLink: React.FC<{ to: To; title: string }> = ({
-  to,
-  title,
-}) => {
+export const NavigationLink: React.FC<{
+  to: To;
+  title: string;
+  icon?: ReactNode;
+}> = ({ to, title, icon }) => {
   return (
     <NavLink
       to={to}
-      className="hover:bg-[#262736] h-[27px] px-1 items-center flex rounded gap-2"
+      // className="hover:bg-[#262736] h-[27px] px-1 items-center flex rounded gap-2"
+      className={({ isActive }) =>
+        `hover:bg-[#262736] h-[27px] px-1 items-center flex rounded gap-2 ${
+          isActive ? "bg-[#262736]" : undefined
+        }`
+      }
       end
     >
+      {icon && <div className="w-4 h-4">{icon}</div>}
       {title}
     </NavLink>
   );

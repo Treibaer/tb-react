@@ -1,15 +1,13 @@
-import { useRef, useState } from "react";
-import Dialog from "../../components/common/Dialog";
+import { useState } from "react";
+import { LoaderFunction, useLoaderData } from "react-router-dom";
+import HeaderView from "../../components/HeaderView";
 import ProjectCard from "../../components/projects/ProjectCard";
 import TitleView from "../../components/TitleView";
-import { useProjects } from "../../hooks/projects/useProjects";
-import HeaderView from "../../components/HeaderView";
 import { Breadcrumb } from "../../models/breadcrumb";
-import { ROUTES } from "../../routes";
-import ProjectCreationDialog from "./ProjectCreationDialog";
-import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { Project } from "../../models/project";
+import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
+import ProjectCreationDialog from "./ProjectCreationDialog";
 
 const projectService = ProjectService.shared;
 

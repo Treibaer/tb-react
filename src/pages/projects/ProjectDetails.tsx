@@ -16,20 +16,20 @@ export const ProjectDetails: React.FC = () => {
   return (
     <>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <div>
+      <div className="flex gap-4 m-2">
         <NavLink to={ROUTES.TICKETS_BOARD_VIEW(project.slug)}>
-          <Button title="View Tickets" />
-        </NavLink>
-        <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
-          <Button title="All Tickets" />
+          <Button title="Board View" />
         </NavLink>
         <NavLink to={ROUTES.BOARDS(project.slug)}>
           <Button title="Boards" />
         </NavLink>
+        <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
+          <Button title="All Tickets" />
+        </NavLink>
       </div>
       <div className="project-details-wrapper">
-        <h2>Title: {project.title}</h2>
-        <p>Description: {project.description}</p>
+        <div className="text-4xl m-2">{project.title}</div>
+        <div className="m-2">{project.description}</div>
       </div>
     </>
   );

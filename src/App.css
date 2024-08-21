@@ -7,6 +7,15 @@
   /* padding-right: 2rem; */
 }
 
+html { font-family: "Inter", "system-ui"; }
+
+
+body {
+  background-color: #191a23;
+  color: #eeeffc;
+  font-size: 15px;
+}
+
 .fullscreenBlurWithLoading {
   position: fixed;
   top: 0;
@@ -233,11 +242,6 @@ a.tb-card:hover {
   color: #eeeffc;
 }
 
-body {
-  background-color: #191a23;
-  color: #eeeffc;
-  font-size: 14.625px;
-}
 
 .testHint {
   margin-top: -8px;

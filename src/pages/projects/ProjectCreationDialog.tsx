@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import Dialog from "../../components/common/Dialog";
-import { useProjects } from "../../hooks/projects/useProjects";
 import { Project } from "../../models/project";
 import ProjectService from "../../services/ProjectService";
 
 export const ProjectCreationDialog: React.FC<{
   onClose: () => void;
 }> = ({ onClose }) => {
-  const { isCreating, setIsCreating, createProject } = useProjects();
   const [error, setError] = useState<string | undefined>(undefined);
 
   const inputRef = useRef<HTMLInputElement>(null);
