@@ -1,14 +1,16 @@
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { Button } from "../../components/Button";
+import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
-import AssigneeContextMenu from "../../components/ticket-details/AssigneeContextMenu";
-import BoardContextMenu from "../../components/ticket-details/BoardContextMenu";
-import Details from "../../components/ticket-details/Details";
-import StatusContextMenu from "../../components/ticket-details/StatusContextMenu";
+import AssigneeDropdown from "../../components/ticket-details/AssigneeDropdown";
+import BoardDropdown from "../../components/ticket-details/BoardDropdown";
+import DescriptionView from "../../components/ticket-details/DescriptionView";
+import StatusDropdown from "../../components/ticket-details/StatusDropdown";
 import TicketAssigneeField from "../../components/ticket-details/TicketAssigneeField";
 import TicketCommentArea from "../../components/ticket-details/TicketCommentArea";
-import TypeContextMenu from "../../components/ticket-details/TypeContextMenu";
+import TypeDropdown from "../../components/ticket-details/TypeDropdown";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
@@ -17,8 +19,6 @@ import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 import TicketStatus from "./TicketStatus";
-import { ButtonIcon } from "../../components/ButtonIcon";
-import { PencilIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
 
 const projectService = ProjectService.shared;
 
@@ -67,8 +67,11 @@ export default function TicketDetailView() {
     loadMetadata();
   }, [project.slug]);
 
-  async function updateStatus(status: string) {
+  async function updateStatus(status: string | null) {
     setShowStatusDropdown(false);
+    if (status === null) {
+      return;
+    }
     if (status === "open" || status === "done" || status === "inProgress") {
       if (status !== ticket.status) {
         const updatedTicket = await projectService.updateTicketStatus(
@@ -80,6 +83,7 @@ export default function TicketDetailView() {
       }
     }
   }
+
   async function updateAssignee(userId: number | null) {
     setShowAssigneeDropdown(false);
     if (userId === null) {
@@ -171,11 +175,7 @@ export default function TicketDetailView() {
               dangerouslySetInnerHTML={{ __html: ticket.description }}
             ></p>
           )}
-          {isEditing && (
-            <div className="h-full text-black">
-              <Details description={currentDescription} ticket={ticket} />
-            </div>
-          )}
+          {isEditing && <DescriptionView description={currentDescription} />}
           <TicketCommentArea ticket={ticket} />
         </div>
         {/* Sidebar */}
@@ -185,9 +185,7 @@ export default function TicketDetailView() {
           </div>
           <div className="px-2 py-3 flex flex-col">
             <div className="flex items-center relative">
-              {showStatusDropdown && (
-                <StatusContextMenu onClose={updateStatus} />
-              )}
+              {showStatusDropdown && <StatusDropdown onClose={updateStatus} />}
               <div className="min-w-20 h-8 px-2 text-gray-400 flex items-center ">
                 Status
               </div>
@@ -201,7 +199,7 @@ export default function TicketDetailView() {
             </div>
             <div className="flex items-center relative">
               {showAssigneeDropdown && (
-                <AssigneeContextMenu
+                <AssigneeDropdown
                   users={metadata?.users ?? []}
                   onClose={updateAssignee}
                 />
@@ -219,7 +217,7 @@ export default function TicketDetailView() {
             </div>
             <div className="flex items-center relative">
               {showBoardDropdown && (
-                <BoardContextMenu
+                <BoardDropdown
                   boards={metadata?.boards ?? []}
                   onClose={updateBoard}
                 />
@@ -235,7 +233,7 @@ export default function TicketDetailView() {
             </div>
             <div className="flex items-center relative">
               {showTypeDropdown && (
-                <TypeContextMenu
+                <TypeDropdown
                   types={metadata?.types ?? []}
                   onClose={updateType}
                 />

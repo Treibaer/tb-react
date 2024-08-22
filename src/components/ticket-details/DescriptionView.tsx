@@ -16,13 +16,11 @@ import {
 } from "ckeditor5";
 
 import "ckeditor5/ckeditor5.css";
-import { Ticket } from "../../models/ticket";
 import { MutableRefObject } from "react";
 
-export const Detail: React.FC<{
-  ticket: Ticket;
+export const DescriptionView: React.FC<{
   description: MutableRefObject<string>;
-}> = ({ ticket, description }) => {
+}> = ({ description }) => {
   return (
     <CKEditor
       editor={ClassicEditor}
@@ -59,7 +57,7 @@ export const Detail: React.FC<{
           Table,
           Undo,
         ],
-        initialData: ticket.description,
+        initialData: description.current,
       }}
       onChange={(event, editor) => {
         const data = editor.getData();
@@ -69,4 +67,4 @@ export const Detail: React.FC<{
   );
 };
 
-export default Detail;
+export default DescriptionView;
