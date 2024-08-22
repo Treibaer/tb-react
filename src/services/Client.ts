@@ -9,9 +9,16 @@ export default class Client {
     return this.request<T>(url, { method: "GET" });
   }
 
-  async post(url: string, data: any): Promise<any> {
-    return this.request(url, {
+  async post<T>(url: string, data: any) {
+    return this.request<T>(url, {
       method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async patch<T>(url: string, data: any) {
+    return this.request<T>(url, {
+      method: "PATCH",
       body: JSON.stringify(data),
     });
   }

@@ -21,3 +21,8 @@ export interface Board {
   tickets: Ticket[];
   creator: User;
 }
+
+export interface SmallBoard {
+  id: number;
+  title: string;
+}

@@ -64,9 +64,11 @@ const TicketsBoardView: React.FC = () => {
       slug: "",
       title,
       description: descriptionRef.current?.value ?? "",
+      type: "",
       createdAt: 0,
       updatedAt: 0,
       status: "open",
+      board: null,
       creator: null,
       assignee: null,
     };

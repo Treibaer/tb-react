@@ -1,6 +1,8 @@
 import { Board, BoardStructure } from "../models/board-structure";
 import { Project } from "../models/project";
+import { ProjectMeta } from "../models/project-meta";
 import { Ticket } from "../models/ticket";
+import { User } from "../models/user";
 import Client from "./Client";
 
 export default class ProjectService {
@@ -10,7 +12,7 @@ export default class ProjectService {
 
   async createProject(project: Project) {
     console.log(project);
-    
+
     // throw new Error("Method not implemented.");
     return this.client.post("/projects", project);
   }
@@ -73,5 +75,50 @@ export default class ProjectService {
   async toggleHideDone(projectSlug: string, value: boolean) {
     const url = `/projects/${projectSlug}/settings`;
     return this.client.post(url, { hideDone: value });
+  }
+
+  async updateTicketStatus(
+    projectSlug: string,
+    ticketSlug: string,
+    status: string
+  ) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+    return this.client.patch<Ticket>(url, { status });
+  }
+
+  async updateAssignee(
+    projectSlug: string,
+    ticketSlug: string,
+    userId: number
+  ) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+    return this.client.patch<Ticket>(url, { assigneeId: userId });
+  }
+
+  async updateType(projectSlug: string, ticketSlug: string, type: string) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+    return this.client.patch<Ticket>(url, { type });
+  }
+
+  async updateBoard(projectSlug: string, ticketSlug: string, boardId: number) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+    return this.client.patch<Ticket>(url, { boardId });
+  }
+
+  async updateDescription(
+    projectSlug: string,
+    ticketSlug: string,
+    description: string
+  ) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+    return this.client.patch<Ticket>(url, { description });
+  }
+
+  async getProjectMetadata(projectSlug: string) {
+    return this.client.get<ProjectMeta>(`/projects/${projectSlug}/metadata`);
+  }
+
+  async getUsers() {
+    return this.client.get<User[]>("/users");
   }
 }

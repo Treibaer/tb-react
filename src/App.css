@@ -340,12 +340,12 @@ a.tb-card:hover {
 }
 
 .tb-dropdown-item svg {
-  margin-top: -2px;
-  color: rgba(220, 216, 254, 0.576);
+  /* margin-top: -2px; */
+  /* color: rgba(220, 216, 254, 0.576); */
 }
 
 .tb-dropdown-item:hover svg:not(.tb-no-fill) {
-  fill: #eeeffc;
+  /* fill: #eeeffc; */
 }
 
 .stop-scrolling {
