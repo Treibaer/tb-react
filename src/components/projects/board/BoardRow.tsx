@@ -12,7 +12,9 @@ export const BoardRow: React.FC<{ projectSlug: string; board: Board }> = ({
       style={{ display: "flex" }}
       className="flex justify-between items-center gap-4 border-b-gray-700 border-b h-12 px-2 bg:[rgb(25,26,35)] hover:bg-[rgb(28,29,42)]"
     >
-      <div className="flex-1">{board.title}</div>
+      <div className="flex-1 whitespace-nowrap overflow-x-hidden text-ellipsis" title={board.title}>
+        {board.title}
+      </div>
       <div className="flex-1 flex justify-center">
         <img
           className="h-7 w-7 rounded-full"

@@ -22,12 +22,14 @@ export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
           placeholder="Email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
+          className="text-green-800"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
+          className="text-green-800"
         />
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Logging in..." : "Login"}

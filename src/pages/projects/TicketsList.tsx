@@ -2,37 +2,45 @@ import { useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import Dialog from "../../components/common/Dialog";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
-import { data as data2 } from "../../components/contextmenu/data";
+import HeaderView from "../../components/HeaderView";
 import { TicketRow } from "../../components/tickets/TicketRow";
 import TitleView from "../../components/TitleView";
-import { Project } from "../../models/project";
-import { Ticket } from "../../models/ticket";
-import ProjectService from "../../services/ProjectService";
-import HeaderView from "../../components/HeaderView";
 import { Breadcrumb } from "../../models/breadcrumb";
+import { Project } from "../../models/project";
+import { ProjectMeta } from "../../models/project-meta";
+import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
+import ProjectService from "../../services/ProjectService";
 
 const projectService = ProjectService.shared;
+
+type Config = {
+  top: number;
+  left: number;
+  show: boolean;
+  ticket: Ticket | null;
+};
 
 const TicketsList: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [config, setConfig] = useState({
+  const [config, setConfig] = useState<Config>({
     top: 0,
     left: 0,
-    right: 0,
-    bottom: 0,
     show: false,
+    ticket: null,
   });
 
   const data = useLoaderData() as {
     tickets: Ticket[];
     project: Project;
+    metadata: ProjectMeta;
   };
 
   const [tickets, setTickets] = useState<Ticket[]>(data.tickets);
   const [project, setProject] = useState<Project>(data.project);
+  const [metadata, setMetaData] = useState<ProjectMeta>(data.metadata);
 
   function openDialog() {
     setIsCreating(true);
@@ -73,12 +81,23 @@ const TicketsList: React.FC = () => {
     console.log("right click");
     console.log("ticket", ticket);
     setConfig({
-      top: e.clientY,
-      left: e.clientX,
-      right: e.clientX,
-      bottom: e.clientY,
+      top: e.pageY,
+      left: e.pageX,
       show: true,
+      ticket,
     });
+  }
+
+  async function closeContextMenu(update: boolean) {
+    setConfig({
+      ...config,
+      show: false,
+      ticket: null,
+    });
+    if (update) {
+      const tickets = await projectService.getTickets(project.slug);
+      setTickets(tickets);
+    }
   }
 
   const breadcrumbs: Breadcrumb[] = [
@@ -90,7 +109,15 @@ const TicketsList: React.FC = () => {
 
   return (
     <>
-      <ContextMenu data={data2} config={config} />
+      {config.show && (
+        <ContextMenu
+          project={project}
+          ticket={config.ticket!}
+          metadata={metadata}
+          config={config}
+          onClose={closeContextMenu}
+        />
+      )}
       {isCreating && (
         <>
           <Dialog
@@ -139,5 +166,6 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 
   const project = await projectService.getProject(slug);
   const tickets = await projectService.getTickets(slug);
-  return { tickets, project };
+  const metadata = await projectService.getProjectMetadata(slug);
+  return { tickets, project, metadata };
 };

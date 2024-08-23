@@ -37,9 +37,9 @@ export const BoardDetails: React.FC = () => {
   return (
     <>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <h2>{board.title}</h2>
-      <div style={{ display: "flex" }}>
-        <div className="col" style={{ flex: 1 }}>
+      <div className="text-2xl p-2">{board.title}</div>
+      <div className="flex mx-2 mt-2 gap-2">
+        <div className="flex flex-col gap-2" style={{ flex: 1 }}>
           <h3>Open</h3>
           {openTickets.map((ticket) => (
             <BoardTicketRow
@@ -49,7 +49,7 @@ export const BoardDetails: React.FC = () => {
             />
           ))}
         </div>
-        <div className="col" style={{ flex: 1 }}>
+        <div className="flex flex-col gap-2" style={{ flex: 1 }}>
           <h3>In Progress</h3>
           {inProgressTickets.map((ticket) => (
             <BoardTicketRow
@@ -59,7 +59,7 @@ export const BoardDetails: React.FC = () => {
             />
           ))}
         </div>
-        <div className="col" style={{ flex: 1 }}>
+        <div className="flex flex-col gap-2" style={{ flex: 1 }}>
           <h3>Done</h3>
           {doneTickets.map((ticket) => (
             <BoardTicketRow

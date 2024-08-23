@@ -3,10 +3,11 @@ import { useEffect, useRef } from "react";
 export const TicketDetailsDropdown: React.FC<{
   children: React.ReactNode;
   onClose: (value: null) => void;
-  className?: string;
   toggleId: string;
-}> = ({ children, onClose, className = "left-20 w-[142px]", toggleId }) => {
+  style?: React.HTMLAttributes<HTMLDivElement>["style"];
+}> = ({ children, onClose, toggleId, style }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
@@ -27,7 +28,8 @@ export const TicketDetailsDropdown: React.FC<{
   return (
     <div
       ref={dropdownRef}
-      className={`ticket-details-dropdown tb-transparent-menu ${className}`}
+      className={`ticket-details-dropdown tb-transparent-menu py-1 max-w-[236px]`}
+      style={style}
     >
       {children}
     </div>

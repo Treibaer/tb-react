@@ -35,8 +35,6 @@ export const DescriptionView: React.FC<{
           "italic",
           "|",
           "link",
-          "insertTable",
-          "mediaEmbed",
           "|",
           "bulletedList",
           "numberedList",

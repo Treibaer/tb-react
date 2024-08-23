@@ -2,8 +2,6 @@ import { useRef, useState } from "react";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import { Button } from "../../components/Button";
 import Dialog from "../../components/common/Dialog";
-import { ContextMenu } from "../../components/contextmenu/ContextMenu";
-import { data as data2 } from "../../components/contextmenu/data";
 import HeaderView from "../../components/HeaderView";
 import { TicketRow } from "../../components/tickets/TicketRow";
 import TitleView from "../../components/TitleView";
@@ -14,19 +12,27 @@ import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
+import { ContextMenu } from "../../components/contextmenu/ContextMenu";
+import { ProjectMeta } from "../../models/project-meta";
 
 const projectService = ProjectService.shared;
+
+type Config = {
+  top: number;
+  left: number;
+  show: boolean;
+  ticket: Ticket | null;
+};
 
 const TicketsBoardView: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [config, setConfig] = useState({
+  const [config, setConfig] = useState<Config>({
     top: 0,
     left: 0,
-    right: 0,
-    bottom: 0,
     show: false,
+    ticket: null,
   });
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -34,6 +40,7 @@ const TicketsBoardView: React.FC = () => {
     tickets: Ticket[];
     project: Project;
     boardStructure: BoardStructure;
+    metadata: ProjectMeta;
   };
 
   // const [tickets, setTickets] = useState<Ticket[]>(data.tickets);
@@ -82,13 +89,27 @@ const TicketsBoardView: React.FC = () => {
 
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
     e.preventDefault();
+
     setConfig({
-      top: e.clientY,
-      left: e.clientX,
-      right: e.clientX,
-      bottom: e.clientY,
+      top: e.pageY,
+      left: e.pageX,
       show: true,
+      ticket,
     });
+  }
+
+  async function closeContextMenu(update: boolean) {
+    setConfig({
+      ...config,
+      show: false,
+      ticket: null,
+    });
+    if (update) {
+      const boardStructure = await projectService.getBoardStructure(
+        project.slug
+      );
+      setBoardStructure(boardStructure);
+    }
   }
 
   async function toggleBoard(boardId: number) {
@@ -134,7 +155,6 @@ const TicketsBoardView: React.FC = () => {
   ];
   return (
     <>
-      <ContextMenu data={data2} config={config} />
       {isCreating && (
         <>
           <Dialog
@@ -147,12 +167,20 @@ const TicketsBoardView: React.FC = () => {
               placeholder="Title"
               id="dialogTitle"
               className="tb-textarea"
+              style={{
+                boxShadow: "none",
+                outline: "none",
+              }}
               ref={inputRef}
             />
             <textarea
               placeholder="Description"
               id="dialogDescription"
               className="tb-textarea"
+              style={{
+                boxShadow: "none",
+                outline: "none",
+              }}
               ref={descriptionRef}
             ></textarea>
           </Dialog>
@@ -162,7 +190,7 @@ const TicketsBoardView: React.FC = () => {
 
       <div className="flex justify-between items-center gap-4">
         <TitleView title="Board View" openDialog={openDialog} />
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 me-2">
           <Toggle
             title="Hide done"
             defaultChecked={hideDone}
@@ -187,9 +215,18 @@ const TicketsBoardView: React.FC = () => {
       </div>
 
       <div className="board-structure">
+        {config.show && (
+          <ContextMenu
+            project={project}
+            ticket={config.ticket!}
+            metadata={data.metadata}
+            config={config}
+            onClose={closeContextMenu}
+          />
+        )}
         {activeBoards.map((board: Board) => (
           <div key={board.id} className="">
-            <div className="flex gap-3 px-4 h-11 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)]">
+            <div className="flex first-letter:flex gap-3 px-4 h-11 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)]">
               <NavLink to={ROUTES.BOARD_DETAILS(project.slug, board.id)}>
                 <div className="text-base">{board.title}</div>
               </NavLink>
@@ -241,5 +278,6 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   const project = await projectService.getProject(slug);
   // const tickets = await projectService.getTickets(project.slug);
   const boardStructure = await projectService.getBoardStructure(project.slug);
-  return { project, boardStructure };
+  const metadata = await projectService.getProjectMetadata(project.slug);
+  return { project, boardStructure, metadata };
 };

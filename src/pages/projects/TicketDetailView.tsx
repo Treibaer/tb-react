@@ -4,13 +4,12 @@ import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
-import AssigneeDropdown from "../../components/ticket-details/AssigneeDropdown";
-import BoardDropdown from "../../components/ticket-details/BoardDropdown";
+import AssigneeDropdown from "../../components/ticket-details/dropdowns/AssigneeDropdown";
+import BoardDropdown from "../../components/ticket-details/dropdowns/BoardDropdown";
 import DescriptionView from "../../components/ticket-details/DescriptionView";
-import StatusDropdown from "../../components/ticket-details/StatusDropdown";
+import StatusDropdown from "../../components/ticket-details/dropdowns/StatusDropdown";
 import TicketAssigneeField from "../../components/ticket-details/TicketAssigneeField";
 import TicketCommentArea from "../../components/ticket-details/TicketCommentArea";
-import TypeDropdown from "../../components/ticket-details/TypeDropdown";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
@@ -19,6 +18,7 @@ import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 import TicketStatus from "./TicketStatus";
+import TypeDropdown from "../../components/ticket-details/dropdowns/TypeDropdown";
 
 const projectService = ProjectService.shared;
 
@@ -185,7 +185,16 @@ export default function TicketDetailView() {
           </div>
           <div className="px-2 py-3 flex flex-col">
             <div className="flex items-center relative">
-              {showStatusDropdown && <StatusDropdown onClose={updateStatus} />}
+              <div>
+                {showStatusDropdown && (
+                  <StatusDropdown
+                    selectedStatus={ticket.status}
+                    states={metadata?.states ?? []}
+                    onClick={updateStatus}
+                    style={{ left: 80, top: 34 }}
+                  />
+                )}
+              </div>
               <div className="min-w-20 h-8 px-2 text-gray-400 flex items-center ">
                 Status
               </div>
@@ -200,8 +209,10 @@ export default function TicketDetailView() {
             <div className="flex items-center relative">
               {showAssigneeDropdown && (
                 <AssigneeDropdown
+                  selectedAssignee={ticket.assignee}
                   users={metadata?.users ?? []}
-                  onClose={updateAssignee}
+                  onClick={updateAssignee}
+                  style={{ left: 80, top: 34 }}
                 />
               )}
               <div className="min-w-20 h-8 py-1 px-2 text-gray-400">
@@ -218,14 +229,17 @@ export default function TicketDetailView() {
             <div className="flex items-center relative">
               {showBoardDropdown && (
                 <BoardDropdown
+                  selectedBoardId={ticket.board?.id ?? 0}
                   boards={metadata?.boards ?? []}
                   onClose={updateBoard}
+                  style={{ left: 0, top: 34 }}
                 />
               )}
               <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Board</div>
               <div
                 id="boardDropdown"
-                className="select2-dropdown"
+                className="select2-dropdown overflow-x-hidden whitespace-nowrap"
+                title={ticket.board?.title}
                 onClick={toggleBoardDropdown}
               >
                 {ticket.board?.title}
@@ -234,8 +248,10 @@ export default function TicketDetailView() {
             <div className="flex items-center relative">
               {showTypeDropdown && (
                 <TypeDropdown
+                  selectedType={ticket.type}
                   types={metadata?.types ?? []}
                   onClose={updateType}
+                  style={{ left: 80, top: 34 }}
                 />
               )}
               <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Type</div>

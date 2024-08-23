@@ -44,7 +44,7 @@ export const TicketRow: React.FC<TicketRowProps> = ({
               <CheckCircleIcon className="h-6 w-6 text-green-800" />
             )}
           </div>
-          <div className="text-gray-400 font-semibold w-16">{ticket.slug}</div>
+          <div className="text-gray-400 w-16">{ticket.slug}</div>
           <div>{ticket.title}</div>
         </div>
         <UserView user={ticket.assignee} />
