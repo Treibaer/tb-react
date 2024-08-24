@@ -23,6 +23,7 @@ export const TicketRow: React.FC<TicketRowProps> = ({
     e.preventDefault();
     onContextMenu(e, ticket);
   };
+  
 
   return (
     <NavLink

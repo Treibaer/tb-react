@@ -9,13 +9,14 @@ import { useEffect, useRef, useState } from "react";
 import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
 import { Status } from "../../models/status";
-import { Ticket } from "../../models/ticket";
+import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import ProjectService from "../../services/ProjectService";
 import AssigneeDropdown from "../ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../ticket-details/dropdowns/BoardDropdown";
+import DropdownElement from "../ticket-details/dropdowns/DropdownElement";
+import PositionDropdown from "../ticket-details/dropdowns/PositionDropdown";
 import StatusDropdown from "../ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../ticket-details/dropdowns/TypeDropdown";
-import DropdownElement from "../ticket-details/dropdowns/DropdownElement";
 
 const projectService = ProjectService.shared;
 
@@ -24,19 +25,21 @@ enum DropdownType {
   ASSIGNEE,
   BOARD,
   TYPE,
+  POSITION,
   NONE,
 }
 
 export const ContextMenu: React.FC<{
   project: Project;
-  ticket: Ticket;
   metadata: ProjectMeta;
-  config: any;
+  config: TicketsContextMenuConfig;
   onClose: (update: boolean) => void;
-}> = ({ project, ticket, metadata, config, onClose }) => {
+}> = ({ project, metadata, config, onClose }) => {
   const [shownDropdown, setShownDropdown] = useState<DropdownType>(
     DropdownType.NONE
   );
+
+  const ticket = config.ticket!;
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const handleClickOutside = (event: MouseEvent) => {
@@ -98,6 +101,18 @@ export const ContextMenu: React.FC<{
     onClose(type !== ticket.type);
   }
 
+  async function onPositionChange(position: number | null) {
+    if (position === null) {
+      return;
+    }
+    console.log("position", position);
+
+    if (position !== ticket.position) {
+      await projectService.updatePosition(project.slug, ticket.slug, position);
+    }
+    onClose(position !== ticket.position);
+  }
+
   return (
     <div ref={dropdownRef}>
       {shownDropdown === DropdownType.STATUS && (
@@ -130,6 +145,14 @@ export const ContextMenu: React.FC<{
           types={metadata.types}
           onClose={onTypeChange}
           style={{ left: config.left + 146, top: config.top + 96 }}
+        />
+      )}
+      {config.board && shownDropdown === DropdownType.POSITION && (
+        <PositionDropdown
+          position={ticket.position}
+          tickets={config.board.tickets}
+          onClick={onPositionChange}
+          style={{ left: config.left + 146, top: config.top + 128 }}
         />
       )}
       <div
@@ -192,6 +215,22 @@ export const ContextMenu: React.FC<{
             </div>
           </div>
         </DropdownElement>
+        {config.board && (
+          <DropdownElement
+            isSelected={false}
+            onMouseOver={() => setShownDropdown(DropdownType.POSITION)}
+          >
+            <div className="flex gap-1">
+              <div className="">
+                <TagIcon className="h-5 w-5 text-gray-400" />
+              </div>
+              <div className="w-[70px]">Position</div>
+              <div className="">
+                <ChevronRightIcon className="h-5 w-5 text-gray-400" />
+              </div>
+            </div>
+          </DropdownElement>
+        )}
       </div>
     </div>
   );

@@ -54,7 +54,7 @@ export default class ProjectService {
 
   async getBoard(projectSlug: string, boardId: number) {
     const url = `/projects/${projectSlug}/boards/${boardId}`;
-    return this.client.get<Board[]>(url);
+    return this.client.get<Board>(url);
   }
 
   async getBoardStructure(projectSlug: string) {
@@ -98,6 +98,15 @@ export default class ProjectService {
   async updateType(projectSlug: string, ticketSlug: string, type: string) {
     const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
     return this.client.patch<Ticket>(url, { type });
+  }
+
+  async updatePosition(
+    projectSlug: string,
+    ticketSlug: string,
+    position: number
+  ) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+    return this.client.patch<Ticket>(url, { position });
   }
 
   async updateBoard(projectSlug: string, ticketSlug: string, boardId: number) {

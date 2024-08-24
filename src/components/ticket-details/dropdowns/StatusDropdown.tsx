@@ -10,7 +10,11 @@ export const StatusDropdown: React.FC<{
   style?: React.HTMLAttributes<HTMLDivElement>["style"];
 }> = ({ selectedStatus, states, onClick, style }) => {
   return (
-    <TicketDetailsDropdown onClose={onClick} toggleId="statusDropdown" style={style}>
+    <TicketDetailsDropdown
+      onClose={onClick}
+      toggleId="statusDropdown"
+      style={style}
+    >
       {states.map((state) => (
         <DropdownElement
           key={state}

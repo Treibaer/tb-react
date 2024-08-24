@@ -33,7 +33,6 @@ export const ProjectCreationDialog: React.FC<{
           title,
         };
         await ProjectService.shared.createProject(newProject);
-        // await createProject(title);
         onClose();
       } catch (error: Error | any) {
         setError(error.message);

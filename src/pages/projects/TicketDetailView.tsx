@@ -4,10 +4,11 @@ import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
+import DescriptionView from "../../components/ticket-details/DescriptionView";
 import AssigneeDropdown from "../../components/ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../../components/ticket-details/dropdowns/BoardDropdown";
-import DescriptionView from "../../components/ticket-details/DescriptionView";
 import StatusDropdown from "../../components/ticket-details/dropdowns/StatusDropdown";
+import TypeDropdown from "../../components/ticket-details/dropdowns/TypeDropdown";
 import TicketAssigneeField from "../../components/ticket-details/TicketAssigneeField";
 import TicketCommentArea from "../../components/ticket-details/TicketCommentArea";
 import { Breadcrumb } from "../../models/breadcrumb";
@@ -18,7 +19,6 @@ import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 import TicketStatus from "./TicketStatus";
-import TypeDropdown from "../../components/ticket-details/dropdowns/TypeDropdown";
 
 const projectService = ProjectService.shared;
 

@@ -34,9 +34,7 @@ export default function Projects() {
 
   return (
     <div>
-      {isCreating && (
-        <ProjectCreationDialog onClose={onClose} />
-      )}
+      {isCreating && <ProjectCreationDialog onClose={onClose} />}
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Projects" openDialog={openDialog} />
       <div className="flex flex-wrap">
@@ -50,4 +48,4 @@ export default function Projects() {
 
 export const loader: LoaderFunction = async () => {
   return await projectService.getProjects();
-}
+};

@@ -3,6 +3,7 @@ import { User } from "./user";
 
 export interface Ticket {
   id: number;
+  position: number;
   ticketId: number;
   slug: string;
   title: string;

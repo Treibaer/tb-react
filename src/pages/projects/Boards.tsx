@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import Dialog from "../../components/common/Dialog";
-import { BoardHeaderView } from "../../components/projects/board/BoardHeaderView";
-import { BoardRow } from "../../components/projects/board/BoardRow";
+import { BoardHeaderView } from "../../components/projects/board-list/BoardHeaderView";
+import { BoardRow } from "../../components/projects/board-list/BoardRow";
 import TitleView from "../../components/TitleView";
 import { Board } from "../../models/board-structure";
 import ProjectService from "../../services/ProjectService";
