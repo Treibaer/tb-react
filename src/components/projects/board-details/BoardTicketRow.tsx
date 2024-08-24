@@ -13,7 +13,7 @@ export const BoardTicketRow: React.FC<{
 
   const [{ isDragging }, drag] = useDrag({
     type: 'TICKET',
-    item: { id: ticket.id, slug: ticket.slug, column: ticket.status }, // Sie können hier zusätzliche Informationen hinzufügen
+    item: { id: ticket.id, slug: ticket.slug, column: ticket.status },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

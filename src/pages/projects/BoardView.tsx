@@ -1,18 +1,16 @@
-import { LoaderFunction, useLoaderData } from "react-router-dom";
-import BoardTicketRow from "../../components/projects/board-details/BoardTicketRow";
-import { Board } from "../../models/board-structure";
-import ProjectService from "../../services/ProjectService";
-import { Breadcrumb } from "../../models/breadcrumb";
-import { ROUTES } from "../../routes";
-import { Project } from "../../models/project";
-import HeaderView from "../../components/HeaderView";
-import { Ticket } from "../../models/ticket";
 import { useState } from "react";
-import { ContextMenu } from "../../components/contextmenu/ContextMenu";
-import { ProjectMeta } from "../../models/project-meta";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { ContextMenu } from "../../components/contextmenu/ContextMenu";
+import HeaderView from "../../components/HeaderView";
 import { BoardColumn } from "../../components/projects/board-details/BoardColumn";
+import { Board } from "../../models/board-structure";
+import { Breadcrumb } from "../../models/breadcrumb";
+import { ProjectMeta } from "../../models/project-meta";
+import { Ticket } from "../../models/ticket";
+import { ROUTES } from "../../routes";
+import ProjectService from "../../services/ProjectService";
 
 const projectService = ProjectService.shared;
 
@@ -26,13 +24,12 @@ type Config = {
 export const BoardDetails: React.FC = () => {
   const data = useLoaderData() as {
     board: Board;
-    project: Project;
     metadata: ProjectMeta;
   };
 
   const [board, setBoard] = useState<Board>(data.board);
-  const [project, setProject] = useState<Project>(data.project);
-  const [metadata, setMetaData] = useState<ProjectMeta>(data.metadata);
+  const { metadata } = data;
+  const project = metadata.project;
 
   const [config, setConfig] = useState<Config>({
     top: 0,
@@ -58,7 +55,6 @@ export const BoardDetails: React.FC = () => {
     { title: "Boards", link: ROUTES.BOARDS(project.slug) },
     { title: board.title, link: "" },
   ];
-  document.title = board.title;
 
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
     e.preventDefault();
@@ -94,7 +90,6 @@ export const BoardDetails: React.FC = () => {
     <DndProvider backend={HTML5Backend}>
       {config.show && (
         <ContextMenu
-          project={project}
           metadata={metadata}
           config={config}
           onClose={closeContextMenu}
@@ -139,8 +134,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const projectSlug = params.projectSlug ?? "";
   const boardId = parseInt(params.boardId ?? "0");
-  const project = await projectService.getProject(projectSlug);
   const board = await projectService.getBoard(projectSlug, boardId);
   const metadata = await projectService.getProjectMetadata(projectSlug);
-  return { board, project, metadata };
+  return { board, metadata };
 };

@@ -19,7 +19,6 @@ export const HeaderView: React.FC<{ breadcrumbs: Breadcrumb[] }> = ({
               {item.title}
             </NavLink>
           )}
-          {/* {!item.link && <div className="">{item.title}</div>} */}
           {index < breadcrumbs.length - 1 && <div> {">"} </div>}
         </React.Fragment>
       ))}

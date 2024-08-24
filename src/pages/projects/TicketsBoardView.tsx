@@ -1,7 +1,6 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import { Button } from "../../components/Button";
-import Dialog from "../../components/common/Dialog";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
 import TitleView from "../../components/TitleView";
@@ -11,11 +10,11 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
+import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
-import BoardSection from "./BoardSection";
-import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
-import TicketCreationDialog from "./TicketCreationDialog";
+import BoardSection from "../../components/tickets/BoardSection";
+import TicketCreationDialog from "../../components/tickets/TicketCreationDialog";
 
 const projectService = ProjectService.shared;
 
@@ -30,14 +29,11 @@ const TicketsBoardView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const data = useLoaderData() as {
-    tickets: Ticket[];
-    project: Project;
     boardStructure: BoardStructure;
     metadata: ProjectMeta;
   };
 
-  // const [tickets, setTickets] = useState<Ticket[]>(data.tickets);
-  const [project, setProject] = useState<Project>(data.project);
+  const [project, setProject] = useState<Project>(data.metadata.project);
   const [boardStructure, setBoardStructure] = useState<BoardStructure>(
     data.boardStructure
   );
@@ -49,14 +45,9 @@ const TicketsBoardView: React.FC = () => {
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
     e.preventDefault();
 
-    // find board
-
     let board = boardStructure.activeBoards.find((b) =>
       b.tickets.find((t) => t.id === ticket.id)
     );
-    if (hideDone) {
-      // board = undefined;
-    }
 
     setConfig({
       top: e.pageY,
@@ -92,15 +83,14 @@ const TicketsBoardView: React.FC = () => {
   }
 
   async function toggleHideDone() {
-    await projectService.toggleHideDone(project.slug, !hideDone);
     setHideDone(!hideDone);
+    await projectService.toggleHideDone(project.slug, !hideDone);
   }
 
   function isBoardVisible(boardId: number) {
     return !closedBoardIds.includes("" + boardId);
   }
 
-  // derive boards
   const activeBoards = boardStructure.activeBoards.filter(
     (b) => b.tickets.length > 0
   );
@@ -159,7 +149,6 @@ const TicketsBoardView: React.FC = () => {
             placeholder="Search"
             className="bg-customBlue text-gray-400 rounded-md p-2"
             style={{ boxShadow: "none", outline: "none" }}
-            // value={search}
             onChange={handleSearch}
           />
           <NavLink to={ROUTES.BOARDS(project.slug)}>
@@ -175,7 +164,6 @@ const TicketsBoardView: React.FC = () => {
       <div className="board-structure">
         {config.show && (
           <ContextMenu
-            project={project}
             metadata={data.metadata}
             config={config}
             onClose={closeContextMenu}
@@ -204,9 +192,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const slug = params.projectSlug ?? "";
 
-  const project = await projectService.getProject(slug);
-  // const tickets = await projectService.getTickets(project.slug);
-  const boardStructure = await projectService.getBoardStructure(project.slug);
-  const metadata = await projectService.getProjectMetadata(project.slug);
-  return { project, boardStructure, metadata };
+  const boardStructure = await projectService.getBoardStructure(slug);
+  const metadata = await projectService.getProjectMetadata(slug);
+  return { boardStructure, metadata };
 };

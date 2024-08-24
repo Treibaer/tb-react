@@ -1,5 +1,5 @@
 import { Status } from "../../../models/status";
-import TicketStatus from "../../../pages/projects/TicketStatus";
+import TicketStatus from "../TicketStatus";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";
 

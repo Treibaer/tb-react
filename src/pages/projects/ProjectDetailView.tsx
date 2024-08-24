@@ -6,7 +6,7 @@ import ProjectService from "../../services/ProjectService";
 import HeaderView from "../../components/HeaderView";
 import { Breadcrumb } from "../../models/breadcrumb";
 
-export const ProjectDetails: React.FC = () => {
+export const ProjectDetailView: React.FC = () => {
   const project = useLoaderData() as Project;
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
@@ -45,4 +45,4 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   return await ProjectService.shared.getProject(projectSlug);
 };
 
-export default ProjectDetails;
+export default ProjectDetailView;

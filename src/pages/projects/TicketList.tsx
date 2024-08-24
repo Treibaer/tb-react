@@ -2,20 +2,20 @@ import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
+import TicketCreationDialog from "../../components/tickets/TicketCreationDialog";
 import { TicketRow } from "../../components/tickets/TicketRow";
 import TitleView from "../../components/TitleView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
+import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
-import TicketCreationDialog from "./TicketCreationDialog";
-import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 
 const projectService = ProjectService.shared;
 
-const TicketsList: React.FC = () => {
+const TicketList: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [config, setConfig] = useState<TicketsContextMenuConfig>({
     top: 0,
@@ -26,13 +26,11 @@ const TicketsList: React.FC = () => {
 
   const data = useLoaderData() as {
     tickets: Ticket[];
-    project: Project;
     metadata: ProjectMeta;
   };
 
   const [tickets, setTickets] = useState<Ticket[]>(data.tickets);
-  const [project, setProject] = useState<Project>(data.project);
-  const [metadata, setMetaData] = useState<ProjectMeta>(data.metadata);
+  const [project, setProject] = useState<Project>(data.metadata.project);
 
   function openDialog() {
     setIsCreating(true);
@@ -81,8 +79,7 @@ const TicketsList: React.FC = () => {
     <>
       {config.show && (
         <ContextMenu
-          project={project}
-          metadata={metadata}
+          metadata={data.metadata}
           config={config}
           onClose={closeContextMenu}
         />
@@ -106,15 +103,14 @@ const TicketsList: React.FC = () => {
   );
 };
 
-export default TicketsList;
+export default TicketList;
 
 export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,
 }) => {
   const slug = params.projectSlug ?? "";
 
-  const project = await projectService.getProject(slug);
   const tickets = await projectService.getTickets(slug);
   const metadata = await projectService.getProjectMetadata(slug);
-  return { tickets, project, metadata };
+  return { tickets, metadata };
 };

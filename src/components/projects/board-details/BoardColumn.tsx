@@ -12,7 +12,7 @@ export const BoardColumn: React.FC<{
   update: () => void;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
 }> = ({ state, title, project, tickets, update, onContextMenu }) => {
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: "TICKET",
     drop: async (item: { slug: string }) => {
       await ProjectService.shared.updateTicketStatus(

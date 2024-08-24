@@ -2,13 +2,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import Logout from "./pages/Logout";
-import Boards, { loader as boardsLoader } from "./pages/projects/Boards";
+import Boards, { loader as boardsLoader } from "./pages/projects/BoardList";
 import BoardDetails, {
   loader as boardDetailsLoader,
 } from "./pages/projects/BoardView";
-import ProjectDetails, {
+import ProjectDetailView, {
   loader as projectDetailsLoader,
-} from "./pages/projects/ProjectDetails";
+} from "./pages/projects/ProjectDetailView";
 import Projects, { loader as projectsLoader } from "./pages/projects/Projects";
 import TicketDetailView, {
   loader as ticketDetailsLoader,
@@ -16,9 +16,9 @@ import TicketDetailView, {
 import TicketsBoardView, {
   loader as ticketsLoader,
 } from "./pages/projects/TicketsBoardView";
-import TicketsList, {
+import TicketList, {
   loader as ticketsAllLoader,
-} from "./pages/projects/TicketsList";
+} from "./pages/projects/TicketList";
 import RootLayout from "./pages/RootLayout";
 import Settings from "./pages/Settings";
 
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/projects/:projectSlug/tickets/all",
-        element: <TicketsList />,
+        element: <TicketList />,
         loader: ticketsAllLoader,
       },
       {
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/projects/:projectSlug",
-        element: <ProjectDetails />,
+        element: <ProjectDetailView />,
         loader: projectDetailsLoader,
       },
       {

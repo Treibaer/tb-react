@@ -7,7 +7,7 @@ export const TicketDetailsDropdown: React.FC<{
   style?: React.HTMLAttributes<HTMLDivElement>["style"];
 }> = ({ children, onClose, toggleId, style }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.current &&

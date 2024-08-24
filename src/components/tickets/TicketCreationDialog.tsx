@@ -1,4 +1,4 @@
-import Dialog from "../../components/common/Dialog";
+import Dialog from "../common/Dialog";
 import { Project } from "../../models/project";
 import { useEffect, useRef } from "react";
 import { Ticket } from "../../models/ticket";

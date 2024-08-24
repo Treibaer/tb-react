@@ -35,7 +35,7 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
   return (
     <div
       ref={dropdownRef}
-      className="tb-container active tb-transparent-menu tb-context-menu show absolute right-2 top-12 w-[140px]"
+      className="tb-container active tb-transparent-menu tb-context-menu show absolute right-2 pt-1 top-12 w-[140px]"
     >
       <NavLink className="tb-dropdown-item" to="/settings">
         Settings

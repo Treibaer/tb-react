@@ -9,11 +9,7 @@ export const Logout: React.FC = () => {
     navigate("/");
   }, [navigate]);
 
-  return (
-    <div>
-      <h1>Logged out.</h1>
-    </div>
-  );
+  return <div>Logged out.</div>;
 };
 
 export default Logout;

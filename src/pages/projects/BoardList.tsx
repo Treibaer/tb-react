@@ -1,15 +1,15 @@
 import { useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import Dialog from "../../components/common/Dialog";
+import HeaderView from "../../components/HeaderView";
 import { BoardHeaderView } from "../../components/projects/board-list/BoardHeaderView";
 import { BoardRow } from "../../components/projects/board-list/BoardRow";
 import TitleView from "../../components/TitleView";
 import { Board } from "../../models/board-structure";
-import ProjectService from "../../services/ProjectService";
 import { Breadcrumb } from "../../models/breadcrumb";
-import { ROUTES } from "../../routes";
 import { Project } from "../../models/project";
-import HeaderView from "../../components/HeaderView";
+import { ROUTES } from "../../routes";
+import ProjectService from "../../services/ProjectService";
 
 const projectService = ProjectService.shared;
 
@@ -42,26 +42,23 @@ export const Boards: React.FC = () => {
     { title: project.title, link: ROUTES.PROJECT_DETAILS(project.slug) },
     { title: "Boards", link: "" },
   ];
-  document.title = "Boards";
 
   return (
-    <div>
+    <>
       {isCreating && (
-        <>
-          <Dialog
-            title="Create Board"
-            onClose={() => setIsCreating(false)}
-            onSubmit={handleCreateBoard}
-          >
-            <input
-              type="text"
-              placeholder="Board title"
-              id="dialogTitle"
-              className="tb-textarea"
-              ref={inputRef}
-            />
-          </Dialog>
-        </>
+        <Dialog
+          title="Create Board"
+          onClose={() => setIsCreating(false)}
+          onSubmit={handleCreateBoard}
+        >
+          <input
+            type="text"
+            placeholder="Board title"
+            id="dialogTitle"
+            className="tb-textarea"
+            ref={inputRef}
+          />
+        </Dialog>
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Boards" openDialog={openDialog} />
@@ -71,7 +68,7 @@ export const Boards: React.FC = () => {
           <BoardRow key={board.id} projectSlug={project.slug} board={board} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

@@ -2,12 +2,12 @@ import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import HeaderView from "../../components/HeaderView";
 import ProjectCard from "../../components/projects/ProjectCard";
+import ProjectCreationDialog from "../../components/projects/ProjectCreationDialog";
 import TitleView from "../../components/TitleView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
-import ProjectCreationDialog from "./ProjectCreationDialog";
 
 const projectService = ProjectService.shared;
 
@@ -20,7 +20,6 @@ export default function Projects() {
     { title: "Home", link: ROUTES.HOME },
     { title: "Projects", link: "" },
   ];
-  document.title = "Projects";
 
   function openDialog() {
     setIsCreating(true);

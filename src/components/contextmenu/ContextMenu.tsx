@@ -6,6 +6,7 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
+import { DropdownType } from "../../models/dropdown-type";
 import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
 import { Status } from "../../models/status";
@@ -20,26 +21,15 @@ import TypeDropdown from "../ticket-details/dropdowns/TypeDropdown";
 
 const projectService = ProjectService.shared;
 
-enum DropdownType {
-  STATUS,
-  ASSIGNEE,
-  BOARD,
-  TYPE,
-  POSITION,
-  NONE,
-}
-
 export const ContextMenu: React.FC<{
-  project: Project;
   metadata: ProjectMeta;
   config: TicketsContextMenuConfig;
   onClose: (update: boolean) => void;
-}> = ({ project, metadata, config, onClose }) => {
-  const [shownDropdown, setShownDropdown] = useState<DropdownType>(
-    DropdownType.NONE
-  );
+}> = ({ metadata, config, onClose }) => {
+  const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
 
   const ticket = config.ticket!;
+  const project = metadata.project;
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const handleClickOutside = (event: MouseEvent) => {
@@ -48,7 +38,6 @@ export const ContextMenu: React.FC<{
       !dropdownRef.current.contains(event.target as Node)
     ) {
       onClose(false);
-      console.log("click outside");
     }
   };
 
@@ -105,8 +94,6 @@ export const ContextMenu: React.FC<{
     if (position === null) {
       return;
     }
-    console.log("position", position);
-
     if (position !== ticket.position) {
       await projectService.updatePosition(project.slug, ticket.slug, position);
     }
@@ -115,7 +102,7 @@ export const ContextMenu: React.FC<{
 
   return (
     <div ref={dropdownRef}>
-      {shownDropdown === DropdownType.STATUS && (
+      {dropdown === DropdownType.STATUS && (
         <StatusDropdown
           selectedStatus={ticket.status}
           states={metadata.states}
@@ -123,7 +110,7 @@ export const ContextMenu: React.FC<{
           style={{ left: config.left + 146, top: config.top }}
         />
       )}
-      {shownDropdown === DropdownType.ASSIGNEE && (
+      {dropdown === DropdownType.ASSIGNEE && (
         <AssigneeDropdown
           selectedAssignee={ticket.assignee}
           users={metadata.users}
@@ -131,7 +118,7 @@ export const ContextMenu: React.FC<{
           style={{ left: config.left + 146, top: config.top + 32 }}
         />
       )}
-      {shownDropdown === DropdownType.BOARD && (
+      {dropdown === DropdownType.BOARD && (
         <BoardDropdown
           selectedBoardId={ticket.board?.id ?? 0}
           boards={metadata.boards}
@@ -139,7 +126,7 @@ export const ContextMenu: React.FC<{
           style={{ left: config.left + 146, top: config.top + 64 }}
         />
       )}
-      {shownDropdown === DropdownType.TYPE && (
+      {dropdown === DropdownType.TYPE && (
         <TypeDropdown
           selectedType={ticket.type}
           types={metadata.types}
@@ -147,7 +134,7 @@ export const ContextMenu: React.FC<{
           style={{ left: config.left + 146, top: config.top + 96 }}
         />
       )}
-      {config.board && shownDropdown === DropdownType.POSITION && (
+      {config.board && dropdown === DropdownType.POSITION && (
         <PositionDropdown
           position={ticket.position}
           tickets={config.board.tickets}
@@ -161,7 +148,7 @@ export const ContextMenu: React.FC<{
       >
         <DropdownElement
           isSelected={false}
-          onMouseOver={() => setShownDropdown(DropdownType.STATUS)}
+          onMouseOver={() => setDropdown(DropdownType.STATUS)}
         >
           <div className="flex gap-1">
             <div className="">
@@ -175,7 +162,7 @@ export const ContextMenu: React.FC<{
         </DropdownElement>
         <DropdownElement
           isSelected={false}
-          onMouseOver={() => setShownDropdown(DropdownType.ASSIGNEE)}
+          onMouseOver={() => setDropdown(DropdownType.ASSIGNEE)}
         >
           <div className="flex gap-1">
             <div className="">
@@ -189,7 +176,7 @@ export const ContextMenu: React.FC<{
         </DropdownElement>
         <DropdownElement
           isSelected={false}
-          onMouseOver={() => setShownDropdown(DropdownType.BOARD)}
+          onMouseOver={() => setDropdown(DropdownType.BOARD)}
         >
           <div className="flex gap-1">
             <div className="">
@@ -203,7 +190,7 @@ export const ContextMenu: React.FC<{
         </DropdownElement>
         <DropdownElement
           isSelected={false}
-          onMouseOver={() => setShownDropdown(DropdownType.TYPE)}
+          onMouseOver={() => setDropdown(DropdownType.TYPE)}
         >
           <div className="flex gap-1">
             <div className="">
@@ -218,7 +205,7 @@ export const ContextMenu: React.FC<{
         {config.board && (
           <DropdownElement
             isSelected={false}
-            onMouseOver={() => setShownDropdown(DropdownType.POSITION)}
+            onMouseOver={() => setDropdown(DropdownType.POSITION)}
           >
             <div className="flex gap-1">
               <div className="">

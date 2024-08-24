@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { Button } from "../../components/Button";
-import { TicketRow } from "../../components/tickets/TicketRow";
+import { Button } from "../Button";
+import { TicketRow } from "./TicketRow";
 import { Board } from "../../models/board-structure";
 import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
@@ -23,7 +23,6 @@ export const BoardSection: React.FC<{
   toggleBoard,
   onContextMenu,
 }) => {
-  
   return (
     <div key={board.id} className="">
       <div className="flex first-letter:flex gap-3 px-4 h-11 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)]">
