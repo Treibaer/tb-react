@@ -10,7 +10,7 @@ export const HeaderView: React.FC<{ breadcrumbs: Breadcrumb[] }> = ({
       {breadcrumbs.map((item, index) => (
         <React.Fragment key={item.link}>
           {item.link && (
-            <NavLink className=" hover:text-[#ccccd7]" to={item.link}>
+            <NavLink className="hover:text-[#ccccd7]" to={item.link}>
               {item.title}
             </NavLink>
           )}

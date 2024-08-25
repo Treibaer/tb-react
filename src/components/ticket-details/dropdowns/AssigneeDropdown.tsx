@@ -1,3 +1,4 @@
+import { StyleProps } from "../../../models/style-props";
 import { User } from "../../../models/user";
 import TicketAssigneeField from "../TicketAssigneeField";
 import DropdownElement from "./DropdownElement";
@@ -7,7 +8,7 @@ export const AssigneeDropdown: React.FC<{
   selectedAssignee: User | null;
   users: User[];
   onClick: (userId: number | null) => void;
-  style?: React.HTMLAttributes<HTMLDivElement>["style"];
+  style?: StyleProps;
 }> = ({ users, onClick, selectedAssignee, style }) => {
   return (
     <TicketDetailsDropdown

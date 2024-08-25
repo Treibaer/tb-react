@@ -13,10 +13,12 @@ export default class TicketService {
   /**
    * Creates a new ticket within a specified project.
    * @param projectSlug - The slug identifier of the project.
-   * @param ticket - The ticket object to create.
+   * @param title - The title of the ticket.
+   * @param description - The description of the ticket.
    * @returns A promise that resolves to the created ticket.
    */
-  async create(projectSlug: string, ticket: Ticket) {
+  async create(projectSlug: string, title: string, description: string) {
+    const ticket = this.createTicketObject(title, description);
     return this.client.post(`/projects/${projectSlug}/tickets`, ticket);
   }
 
@@ -74,5 +76,23 @@ export default class TicketService {
     // const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
     throw new Error("Method not implemented.");
     // return this.client.delete(url);
+  }
+
+  private createTicketObject(title: string, description: string) {
+    return {
+      id: 0,
+      position: 0,
+      ticketId: 0,
+      slug: "",
+      title,
+      description: description,
+      type: "",
+      createdAt: 0,
+      updatedAt: 0,
+      status: "open",
+      board: null,
+      creator: null,
+      assignee: null,
+    };
   }
 }

@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { Board } from "../../../models/board-structure";
 import { FormatType, formatUnixTimestamp } from "../../../utils/dataUtils";
+import { ROUTES } from "../../../routes";
 
 export const BoardRow: React.FC<{ projectSlug: string; board: Board }> = ({
   projectSlug,
@@ -8,7 +9,7 @@ export const BoardRow: React.FC<{ projectSlug: string; board: Board }> = ({
 }) => {
   return (
     <NavLink
-      to={`/projects/${projectSlug}/boards/${board.id}`}
+      to={ROUTES.BOARD_DETAILS(projectSlug, board.id)}
       style={{ display: "flex" }}
       className="flex justify-between items-center gap-4 border-b-gray-700 border-b h-12 px-2 bg:[rgb(25,26,35)] hover:bg-[rgb(28,29,42)]"
     >

@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
-import { Button } from "../Button";
-import { TicketRow } from "./TicketRow";
 import { Board } from "../../models/board-structure";
 import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
+import { Button } from "../Button";
+import { TicketRow } from "./TicketRow";
 
 export const BoardSection: React.FC<{
   board: Board;
@@ -23,6 +23,11 @@ export const BoardSection: React.FC<{
   toggleBoard,
   onContextMenu,
 }) => {
+  const tickets = board.tickets.filter(
+    (t) =>
+      (!hideDone || t.status !== "done") &&
+      t.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div key={board.id} className="">
       <div className="flex gap-3 px-4 h-11 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)] w-full">
@@ -43,26 +48,15 @@ export const BoardSection: React.FC<{
           />
         )}
       </div>
-      <div
-        style={{
-          display: isBoardVisible ? "block" : "none",
-        }}
-      >
-        {board.tickets
-          .filter(
-            (t) =>
-              (!hideDone || t.status !== "done") &&
-              t.title.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .map((ticket: Ticket) => (
-            <TicketRow
-              key={ticket.id}
-              project={project}
-              ticket={ticket}
-              onContextMenu={onContextMenu}
-            />
-          ))}
-      </div>
+      {isBoardVisible &&
+        tickets.map((ticket: Ticket) => (
+          <TicketRow
+            key={ticket.id}
+            project={project}
+            ticket={ticket}
+            onContextMenu={onContextMenu}
+          />
+        ))}
     </div>
   );
 };

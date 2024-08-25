@@ -38,8 +38,8 @@ const TicketList: React.FC = () => {
     setIsCreating(true);
   }
 
-  async function onClose(update: boolean) {
-    if (update) {
+  async function onClose(shouldUpdate: boolean) {
+    if (shouldUpdate) {
       const tickets = await ticketService.getAll(project.slug);
       const updatedProject = await projectService.get(project.slug);
       setTickets(tickets);
@@ -58,13 +58,13 @@ const TicketList: React.FC = () => {
     });
   }
 
-  async function closeContextMenu(update: boolean) {
+  async function closeContextMenu(shouldUpdate: boolean) {
     setConfig({
       ...config,
       show: false,
       ticket: null,
     });
-    if (update) {
+    if (shouldUpdate) {
       const tickets = await ticketService.getAll(project.slug);
       setTickets(tickets);
     }

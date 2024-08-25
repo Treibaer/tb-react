@@ -8,6 +8,7 @@ export const ROUTES = {
   TICKETS_LIST: (projectSlug: string) => `/projects/${projectSlug}/tickets/all`,
   TICKETS_BOARD_VIEW: (projectSlug: string) => `/projects/${projectSlug}/tickets`,
   PROJECT_DETAILS: (projectSlug: string) => `/projects/${projectSlug}`,
+  BOARD_STRUCTURE: (projectSlug: string) => `/projects/${projectSlug}/tickets-board-structure`,
 
 
   DASHBOARD: '/dashboard',

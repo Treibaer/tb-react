@@ -3,9 +3,10 @@ import {
   EllipsisHorizontalCircleIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
+import { TicketStatus } from "../../models/ticket-status";
 
 export const TicketStatusView: React.FC<{
-  status: "done" | "inProgress" | "open";
+  status: TicketStatus;
 }> = ({ status }) => {
   return (
     <div className="flex gap-1 items-center capitalize">
@@ -20,7 +21,6 @@ export const TicketStatusView: React.FC<{
       )}
       {status}
     </div>
-    // <div>{status}</div>
   );
 };
 

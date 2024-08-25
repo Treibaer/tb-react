@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Dialog from "../../components/common/Dialog";
 import { Project } from "../../models/project";
 import ProjectService from "../../services/ProjectService";
+import { ROUTES } from "../../routes";
 
 export const ProjectCreationDialog: React.FC<{
   onClose: () => void;
@@ -11,7 +12,9 @@ export const ProjectCreationDialog: React.FC<{
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const slugRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState("`/projects/TL/tickets/TL-1`");
+  const [previewUrl, setPreviewUrl] = useState(
+    ROUTES.TICKET_DETAILS("TL", "TL-1")
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -48,7 +51,7 @@ export const ProjectCreationDialog: React.FC<{
       slug = "TL";
     }
     slug = slug.toUpperCase().substring(0, 2);
-    setPreviewUrl(`/projects/${slug}/tickets/${slug}-1`);
+    setPreviewUrl(ROUTES.TICKET_DETAILS(slug, `${slug}-1`));
   }
 
   return (

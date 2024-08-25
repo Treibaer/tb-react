@@ -60,16 +60,14 @@ const TicketsBoardView: React.FC = () => {
     });
   }
 
-  async function closeContextMenu(update: boolean) {
+  async function closeContextMenu(shouldUpdate: boolean) {
     setConfig({
       ...config,
       show: false,
       ticket: null,
     });
-    if (update) {
-      const boardStructure = await boardService.getBoardStructure(
-        project.slug
-      );
+    if (shouldUpdate) {
+      const boardStructure = await boardService.getBoardStructure(project.slug);
       setBoardStructure(boardStructure);
     }
   }
@@ -119,11 +117,9 @@ const TicketsBoardView: React.FC = () => {
     setIsCreating(true);
   }
 
-  async function onClose(update: boolean) {
-    if (update) {
-      const boardStructure = await boardService.getBoardStructure(
-        project.slug
-      );
+  async function onClose(shouldUpdate: boolean) {
+    if (shouldUpdate) {
+      const boardStructure = await boardService.getBoardStructure(project.slug);
       const updatedProject = await projectService.get(project.slug);
       setBoardStructure(boardStructure);
       setProject(updatedProject);
@@ -173,6 +169,7 @@ const TicketsBoardView: React.FC = () => {
         )}
         {activeBoards.map((board: Board) => (
           <BoardSection
+            key={board.id}
             board={board}
             isBoardVisible={isBoardVisible(board.id)}
             onContextMenu={onContextMenu}

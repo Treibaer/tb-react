@@ -86,7 +86,7 @@ export const TicketDetailsSidebar: React.FC<{
             {dropdown === DropdownType.STATUS && (
               <StatusDropdown
                 selectedStatus={ticket.status}
-                states={metadata?.states ?? []}
+                states={metadata.states}
                 onClick={updateStatus}
                 style={{ left: 80, top: 34 }}
               />
@@ -107,7 +107,7 @@ export const TicketDetailsSidebar: React.FC<{
           {dropdown === DropdownType.ASSIGNEE && (
             <AssigneeDropdown
               selectedAssignee={ticket.assignee}
-              users={metadata?.users ?? []}
+              users={metadata.users}
               onClick={updateAssignee}
               style={{ left: 80, top: 34 }}
             />
@@ -125,7 +125,7 @@ export const TicketDetailsSidebar: React.FC<{
           {dropdown === DropdownType.BOARD && (
             <BoardDropdown
               selectedBoardId={ticket.board?.id ?? 0}
-              boards={metadata?.boards ?? []}
+              boards={metadata.boards}
               onClose={updateBoard}
               style={{ left: 0, top: 34 }}
             />
@@ -144,7 +144,7 @@ export const TicketDetailsSidebar: React.FC<{
           {dropdown === DropdownType.TYPE && (
             <TypeDropdown
               selectedType={ticket.type}
-              types={metadata?.types ?? []}
+              types={metadata.types}
               onClose={updateType}
               style={{ left: 80, top: 34 }}
             />

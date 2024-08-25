@@ -1,8 +1,7 @@
-import Dialog from "../common/Dialog";
-import { Project } from "../../models/project";
 import { useEffect, useRef } from "react";
-import { Ticket } from "../../models/ticket";
+import { Project } from "../../models/project";
 import TicketService from "../../services/TicketService";
+import Dialog from "../common/Dialog";
 
 const ticketService = TicketService.shared;
 
@@ -24,22 +23,7 @@ export const TicketCreationDialog: React.FC<{
     if (!title) {
       return;
     }
-    const newTicket: Ticket = {
-      id: 0,
-      position: 0,
-      ticketId: 0,
-      slug: "",
-      title,
-      description: descriptionRef.current?.value ?? "",
-      type: "",
-      createdAt: 0,
-      updatedAt: 0,
-      status: "open",
-      board: null,
-      creator: null,
-      assignee: null,
-    };
-    await ticketService.create(project.slug, newTicket);
+    await ticketService.create(project.slug, title, descriptionRef.current?.value ?? "");
     onClose(true);
   }
 
