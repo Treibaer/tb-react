@@ -11,8 +11,10 @@ import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
+import { BoardService } from "../../services/BoardService";
 
 const projectService = ProjectService.shared;
+const boardService = BoardService.shared;
 
 type Config = {
   top: number;
@@ -67,7 +69,7 @@ export const BoardDetails: React.FC = () => {
   }
 
   async function updateBoard() {
-    const updatedBoard = await projectService.getBoard(project.slug, board.id);
+    const updatedBoard = await boardService.get(project.slug, board.id);
     setBoard(updatedBoard);
   }
 
@@ -78,11 +80,7 @@ export const BoardDetails: React.FC = () => {
       ticket: null,
     });
     if (update) {
-      const updatedBoard = await projectService.getBoard(
-        project.slug,
-        board.id
-      );
-      setBoard(updatedBoard);
+      await updateBoard();
     }
   }
 
@@ -99,7 +97,7 @@ export const BoardDetails: React.FC = () => {
       <div className="text-2xl p-2">{board.title}</div>
       <div className="flex mx-2 mt-2 gap-2">
         <BoardColumn
-          state="open"
+          status="open"
           title="Open"
           project={project}
           tickets={openTickets}
@@ -107,7 +105,7 @@ export const BoardDetails: React.FC = () => {
           onContextMenu={onContextMenu}
         />
         <BoardColumn
-          state="inProgress"
+          status="inProgress"
           title="In Progress"
           project={project}
           tickets={inProgressTickets}
@@ -115,7 +113,7 @@ export const BoardDetails: React.FC = () => {
           onContextMenu={onContextMenu}
         />
         <BoardColumn
-          state="done"
+          status="done"
           title="Done"
           project={project}
           tickets={doneTickets}
@@ -134,7 +132,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const projectSlug = params.projectSlug ?? "";
   const boardId = parseInt(params.boardId ?? "0");
-  const board = await projectService.getBoard(projectSlug, boardId);
-  const metadata = await projectService.getProjectMetadata(projectSlug);
+  const board = await boardService.get(projectSlug, boardId);
+  const metadata = await projectService.getMetadata(projectSlug);
   return { board, metadata };
 };

@@ -1,25 +1,24 @@
 import { useDrop } from "react-dnd";
-import BoardTicketRow from "./BoardTicketRow";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
-import ProjectService from "../../../services/ProjectService";
+import { TicketStatus } from "../../../models/ticket-status";
+import TicketService from "../../../services/TicketService";
+import BoardTicketRow from "./BoardTicketRow";
 
 export const BoardColumn: React.FC<{
-  state: string;
+  status: TicketStatus;
   title: string;
   project: Project;
   tickets: Ticket[];
   update: () => void;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
-}> = ({ state, title, project, tickets, update, onContextMenu }) => {
+}> = ({ status, title, project, tickets, update, onContextMenu }) => {
   const [{ isOver }, drop] = useDrop({
     accept: "TICKET",
     drop: async (item: { slug: string }) => {
-      await ProjectService.shared.updateTicketStatus(
-        project.slug,
-        item.slug,
-        state
-      );
+      await TicketService.shared.update(project.slug, item.slug, {
+        status,
+      });
       await update();
     },
     collect: (monitor) => ({

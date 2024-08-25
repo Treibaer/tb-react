@@ -28,7 +28,7 @@ export default function Projects() {
   async function onClose() {
     setIsCreating(false);
     // refresh projects always
-    setProjects(await projectService.getProjects());
+    setProjects(await projectService.getAll());
   }
 
   return (
@@ -46,5 +46,5 @@ export default function Projects() {
 }
 
 export const loader: LoaderFunction = async () => {
-  return await projectService.getProjects();
+  return await projectService.getAll();
 };

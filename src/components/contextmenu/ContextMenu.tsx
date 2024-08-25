@@ -7,11 +7,10 @@ import {
 } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 import { DropdownType } from "../../models/dropdown-type";
-import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
-import { Status } from "../../models/status";
+import { TicketStatus } from "../../models/ticket-status";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
-import ProjectService from "../../services/ProjectService";
+import TicketService from "../../services/TicketService";
 import AssigneeDropdown from "../ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../ticket-details/dropdowns/BoardDropdown";
 import DropdownElement from "../ticket-details/dropdowns/DropdownElement";
@@ -19,7 +18,7 @@ import PositionDropdown from "../ticket-details/dropdowns/PositionDropdown";
 import StatusDropdown from "../ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../ticket-details/dropdowns/TypeDropdown";
 
-const projectService = ProjectService.shared;
+const ticketService = TicketService.shared;
 
 export const ContextMenu: React.FC<{
   metadata: ProjectMeta;
@@ -48,25 +47,23 @@ export const ContextMenu: React.FC<{
     };
   });
 
-  async function onAssigneeChange(userId: number | null) {
-    if (userId === null) {
+  async function onAssigneeChange(assigneeId: number | null) {
+    if (assigneeId === null) {
       return;
     }
-    if (userId !== ticket.assignee?.id) {
-      await projectService.updateAssignee(project.slug, ticket.slug, userId);
+    if (assigneeId !== ticket.assignee?.id) {
+      await ticketService.update(project.slug, ticket.slug, {
+        assigneeId,
+      });
     }
-    onClose(userId !== ticket.assignee?.id);
+    onClose(assigneeId !== ticket.assignee?.id);
   }
-  async function onStatusChange(status: Status | null) {
+  async function onStatusChange(status: TicketStatus | null) {
     if (status === null) {
       return;
     }
     if (status !== ticket.status) {
-      await projectService.updateTicketStatus(
-        project.slug,
-        ticket.slug,
-        status
-      );
+      await ticketService.update(project.slug, ticket.slug, { status });
     }
     onClose(status !== ticket.status);
   }
@@ -75,7 +72,7 @@ export const ContextMenu: React.FC<{
       return;
     }
     if (boardId !== ticket.board?.id) {
-      await projectService.updateBoard(project.slug, ticket.slug, boardId);
+      await ticketService.update(project.slug, ticket.slug, { boardId });
     }
     onClose(boardId !== ticket.board?.id);
   }
@@ -85,7 +82,7 @@ export const ContextMenu: React.FC<{
       return;
     }
     if (type !== ticket.type) {
-      await projectService.updateType(project.slug, ticket.slug, type);
+      await ticketService.update(project.slug, ticket.slug, { type });
     }
     onClose(type !== ticket.type);
   }
@@ -95,7 +92,9 @@ export const ContextMenu: React.FC<{
       return;
     }
     if (position !== ticket.position) {
-      await projectService.updatePosition(project.slug, ticket.slug, position);
+      await ticketService.update(project.slug, ticket.slug, {
+        position,
+      });
     }
     onClose(position !== ticket.position);
   }

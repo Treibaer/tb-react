@@ -1,20 +1,19 @@
 import { useState } from "react";
+import { DropdownType } from "../../models/dropdown-type";
+import { ProjectMeta } from "../../models/project-meta";
+import { Ticket } from "../../models/ticket";
+import { TicketStatus } from "../../models/ticket-status";
+import TicketService from "../../services/TicketService";
+import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 import TicketAssigneeField from "./TicketAssigneeField";
-import TicketStatus from "./TicketStatus";
+import TicketDetailsRow from "./TicketDetailsRow";
+import TicketStatusView from "./TicketStatusView";
 import AssigneeDropdown from "./dropdowns/AssigneeDropdown";
 import BoardDropdown from "./dropdowns/BoardDropdown";
 import StatusDropdown from "./dropdowns/StatusDropdown";
 import TypeDropdown from "./dropdowns/TypeDropdown";
-import { DropdownType } from "../../models/dropdown-type";
-import { Project } from "../../models/project";
-import { ProjectMeta } from "../../models/project-meta";
-import { Status } from "../../models/status";
-import { Ticket } from "../../models/ticket";
-import ProjectService from "../../services/ProjectService";
-import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
-import TicketDetailsRow from "./TicketDetailsRow";
 
-const projectService = ProjectService.shared;
+const ticketService = TicketService.shared;
 
 export const TicketDetailsSidebar: React.FC<{
   metadata: ProjectMeta;
@@ -24,28 +23,28 @@ export const TicketDetailsSidebar: React.FC<{
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
   const project = metadata.project;
 
-  async function updateStatus(status: Status | null) {
+  async function updateStatus(status: TicketStatus | null) {
     setDropdown(DropdownType.NONE);
     if (status === null || ticket.status === status) {
       return;
     }
-    const updatedTicket = await projectService.updateTicketStatus(
+    const updatedTicket = await ticketService.update(
       project.slug,
       ticket.slug,
-      status
+      { status }
     );
     update(updatedTicket);
   }
 
-  async function updateAssignee(userId: number | null) {
+  async function updateAssignee(assigneeId: number | null) {
     setDropdown(DropdownType.NONE);
-    if (userId === null) {
+    if (assigneeId === null) {
       return;
     }
-    const updatedTicket = await projectService.updateAssignee(
+    const updatedTicket = await ticketService.update(
       project.slug,
       ticket.slug,
-      userId
+      { assigneeId }
     );
     update(updatedTicket);
   }
@@ -55,10 +54,10 @@ export const TicketDetailsSidebar: React.FC<{
     if (type === null) {
       return;
     }
-    const updatedTicket = await projectService.updateType(
+    const updatedTicket = await ticketService.update(
       project.slug,
       ticket.slug,
-      type
+      { type }
     );
     update(updatedTicket);
   }
@@ -68,10 +67,10 @@ export const TicketDetailsSidebar: React.FC<{
     if (boardId === null) {
       return;
     }
-    const updatedTicket = await projectService.updateBoard(
+    const updatedTicket = await ticketService.update(
       project.slug,
       ticket.slug,
-      boardId
+      { boardId }
     );
     update(updatedTicket);
   }
@@ -101,7 +100,7 @@ export const TicketDetailsSidebar: React.FC<{
             className="select2-dropdown"
             onClick={() => setDropdown(DropdownType.STATUS)}
           >
-            <TicketStatus status={ticket.status} />
+            <TicketStatusView status={ticket.status} />
           </div>
         </div>
         <div className="flex items-center relative">

@@ -25,9 +25,12 @@ export const BoardSection: React.FC<{
 }) => {
   return (
     <div key={board.id} className="">
-      <div className="flex first-letter:flex gap-3 px-4 h-11 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)]">
-        <NavLink to={ROUTES.BOARD_DETAILS(project.slug, board.id)}>
-          <div className="text-base">{board.title}</div>
+      <div className="flex gap-3 px-4 h-11 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)] w-full">
+        <NavLink
+          to={ROUTES.BOARD_DETAILS(project.slug, board.id)}
+          className="text-base overflow-x-hidden whitespace-nowrap"
+        >
+          <div>{board.title}</div>
         </NavLink>
         <div className="text-gray-400">
           {board.tickets.filter((e) => e.status === "done").length}/

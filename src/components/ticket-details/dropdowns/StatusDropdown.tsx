@@ -1,12 +1,12 @@
-import { Status } from "../../../models/status";
-import TicketStatus from "../TicketStatus";
+import { TicketStatus } from "../../../models/ticket-status";
+import TicketStatusView from "../TicketStatusView";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";
 
 export const StatusDropdown: React.FC<{
-  selectedStatus: Status;
-  states: Status[];
-  onClick: (status: Status | null) => void;
+  selectedStatus: TicketStatus;
+  states: TicketStatus[];
+  onClick: (status: TicketStatus | null) => void;
   style?: React.HTMLAttributes<HTMLDivElement>["style"];
 }> = ({ selectedStatus, states, onClick, style }) => {
   return (
@@ -21,7 +21,7 @@ export const StatusDropdown: React.FC<{
           isSelected={selectedStatus === state}
           onClick={onClick.bind(this, state)}
         >
-          <TicketStatus status={state} />
+          <TicketStatusView status={state} />
         </DropdownElement>
       ))}
     </TicketDetailsDropdown>

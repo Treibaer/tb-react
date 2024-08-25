@@ -12,17 +12,14 @@ export const RootLayout: React.FC = () => {
     <>
       {state === "loading" && <DelayedLoadingSpinner />}
       {isLoggedIn && (
-        <>
-          <main className="flex">
-            <div className="w-[250px] fixed ">
-              <MainNavigation />
-            </div>
-            <div className="w-[250px] bg-slate-700 px-2 pt-4"></div>
-            <div className="w-[calc(100%-250px)]">
-              <Outlet />
-            </div>
-          </main>
-        </>
+        <main className="flex">
+          <div className="hidden md:block w-[250px]">
+            <MainNavigation />
+          </div>
+          <div className="w-full md:w-[calc(100%-250px)] max-h-screen overflow-scroll">
+            <Outlet />
+          </div>
+        </main>
       )}
       {!isLoggedIn && !checkingLogin && (
         <LoginView setIsLoggedIn={setIsLoggedIn} />

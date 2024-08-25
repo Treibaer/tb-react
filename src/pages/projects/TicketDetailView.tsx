@@ -1,5 +1,5 @@
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
@@ -12,8 +12,10 @@ import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
+import TicketService from "../../services/TicketService";
 
 const projectService = ProjectService.shared;
+const ticketService = TicketService.shared;
 
 export default function TicketDetailView() {
   const data = useLoaderData() as {
@@ -36,10 +38,11 @@ export default function TicketDetailView() {
 
   async function toggleEdit() {
     if (isEditing) {
-      const updatedTicket = await projectService.updateDescription(
+      const description = currentDescription.current;
+      const updatedTicket = await ticketService.update(
         project.slug,
         ticket.slug,
-        currentDescription.current
+        { description }
       );
       setTicket(updatedTicket);
     }
@@ -105,8 +108,8 @@ export const loader: LoaderFunction<{
   const projectSlug = params.projectSlug ?? "";
   const ticketSlug = params.ticketSlug ?? "";
 
-  const metadata = await projectService.getProjectMetadata(projectSlug);
-  const ticket = await projectService.getTicket(projectSlug, ticketSlug);
+  const metadata = await projectService.getMetadata(projectSlug);
+  const ticket = await ticketService.get(projectSlug, ticketSlug);
 
   return { metadata, ticket };
 };

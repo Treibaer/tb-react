@@ -2,9 +2,9 @@ import Dialog from "../common/Dialog";
 import { Project } from "../../models/project";
 import { useEffect, useRef } from "react";
 import { Ticket } from "../../models/ticket";
-import ProjectService from "../../services/ProjectService";
+import TicketService from "../../services/TicketService";
 
-const projectService = ProjectService.shared;
+const ticketService = TicketService.shared;
 
 export const TicketCreationDialog: React.FC<{
   project: Project;
@@ -39,7 +39,7 @@ export const TicketCreationDialog: React.FC<{
       creator: null,
       assignee: null,
     };
-    await projectService.createTicket(project.slug, newTicket);
+    await ticketService.create(project.slug, newTicket);
     onClose(true);
   }
 

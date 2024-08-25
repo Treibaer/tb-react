@@ -10,8 +10,10 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
+import { BoardService } from "../../services/BoardService";
 
 const projectService = ProjectService.shared;
+const boardService = BoardService.shared;
 
 export const Boards: React.FC = () => {
   const { boards, project } = useLoaderData() as {
@@ -78,8 +80,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,
 }) => {
   const projectSlug = params.projectSlug ?? "";
-
-  const project = await projectService.getProject(projectSlug);
-  const boards = await projectService.getBoards(projectSlug);
+  const project = await projectService.get(projectSlug);
+  const boards = await boardService.getAll(projectSlug);
   return { boards, project };
 };

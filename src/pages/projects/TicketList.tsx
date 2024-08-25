@@ -12,10 +12,17 @@ import { Ticket } from "../../models/ticket";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
+import TicketService from "../../services/TicketService";
 
 const projectService = ProjectService.shared;
+const ticketService = TicketService.shared;
 
 const TicketList: React.FC = () => {
+  const data = useLoaderData() as {
+    tickets: Ticket[];
+    metadata: ProjectMeta;
+  };
+
   const [isCreating, setIsCreating] = useState(false);
   const [config, setConfig] = useState<TicketsContextMenuConfig>({
     top: 0,
@@ -23,11 +30,6 @@ const TicketList: React.FC = () => {
     show: false,
     ticket: null,
   });
-
-  const data = useLoaderData() as {
-    tickets: Ticket[];
-    metadata: ProjectMeta;
-  };
 
   const [tickets, setTickets] = useState<Ticket[]>(data.tickets);
   const [project, setProject] = useState<Project>(data.metadata.project);
@@ -38,8 +40,8 @@ const TicketList: React.FC = () => {
 
   async function onClose(update: boolean) {
     if (update) {
-      const tickets = await projectService.getTickets(project.slug);
-      const updatedProject = await projectService.getProject(project.slug);
+      const tickets = await ticketService.getAll(project.slug);
+      const updatedProject = await projectService.get(project.slug);
       setTickets(tickets);
       setProject(updatedProject);
     }
@@ -63,7 +65,7 @@ const TicketList: React.FC = () => {
       ticket: null,
     });
     if (update) {
-      const tickets = await projectService.getTickets(project.slug);
+      const tickets = await ticketService.getAll(project.slug);
       setTickets(tickets);
     }
   }
@@ -110,7 +112,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const slug = params.projectSlug ?? "";
 
-  const tickets = await projectService.getTickets(slug);
-  const metadata = await projectService.getProjectMetadata(slug);
+  const tickets = await ticketService.getAll(slug);
+  const metadata = await projectService.getMetadata(slug);
   return { tickets, metadata };
 };

@@ -3,6 +3,8 @@ import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
+import BoardSection from "../../components/tickets/BoardSection";
+import TicketCreationDialog from "../../components/tickets/TicketCreationDialog";
 import TitleView from "../../components/TitleView";
 import { Toggle } from "../../components/Toggle";
 import { Board, BoardStructure } from "../../models/board-structure";
@@ -13,10 +15,10 @@ import { Ticket } from "../../models/ticket";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
-import BoardSection from "../../components/tickets/BoardSection";
-import TicketCreationDialog from "../../components/tickets/TicketCreationDialog";
+import { BoardService } from "../../services/BoardService";
 
 const projectService = ProjectService.shared;
+const boardService = BoardService.shared;
 
 const TicketsBoardView: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -65,7 +67,7 @@ const TicketsBoardView: React.FC = () => {
       ticket: null,
     });
     if (update) {
-      const boardStructure = await projectService.getBoardStructure(
+      const boardStructure = await boardService.getBoardStructure(
         project.slug
       );
       setBoardStructure(boardStructure);
@@ -75,16 +77,16 @@ const TicketsBoardView: React.FC = () => {
   async function toggleBoard(boardId: number) {
     if (closedBoardIds.includes("" + boardId)) {
       setClosedBoardIds(closedBoardIds.filter((id) => id !== "" + boardId));
-      await projectService.openBoard(project.slug, boardId);
+      await boardService.open(project.slug, boardId);
     } else {
       setClosedBoardIds([...closedBoardIds, "" + boardId]);
-      await projectService.closeBoard(project.slug, boardId);
+      await boardService.close(project.slug, boardId);
     }
   }
 
   async function toggleHideDone() {
     setHideDone(!hideDone);
-    await projectService.toggleHideDone(project.slug, !hideDone);
+    await boardService.toggleHideDone(project.slug, !hideDone);
   }
 
   function isBoardVisible(boardId: number) {
@@ -119,10 +121,10 @@ const TicketsBoardView: React.FC = () => {
 
   async function onClose(update: boolean) {
     if (update) {
-      const boardStructure = await projectService.getBoardStructure(
+      const boardStructure = await boardService.getBoardStructure(
         project.slug
       );
-      const updatedProject = await projectService.getProject(project.slug);
+      const updatedProject = await projectService.get(project.slug);
       setBoardStructure(boardStructure);
       setProject(updatedProject);
     }
@@ -192,7 +194,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const slug = params.projectSlug ?? "";
 
-  const boardStructure = await projectService.getBoardStructure(slug);
-  const metadata = await projectService.getProjectMetadata(slug);
+  const boardStructure = await boardService.getBoardStructure(slug);
+  const metadata = await projectService.getMetadata(slug);
   return { boardStructure, metadata };
 };

@@ -4,7 +4,7 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 
-export const TicketStatus: React.FC<{
+export const TicketStatusView: React.FC<{
   status: "done" | "inProgress" | "open";
 }> = ({ status }) => {
   return (
@@ -24,4 +24,4 @@ export const TicketStatus: React.FC<{
   );
 };
 
-export default TicketStatus;
+export default TicketStatusView;

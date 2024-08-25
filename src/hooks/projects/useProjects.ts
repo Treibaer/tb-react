@@ -16,7 +16,7 @@ export function useProjects() {
       description: "",
       title,
     };
-    await projectService.createProject(newProject);
+    await projectService.create(newProject);
     setIsCreating(false);
   }
 

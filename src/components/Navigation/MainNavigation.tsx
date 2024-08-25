@@ -1,12 +1,11 @@
 import { useParams } from "react-router-dom";
 import { ROUTES } from "../../routes";
-// import classes from "./MainNavigation.module.css";
 import {
   ChartBarIcon,
   ChartPieIcon,
   HomeIcon,
   TagIcon,
-  TicketIcon
+  TicketIcon,
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import NavigationLink from "./NavigationLink";
