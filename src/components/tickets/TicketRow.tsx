@@ -15,11 +15,11 @@ interface TicketRowProps {
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
 }
 
-export const TicketRow: React.FC<TicketRowProps> = ({
+export default function TicketRow({
   project,
   ticket,
   onContextMenu,
-}) => {
+}: TicketRowProps) {
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     onContextMenu(e, ticket);
@@ -51,4 +51,4 @@ export const TicketRow: React.FC<TicketRowProps> = ({
       </div>
     </NavLink>
   );
-};
+}

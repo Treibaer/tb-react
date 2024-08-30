@@ -1,5 +1,5 @@
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
-import { Button } from "../../components/Button";
+import Button from "../../components/Button";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";

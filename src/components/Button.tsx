@@ -3,7 +3,7 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-export const Button: React.FC<ButtonProps> = ({ title, onClick }) => {
+export default function Button({ title, onClick }: ButtonProps) {
   return (
     <button
       className="bg-customBlue px-3 rounded-custom-tb h-7 border-solid border border-slate-700 hover:bg-slate-700"
@@ -12,4 +12,7 @@ export const Button: React.FC<ButtonProps> = ({ title, onClick }) => {
       {title}
     </button>
   );
-};
+}
+
+// export const Button: React.FC<ButtonProps> = ({ title, onClick }) => {
+// };

@@ -1,4 +1,4 @@
-import Constants from "./Constants";
+import Constants from "./Constants.js";
 
 /**
  * Service class for making HTTP requests to the backend API.
@@ -6,6 +6,7 @@ import Constants from "./Constants";
  */
 export default class Client {
   static shared = new Client();
+  static token = "";
   private api = `${Constants.backendUrl}/api/v3`;
 
   /**
@@ -71,7 +72,7 @@ export default class Client {
    * @returns The authentication token string.
    */
   private getAuthToken() {
-    return localStorage.getItem("token");
+    return Client.token;
   }
 
   /**
@@ -81,12 +82,12 @@ export default class Client {
    * @returns A promise that resolves to the response data.
    */
   private async request<T>(url: string, options: RequestInit): Promise<T> {
-    const response = await fetch((this.api) + url, {
+    const response = await fetch(this.api + url, {
       ...options,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${this.getAuthToken()}`,
+        Authorization: `${this.getAuthToken()}`,
         ...options.headers,
       },
     });

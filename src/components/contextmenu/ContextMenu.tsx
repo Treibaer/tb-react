@@ -221,3 +221,5 @@ export const ContextMenu: React.FC<{
     </div>
   );
 };
+
+export default ContextMenu;

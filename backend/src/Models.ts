@@ -5,6 +5,10 @@ export interface Project {
   description: string;
 }
 
+export interface Board {}
+
+export interface BoardStructure {}
+
 export interface Ticket {
   id: number;
   projectId: number;

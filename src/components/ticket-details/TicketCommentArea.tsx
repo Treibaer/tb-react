@@ -1,5 +1,5 @@
 import { Ticket } from "../../models/ticket";
-import { Button } from "../Button";
+import Button from "../Button";
 
 export const TicketCommentArea: React.FC<{ ticket: Ticket }> = ({ ticket }) => {
   return (

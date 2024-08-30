@@ -1,4 +1,3 @@
-import { StyleProps } from "../../../models/style-props";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";
 
@@ -6,7 +5,7 @@ export const TypeDropdown: React.FC<{
   selectedType: string;
   types: string[];
   onClose: (status: string | null) => void;
-  style?: StyleProps;
+  style?: React.CSSProperties;
 }> = ({ types, onClose, selectedType, style }) => {
   async function onChange(type: string) {
     onClose(type);

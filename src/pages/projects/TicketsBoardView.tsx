@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
-import { Button } from "../../components/Button";
-import { ContextMenu } from "../../components/contextmenu/ContextMenu";
+import Button from "../../components/Button";
+import ContextMenu from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
 import BoardSection from "../../components/tickets/BoardSection";
 import TicketCreationDialog from "../../components/tickets/TicketCreationDialog";

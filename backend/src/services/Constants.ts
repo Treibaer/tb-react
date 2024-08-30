@@ -7,9 +7,8 @@ const prod: Config = {
 };
 
 const dev: Config = {
-  // backendUrl: `https://mac.treibaer.de`,
-  backendUrl: `http://localhost:3052`,
+  backendUrl: `https://mac.treibaer.de`,
   // backendUrl: `https://portfolio.treibaer.de:3063`,
 };
-
-export default process.env.NODE_ENV === `development` ? dev : prod;
+// console.log(process.env);
+export default process.env.NODE_ENV === `development` ? dev : dev;

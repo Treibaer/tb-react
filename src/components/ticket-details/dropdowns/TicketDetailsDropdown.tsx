@@ -1,11 +1,10 @@
 import { useEffect, useRef } from "react";
-import { StyleProps } from "../../../models/style-props";
 
 export const TicketDetailsDropdown: React.FC<{
   children: React.ReactNode;
   onClose: (value: null) => void;
   toggleId: string;
-  style?: StyleProps;
+  style?: React.CSSProperties;
 }> = ({ children, onClose, toggleId, style }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 

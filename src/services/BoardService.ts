@@ -25,8 +25,8 @@ export class BoardService {
    * @returns A promise that resolves to the board details.
    */
   async get(projectSlug: string, boardId: number) {
-    const url = `/projects/${projectSlug}/boards/${boardId}`;
-    return this.client.get<Board>(url);
+    const path = `/projects/${projectSlug}/boards/${boardId}`;
+    return this.client.get<Board>(path);
   }
 
   /**
@@ -35,8 +35,8 @@ export class BoardService {
    * @returns A promise that resolves to the board structure.
    */
   async getBoardStructure(projectSlug: string) {
-    const url = `/projects/${projectSlug}/tickets-board-structure`;
-    return this.client.get<BoardStructure>(url);
+    const path = `/projects/${projectSlug}/tickets-board-structure`;
+    return this.client.get<BoardStructure>(path);
   }
 
 
@@ -47,8 +47,8 @@ export class BoardService {
    * @returns A promise that resolves when the board is successfully opened.
    */
   async open(projectSlug: string, boardId: number) {
-    const url = `/projects/${projectSlug}/boards/${boardId}/open`;
-    return this.client.post(url, {});
+    const path = `/projects/${projectSlug}/boards/${boardId}/open`;
+    return this.client.post(path, {});
   }
 
   /**
@@ -58,8 +58,8 @@ export class BoardService {
    * @returns A promise that resolves when the board is successfully closed.
    */
   async close(projectSlug: string, boardId: number) {
-    const url = `/projects/${projectSlug}/boards/${boardId}/close`;
-    return this.client.post(url, {});
+    const path = `/projects/${projectSlug}/boards/${boardId}/close`;
+    return this.client.post(path, {});
   }
 
   /**
@@ -69,7 +69,7 @@ export class BoardService {
    * @returns A promise that resolves when the setting is successfully updated.
    */
   async toggleHideDone(projectSlug: string, value: boolean) {
-    const url = `/projects/${projectSlug}/settings`;
-    return this.client.post(url, { hideDone: value });
+    const path = `/projects/${projectSlug}/settings`;
+    return this.client.post(path, { hideDone: value });
   }
 }

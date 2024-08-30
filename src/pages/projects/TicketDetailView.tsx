@@ -1,7 +1,7 @@
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
-import { Button } from "../../components/Button";
+import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
 import DescriptionView from "../../components/ticket-details/DescriptionView";

@@ -1,4 +1,3 @@
-import { StyleProps } from "../../../models/style-props";
 import { TicketStatus } from "../../../models/ticket-status";
 import TicketStatusView from "../TicketStatusView";
 import DropdownElement from "./DropdownElement";
@@ -8,7 +7,7 @@ export const StatusDropdown: React.FC<{
   selectedStatus: TicketStatus;
   states: TicketStatus[];
   onClick: (status: TicketStatus | null) => void;
-  style?: StyleProps;
+  style?: React.CSSProperties;
 }> = ({ selectedStatus, states, onClick, style }) => {
   return (
     <TicketDetailsDropdown

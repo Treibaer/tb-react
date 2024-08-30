@@ -3,7 +3,7 @@ import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
 import TicketCreationDialog from "../../components/tickets/TicketCreationDialog";
-import { TicketRow } from "../../components/tickets/TicketRow";
+import TicketRow from "../../components/tickets/TicketRow";
 import TitleView from "../../components/TitleView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";

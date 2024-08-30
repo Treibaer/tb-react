@@ -1,5 +1,4 @@
 import { SmallBoard } from "../../../models/board-structure";
-import { StyleProps } from "../../../models/style-props";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";
 
@@ -7,7 +6,7 @@ export const BoardDropdown: React.FC<{
   selectedBoardId: number;
   boards: SmallBoard[];
   onClose: (boardId: number | null) => void;
-  style?: StyleProps;
+  style?: React.CSSProperties;
 }> = ({ boards, onClose, selectedBoardId, style }) => {
   async function onChange(boardId: number) {
     onClose(boardId);
