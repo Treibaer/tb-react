@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { Board } from "../../models/board-structure";
-import { Project } from "../../models/project";
-import { Ticket } from "../../models/ticket";
-import { ROUTES } from "../../routes";
-import Button from "../Button";
+import { Board } from "../../../models/board-structure";
+import { Project } from "../../../models/project";
+import { Ticket } from "../../../models/ticket";
+import { ROUTES } from "../../../routes";
+import Button from "../../Button";
 import TicketRow from "./TicketRow";
 
 export const BoardSection: React.FC<{

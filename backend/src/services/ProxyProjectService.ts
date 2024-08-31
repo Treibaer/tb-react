@@ -1,6 +1,6 @@
 import { Project } from "../Models.js";
 import Client from "./Client.js";
-import { IProjectService } from "./IProjectService.js";
+import { IProjectService } from "./interfaces/IProjectService.js";
 
 export class ProxyProjectService implements IProjectService {
   private client = Client.shared;
@@ -8,8 +8,7 @@ export class ProxyProjectService implements IProjectService {
   private constructor() {}
 
   async createProject(project: Project): Promise<Project> {
-    // return this.service.createProject(project);
-    throw new Error("Method not implemented." + project.id);
+    return this.client.post("/projects", project);
   }
 
   async getProjects(): Promise<Project[]> {

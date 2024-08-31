@@ -1,4 +1,4 @@
-import { SmallBoard } from "../../../models/board-structure";
+import { SmallBoard } from "../../../../models/board-structure";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";
 

@@ -1,4 +1,4 @@
-import { TicketStatus } from "../../../models/ticket-status";
+import { TicketStatus } from "../../../../models/ticket-status";
 import TicketStatusView from "../TicketStatusView";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";

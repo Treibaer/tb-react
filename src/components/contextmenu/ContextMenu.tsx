@@ -11,12 +11,12 @@ import { ProjectMeta } from "../../models/project-meta";
 import { TicketStatus } from "../../models/ticket-status";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import TicketService from "../../services/TicketService";
-import AssigneeDropdown from "../ticket-details/dropdowns/AssigneeDropdown";
-import BoardDropdown from "../ticket-details/dropdowns/BoardDropdown";
-import DropdownElement from "../ticket-details/dropdowns/DropdownElement";
-import PositionDropdown from "../ticket-details/dropdowns/PositionDropdown";
-import StatusDropdown from "../ticket-details/dropdowns/StatusDropdown";
-import TypeDropdown from "../ticket-details/dropdowns/TypeDropdown";
+import AssigneeDropdown from "../projects/ticket-details/dropdowns/AssigneeDropdown";
+import BoardDropdown from "../projects/ticket-details/dropdowns/BoardDropdown";
+import DropdownElement from "../projects/ticket-details/dropdowns/DropdownElement";
+import PositionDropdown from "../projects/ticket-details/dropdowns/PositionDropdown";
+import StatusDropdown from "../projects/ticket-details/dropdowns/StatusDropdown";
+import TypeDropdown from "../projects/ticket-details/dropdowns/TypeDropdown";
 
 const ticketService = TicketService.shared;
 

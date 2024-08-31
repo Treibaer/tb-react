@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { DropdownType } from "../../models/dropdown-type";
-import { ProjectMeta } from "../../models/project-meta";
-import { Ticket } from "../../models/ticket";
-import { TicketStatus } from "../../models/ticket-status";
-import TicketService from "../../services/TicketService";
-import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
+import { DropdownType } from "../../../models/dropdown-type";
+import { ProjectMeta } from "../../../models/project-meta";
+import { Ticket } from "../../../models/ticket";
+import { TicketStatus } from "../../../models/ticket-status";
+import TicketService from "../../../services/TicketService";
+import { FormatType, formatUnixTimestamp } from "../../../utils/dataUtils";
 import TicketAssigneeField from "./TicketAssigneeField";
 import TicketDetailsRow from "./TicketDetailsRow";
 import TicketStatusView from "./TicketStatusView";

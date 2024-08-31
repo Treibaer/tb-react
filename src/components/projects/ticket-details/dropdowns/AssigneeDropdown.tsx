@@ -1,4 +1,4 @@
-import { User } from "../../../models/user";
+import { User } from "../../../../models/user";
 import TicketAssigneeField from "../TicketAssigneeField";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";

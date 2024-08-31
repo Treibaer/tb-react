@@ -1,4 +1,4 @@
-import { Project } from "../Models";
+import { Project } from "../../Models";
 
 export interface IProjectService {
   createProject(project: Project): Promise<Project>;

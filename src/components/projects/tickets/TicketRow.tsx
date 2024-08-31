@@ -4,10 +4,10 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 import { NavLink } from "react-router-dom";
-import { Project } from "../../models/project";
-import { Ticket } from "../../models/ticket";
-import { ROUTES } from "../../routes";
-import UserView from "../UserView";
+import { Project } from "../../../models/project";
+import { Ticket } from "../../../models/ticket";
+import { ROUTES } from "../../../routes";
+import UserView from "../../UserView";
 
 interface TicketRowProps {
   project: Project;

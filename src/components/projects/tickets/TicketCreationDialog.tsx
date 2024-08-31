@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { Project } from "../../models/project";
-import TicketService from "../../services/TicketService";
-import Dialog from "../common/Dialog";
+import { Project } from "../../../models/project";
+import TicketService from "../../../services/TicketService";
+import Dialog from "../../common/Dialog";
 
 const ticketService = TicketService.shared;
 

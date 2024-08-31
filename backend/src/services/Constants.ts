@@ -10,5 +10,5 @@ const dev: Config = {
   backendUrl: `https://mac.treibaer.de`,
   // backendUrl: `https://portfolio.treibaer.de:3063`,
 };
-// console.log(process.env);
+
 export default process.env.NODE_ENV === `development` ? dev : dev;

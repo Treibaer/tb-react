@@ -13,12 +13,12 @@ import Projects, { loader as projectsLoader } from "./pages/projects/Projects";
 import TicketDetailView, {
   loader as ticketDetailsLoader,
 } from "./pages/projects/TicketDetailView";
-import TicketsBoardView, {
-  loader as ticketsLoader,
-} from "./pages/projects/TicketsBoardView";
 import TicketList, {
   loader as ticketsAllLoader,
 } from "./pages/projects/TicketList";
+import TicketsBoardView, {
+  loader as ticketsLoader,
+} from "./pages/projects/TicketsBoardView";
 import RootLayout from "./pages/RootLayout";
 import Settings from "./pages/Settings";
 
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/logout",
-    element: <Logout />
+    element: <Logout />,
   },
 ]);
 

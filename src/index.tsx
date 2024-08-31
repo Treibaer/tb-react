@@ -4,7 +4,9 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import "inter-ui/inter.css";
 
+import setFavicon from './utils/faviconSwitcher';
 
+setFavicon();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

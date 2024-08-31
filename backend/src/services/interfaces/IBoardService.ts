@@ -1,4 +1,4 @@
-import { Board, BoardStructure } from "../Models";
+import { Board, BoardStructure } from "../../Models";
 
 export interface IBoardService {
     // createBoard(board: Board): Promise<Board>;

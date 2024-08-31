@@ -4,9 +4,9 @@ import { LoaderFunction, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
-import DescriptionView from "../../components/ticket-details/DescriptionView";
-import TicketCommentArea from "../../components/ticket-details/TicketCommentArea";
-import TicketDetailsSidebar from "../../components/ticket-details/TicketDetailsSidebar";
+import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
+import TicketCommentArea from "../../components/projects/ticket-details/TicketCommentArea";
+import TicketDetailsSidebar from "../../components/projects/ticket-details/TicketDetailsSidebar";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
@@ -25,6 +25,7 @@ export default function TicketDetailView() {
   const { metadata } = data;
   const project = metadata.project;
   const [ticket, setTicket] = useState<Ticket>(data.ticket);
+  const currentTitle = useRef<HTMLInputElement>(null);
   const currentDescription = useRef(ticket.description);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -38,11 +39,12 @@ export default function TicketDetailView() {
 
   async function toggleEdit() {
     if (isEditing) {
+      const title = currentTitle.current?.value;
       const description = currentDescription.current;
       const updatedTicket = await ticketService.update(
         project.slug,
         ticket.slug,
-        { description }
+        { title, description }
       );
       setTicket(updatedTicket);
     }
@@ -60,7 +62,15 @@ export default function TicketDetailView() {
         <div className="w-[calc(100%-240px)] h-[calc(100vh-56px)] overflow-auto max-h-full px-2 flex flex-col">
           <div className="border-b-[rgb(37,38,50)] border-b mb-4">
             <div className="flex h-12 items-center gap-2">
-              <div className="text-2xl">{ticket.title}</div>
+              {isEditing && (
+                <input
+                  ref={currentTitle}
+                  type="text"
+                  className="w-full bg-transparent text-2xl"
+                  defaultValue={ticket.title}
+                />
+              )}
+              {!isEditing && <div className="text-2xl">{ticket.title}</div>}
               <div>
                 {isEditing && (
                   <div className="flex gap-2">

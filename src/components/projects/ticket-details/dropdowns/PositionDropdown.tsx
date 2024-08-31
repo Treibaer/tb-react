@@ -1,4 +1,4 @@
-import { Ticket } from "../../../models/ticket";
+import { Ticket } from "../../../../models/ticket";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";
 

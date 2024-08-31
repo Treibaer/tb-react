@@ -59,6 +59,7 @@ export default class TicketService {
       type?: string;
       boardId?: number;
       position?: number;
+      title?: string;
       description?: string;
     }
   ) {

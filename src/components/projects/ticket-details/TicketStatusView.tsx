@@ -3,7 +3,7 @@ import {
   EllipsisHorizontalCircleIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { TicketStatus } from "../../models/ticket-status";
+import { TicketStatus } from "../../../models/ticket-status";
 
 export const TicketStatusView: React.FC<{
   status: TicketStatus;

@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
-import TicketAssigneeField from "../../ticket-details/TicketAssigneeField";
+import TicketAssigneeField from "../../projects/ticket-details/TicketAssigneeField";
 import { useDrag } from "react-dnd";
 
 export const BoardTicketRow: React.FC<{

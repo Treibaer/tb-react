@@ -1,5 +1,5 @@
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { User } from "../../models/user";
+import { User } from "../../../models/user";
 
 export const TicketAssigneeField: React.FC<{ user: User | null }> = ({
   user,
