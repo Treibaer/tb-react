@@ -8,6 +8,7 @@ export class Board extends Model {
   declare endDate: number;
   declare project_id: number;
   declare creator_id: number;
+  declare isActive: boolean;
 }
 
 Board.init(
@@ -31,6 +32,11 @@ Board.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "end_date",
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: "active",
     },
   },
   { sequelize, tableName: "board", timestamps: false }

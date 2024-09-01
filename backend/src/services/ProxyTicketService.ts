@@ -2,6 +2,10 @@ import { TicketDTO } from "../models/dtos.js";
 import Client from "./Client.js";
 import { ITicketService } from "./interfaces/ITicketService.js";
 
+/**
+ * ProxyTicketService is a proxy class for the TicketService.
+ * It forwards requests to the old backend API.
+ */
 export class ProxyTicketService implements ITicketService {
   client = Client.shared;
   static shared = new ProxyTicketService();

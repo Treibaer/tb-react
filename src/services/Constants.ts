@@ -1,4 +1,5 @@
 type Config = {
+  loginBackendUrl?: string;
   backendUrl: string;
 };
 
@@ -7,7 +8,7 @@ const prod: Config = {
 };
 
 const dev: Config = {
-  // backendUrl: `https://mac.treibaer.de`,
+  loginBackendUrl: `https://mac.treibaer.de`,
   backendUrl: `http://localhost:3052`,
   // backendUrl: `https://portfolio.treibaer.de:3063`,
 };

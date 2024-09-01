@@ -2,6 +2,10 @@ import { BoardDTO, BoardStructureDTO } from "../models/dtos.js";
 import Client from "./Client.js";
 import { IBoardService } from "./interfaces/IBoardService.js";
 
+/**
+ * ProxyBoardService is a proxy class for the BoardService.
+ * It forwards requests to the old backend API.
+ */
 export class ProxyBoardService implements IBoardService {
   private client = Client.shared;
   static shared = new ProxyBoardService();

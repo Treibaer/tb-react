@@ -1,66 +1,17 @@
 import express from "express";
+import fs from "fs";
+import https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
-import { AccessToken } from "./models/access-token.js";
-import { Board } from "./models/board.js";
-import { ProjectEntity } from "./models/project.js";
-import { TicketEntity } from "./models/ticket.js";
-import { User } from "./models/user.js";
 import boardsRoutes from "./routes/boards.js";
 import projectsRoutes from "./routes/projects.js";
 import ticketsRoutes from "./routes/tickets.js";
 import UserService from "./services/UserService.js";
 import { sequelize } from "./utils/database.js";
 import { global } from "./utils/global.js";
+import { createRelations } from "./utils/relations.js";
 
-ProjectEntity.belongsTo(User, {
-  constraints: false,
-  as: "creator",
-  foreignKey: "creator_id",
-});
-User.hasMany(ProjectEntity, {
-  as: "projects",
-  foreignKey: "creator_id",
-});
-
-AccessToken.belongsTo(User, {
-  constraints: false,
-  as: "user",
-  foreignKey: "user_id",
-});
-
-ProjectEntity.hasMany(TicketEntity, {
-  as: "tickets",
-  foreignKey: "project_id",
-});
-
-TicketEntity.belongsTo(User, {
-  constraints: false,
-  as: "creator",
-  foreignKey: "creator_id",
-});
-
-TicketEntity.belongsTo(User, {
-  constraints: false,
-  as: "assignee",
-  foreignKey: "assigned_id",
-});
-TicketEntity.belongsTo(Board, {
-  constraints: false,
-  as: "board",
-  foreignKey: "board_id",
-});
-Board.belongsTo(ProjectEntity, {
-  constraints: false,
-  as: "project",
-  foreignKey: "project_id",
-});
-Board.belongsTo(User, {
-  constraints: false,
-  as: "creator",
-  foreignKey: "creator_id",
-});
-
+createRelations();
 
 const app = express();
 app.use(express.json());
@@ -76,11 +27,13 @@ app.use((_, res, next) => {
   next();
 });
 
-app.use((req, _, next) => {
-  if (req.method !== "OPTIONS") {
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.status(200).json({});
+  } else {
     console.log(req.method, req.url);
+    return next();
   }
-  next();
 });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -89,18 +42,13 @@ const __dirname = path.dirname(__filename);
 // serve static files
 app.use("/", express.static(path.join(__dirname, "../public")));
 
+// auth middleware
 app.use(async (req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return res.status(200).json({});
-  }
   const authorization = req.headers.authorization ?? "";
   if (!authorization) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   global.host = req.protocol + "://" + req.get("host");
-
-  // clean user, prefetch all users
-  // todo: move to a better place
   await UserService.shared.setup(authorization);
 
   return next();
@@ -120,6 +68,32 @@ app.get("/", async (_, res) => {
   res.json({ api: "running" });
 });
 
-sequelize.sync().then(() => {
-  app.listen(port);
-});
+const development = true;
+if (development) {
+  startDevServer();
+} else {
+  startProdServer();
+}
+
+function startDevServer() {
+  sequelize.sync().then(() => {
+    app.listen(port);
+  });
+}
+
+function startProdServer() {
+  const path = "/etc/letsencrypt/live/treibaer.de/";
+  const privateKey = fs.readFileSync(`${path}/privkey.pem`, "utf8");
+  const certificate = fs.readFileSync(`${path}/cert.pem`, "utf8");
+
+  const options = {
+    key: privateKey,
+    cert: certificate,
+  };
+
+  sequelize.sync().then(() => {
+    https.createServer(options, app).listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  });
+}

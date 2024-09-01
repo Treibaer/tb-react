@@ -14,7 +14,7 @@ export class User extends Model {
   declare language: string;
   declare openedPages: string;
   declare closedBords: string;
-  declare hideDoneProjects: boolean;
+  declare hideDoneProjects: string;
   declare isAdmin: boolean;
   declare projectAccess: string;
   declare maximized: boolean;
@@ -79,7 +79,7 @@ User.init(
       field: "closed_boards",
     },
     hideDoneProjects: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "",
       field: "hide_done_projects",

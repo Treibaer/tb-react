@@ -6,13 +6,9 @@ import { ticketTypes } from "../models/ticket-types.js";
 import Transformer from "../utils/Transformer.js";
 import Validator from "../utils/Validator.js";
 import { IProjectService } from "./interfaces/IProjectService.js";
-import { ProxyProjectService } from "./ProxyProjectService.js";
 import UserService from "./UserService.js";
 
-export class SQLProjectService
-  extends ProxyProjectService
-  implements IProjectService
-{
+export class SQLProjectService implements IProjectService {
   static shared = new SQLProjectService();
   private userService = UserService.shared;
 
@@ -41,7 +37,7 @@ export class SQLProjectService
     if (!project) return null;
 
     const users = await UserService.shared.getAll();
-    const userDTOs = await Promise.all(users.map(Transformer.user));
+    const userDTOs = users.map(Transformer.user);
     const boards = await Board.findAll({ where: { project_id: project.id } });
     boards.sort((a, b) => a.startDate - b.startDate);
     const smallBoardDTOs = await Promise.all(

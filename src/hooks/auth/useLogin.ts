@@ -13,7 +13,7 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
     setError("");
 
     try {
-      const response = await fetch(`${Constants.backendUrl}/api/v2/login`, {
+      const response = await fetch(`${Constants.loginBackendUrl}/api/v2/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

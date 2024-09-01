@@ -12,8 +12,8 @@ export class TicketEntity extends Model {
   declare changedAt: number;
   declare position: number;
   declare creator_id: number;
-  declare assigned_id: number;
-  declare board_id: number;
+  declare assigned_id: number | null;
+  declare board_id: number | null;
 }
 
 TicketEntity.init(

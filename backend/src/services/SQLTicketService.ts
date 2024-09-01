@@ -1,14 +1,11 @@
 import { TicketDTO } from "../models/dtos.js";
 import { ProjectEntity } from "../models/project.js";
-import { ITicketService } from "./interfaces/ITicketService.js";
-import { ProxyTicketService } from "./ProxyTicketService.js";
-import Transformer from "../utils/Transformer.js";
 import { TicketEntity } from "../models/ticket.js";
+import Transformer from "../utils/Transformer.js";
+import { ITicketService } from "./interfaces/ITicketService.js";
+import LegacyTicketService from "./LegacyTicketService.js";
 
-export class SQLTicketService
-  extends ProxyTicketService
-  implements ITicketService
-{
+export class SQLTicketService implements ITicketService {
   static shared = new SQLTicketService();
 
   async get(
@@ -45,6 +42,30 @@ export class SQLTicketService
       tickets.map(async (ticket: TicketEntity) =>
         Transformer.ticket(projectSlug, ticket)
       )
+    );
+  }
+
+  async create(
+    projectSlug: string,
+    title: string,
+    description: string
+  ): Promise<TicketDTO> {
+    return LegacyTicketService.shared.createTicket(
+      projectSlug,
+      title,
+      description
+    );
+  }
+
+  async update(
+    projectSlug: string,
+    ticketSlug: string,
+    data: TicketDTO
+  ): Promise<TicketDTO> {
+    return LegacyTicketService.shared.updateTicket(
+      projectSlug,
+      ticketSlug,
+      data
     );
   }
 }

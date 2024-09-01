@@ -12,13 +12,17 @@ router.get("/:slug/tickets", async (req, res) => {
 });
 
 router.post("/:slug/tickets", async (req, res) => {
-  const projectSlug = req.params.slug;
-  const ticket = await ticketsService.create(
-    projectSlug,
-    req.body.title,
-    req.body.description
-  );
-  res.status(200).json(ticket);
+  try {
+    const projectSlug = req.params.slug;
+    const ticket = await ticketsService.create(
+      projectSlug,
+      req.body.title,
+      req.body.description
+    );
+    res.status(201).json(ticket);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 router.get("/:slug/tickets/:ticketSlug", async (req, res) => {

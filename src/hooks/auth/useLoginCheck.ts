@@ -5,6 +5,7 @@ import Constants from "../../services/Constants";
 export function useLoginCheck() {
   const [checkingLogin, setCheckingLogin] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -23,7 +24,7 @@ export function useLoginCheck() {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        });
+        })
 
         if (result.status === 401) {
           setIsLoggedIn(false);
@@ -32,6 +33,7 @@ export function useLoginCheck() {
           setIsLoggedIn(data.allowed);
         }
       } catch (error) {
+        setServerError(true);
         console.error("Login check failed", error);
         setIsLoggedIn(false);
       } finally {
@@ -42,5 +44,5 @@ export function useLoginCheck() {
     checkLogin();
   }, []);
 
-  return { checkingLogin, isLoggedIn, setIsLoggedIn };
+  return { checkingLogin, isLoggedIn, setIsLoggedIn, serverError };
 }

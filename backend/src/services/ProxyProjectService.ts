@@ -2,6 +2,10 @@ import { ProjectDTO, ProjectMetaDTO } from "../models/dtos.js";
 import Client from "./Client.js";
 import { IProjectService } from "./interfaces/IProjectService.js";
 
+/**
+ * ProxyProjectService is a proxy class for the ProjectService.
+ * It forwards requests to the old backend API.
+ */
 export class ProxyProjectService implements IProjectService {
   client = Client.shared;
   static shared = new ProxyProjectService();

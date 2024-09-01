@@ -50,10 +50,11 @@ const TicketsBoardView: React.FC = () => {
     let board = boardStructure.activeBoards.find((b) =>
       b.tickets.find((t) => t.id === ticket.id)
     );
-
+    const maxX = window.innerWidth - 175;
+    const maxY = window.innerHeight - 175;
     setConfig({
-      top: e.pageY,
-      left: e.pageX,
+      top: Math.min(e.pageY, maxY),
+      left: Math.min(e.pageX, maxX),
       show: true,
       ticket,
       board,

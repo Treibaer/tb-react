@@ -15,7 +15,7 @@ body {
   @apply min-w-16 h-8 pl-1 pr-2 text-[rgb(228,229,244)] flex items-center border border-transparent hover:bg-[rgba(82,82,121,0.25)] hover:border hover:border-[rgba(82,82,111,0.44)] rounded cursor-pointer select-none;
 }
 .ticket-details-dropdown {
-  @apply max-h-64 overflow-y-auto absolute select-none;
+  @apply overflow-y-auto absolute select-none;
 }
 
 .ck-editor,

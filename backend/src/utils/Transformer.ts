@@ -19,7 +19,7 @@ export default class Transformer {
     ticket: TicketEntity
   ): Promise<TicketDTO> {
     const creator = await UserService.shared.getUserById(ticket.creator_id);
-    const assignee = await UserService.shared.getUserById(ticket.assigned_id);
+    const assignee = await UserService.shared.getUserById(ticket.assigned_id ?? -1);
     const board = ticket.board_id
       // ? await SQLBoardService.shared.get("", ticket.board_id)
       ? await Board.findByPk(ticket.board_id)
@@ -69,6 +69,7 @@ export default class Transformer {
     const project = await ProjectEntity.findByPk(board.project_id);
     const tickets = await TicketEntity.findAll({
       where: { board_id: board.id },
+      order: [["position", "ASC"]],
     });
     const ticketDTOs = await Promise.all(
       tickets.map(async (ticket: TicketEntity) =>

@@ -50,9 +50,11 @@ const TicketList: React.FC = () => {
 
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
     e.preventDefault();
+    const maxX = window.innerWidth - 175;
+    const maxY = window.innerHeight - 175;
     setConfig({
-      top: e.pageY,
-      left: e.pageX,
+      top: Math.min(e.pageY, maxY),
+      left: Math.min(e.pageX, maxX),
       show: true,
       ticket,
     });
