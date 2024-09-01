@@ -47,6 +47,11 @@ export default function TicketRow({
           <div className="text-gray-400 w-16">{ticket.slug}</div>
           <div>{ticket.title}</div>
         </div>
+        {ticket.type && (
+          <div className="rounded border-gray-500 border px-2">
+            {ticket.type}
+          </div>
+        )}
         <UserView user={ticket.assignee} />
       </div>
     </NavLink>

@@ -1,29 +1,28 @@
-import { Project } from "../Models.js";
+import { ProjectDTO, ProjectMetaDTO } from "../models/dtos.js";
 import Client from "./Client.js";
 import { IProjectService } from "./interfaces/IProjectService.js";
 
 export class ProxyProjectService implements IProjectService {
-  private client = Client.shared;
+  client = Client.shared;
   static shared = new ProxyProjectService();
-  private constructor() {}
 
-  async createProject(project: Project): Promise<Project> {
+  async create(project: ProjectDTO): Promise<ProjectDTO> {
     return this.client.post("/projects", project);
   }
 
-  async getProjects(): Promise<Project[]> {
-    return this.client.get<Project[]>("/projects");
+  async getAll(): Promise<ProjectDTO[]> {
+    return this.client.get<ProjectDTO[]>("/projects");
   }
 
-  async getProject(slug: string): Promise<Project | null> {
-    return this.client.get<Project>(`/projects/${slug}`);
+  async get(slug: string): Promise<ProjectDTO | null> {
+    return this.client.get<ProjectDTO>(`/projects/${slug}`);
   }
 
-  async getMetadata(slug: string): Promise<Project | null> {
-    return this.client.get<Project>(`/projects/${slug}/metadata`);
+  async getMetadata(slug: string): Promise<ProjectMetaDTO | null> {
+    return this.client.get<ProjectMetaDTO>(`/projects/${slug}/metadata`);
   }
 
-  async updateProject(slug: string, project: Project): Promise<Project> {
+  async update(slug: string, project: ProjectDTO): Promise<ProjectDTO> {
     // return this.service.updateProject(id, project);
 
     throw new Error("Method not implemented." + slug + project.id);

@@ -1,0 +1,17 @@
+export const ticketTypes = [
+  "",
+  "design",
+  "unity",
+  "web",
+  "levelDesign",
+  "blender",
+  "udemy",
+  "research",
+  "draw",
+  "3D",
+  "quest",
+  "worldDesign",
+  "battleSystem",
+  "story",
+  "development",
+];

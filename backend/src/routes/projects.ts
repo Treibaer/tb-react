@@ -1,18 +1,22 @@
 import express from "express";
 import { IProjectService } from "../services/interfaces/IProjectService.js";
-import { ProxyProjectService } from "../services/ProxyProjectService.js";
+import { SQLProjectService } from "../services/SQLProjectService.js";
 
-const projectsService: IProjectService = ProxyProjectService.shared;
+const projectsService: IProjectService = SQLProjectService.shared;
 const router = express.Router();
 
 router.get("/", async (_, res) => {
-  const projects = await projectsService.getProjects();
-  res.status(200).json(projects);
+  try {
+    const projects = await projectsService.getAll();
+    res.status(200).json(projects);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
 router.get("/:slug", async (req, res) => {
   const projectSlug = req.params.slug;
-  const project = await projectsService.getProject(projectSlug);
+  const project = await projectsService.get(projectSlug);
   if (!project) {
     res.status(404).json({ message: "Project not found" });
     return;
@@ -21,18 +25,26 @@ router.get("/:slug", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const project = await projectsService.createProject(req.body);
-  res.status(200).json(project);
+  try {
+    const project = await projectsService.create(req.body);
+    res.status(201).json(project);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
 router.get("/:slug/metadata", async (req, res) => {
-  const projectSlug = req.params.slug;
-  const project = await projectsService.getMetadata(projectSlug);
-  if (!project) {
-    res.status(404).json({ message: "Project not found" });
-    return;
+  try {
+    const projectSlug = req.params.slug;
+    const project = await projectsService.getMetadata(projectSlug);
+    if (!project) {
+      res.status(404).json({ message: "Project not found" });
+      return;
+    }
+    res.status(200).json(project);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
   }
-  res.status(200).json(project);
 });
 
 // router.post("/", async (req, res) => {

@@ -1,8 +1,8 @@
 import express from "express";
 import { IBoardService } from "../services/interfaces/IBoardService.js";
-import { ProxyBoardService } from "../services/ProxyBoardService.js";
+import SQLBoardService from "../services/SQLBoardService.js";
 
-const boardService: IBoardService = ProxyBoardService.shared;
+const boardService: IBoardService = SQLBoardService.shared;
 const router = express.Router();
 
 router.get("/:slug/tickets-board-structure", async (req, res) => {
@@ -12,9 +12,15 @@ router.get("/:slug/tickets-board-structure", async (req, res) => {
 });
 
 router.get("/:slug/boards", async (req, res) => {
-  const projectSlug = req.params.slug;
-  const boards = await boardService.getAll(projectSlug);
-  res.status(200).json(boards);
+  try {
+    const projectSlug = req.params.slug;
+    const boards = await boardService.getAll(projectSlug);
+    res.status(200).json(boards);
+  } catch (error: any) {
+    // throw error on development mode
+    // throw error;
+    res.status(400).json({ message: error.message });
+  }
 });
 
 router.get("/:slug/boards/:id", async (req, res) => {

@@ -1,10 +1,10 @@
-import { Project } from "../../Models";
+import { ProjectDTO, ProjectMetaDTO } from "../../models/dtos";
 
 export interface IProjectService {
-  createProject(project: Project): Promise<Project>;
-  getProjects(): Promise<Project[]>;
-  getProject(slug: string): Promise<Project | null>;
-  getMetadata(slug: string): Promise<Project | null>;
-  updateProject(slug: string, project: Project): Promise<Project>;
+  getAll(): Promise<ProjectDTO[]>;
+  get(slug: string): Promise<ProjectDTO | null>;
+  getMetadata(slug: string): Promise<ProjectMetaDTO | null>;
+  create(project: ProjectDTO): Promise<ProjectDTO>;
+  update(slug: string, project: ProjectDTO): Promise<ProjectDTO>;
   deleteProject(slug: string): Promise<boolean>;
 }

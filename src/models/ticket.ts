@@ -1,4 +1,5 @@
 import { SmallBoard } from "./board-structure";
+import { TicketStatus } from "./ticket-status";
 import { User } from "./user";
 
 export interface Ticket {
@@ -9,7 +10,7 @@ export interface Ticket {
   title: string;
   description: string;
   type: string;
-  status: "open" | "inProgress" | "done";
+  status: TicketStatus;
   board: SmallBoard | null;
   creator: User | null;
   assignee: User | null;

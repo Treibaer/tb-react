@@ -1,25 +1,24 @@
-import { Ticket } from "../Models.js";
+import { TicketDTO } from "../models/dtos.js";
 import Client from "./Client.js";
 import { ITicketService } from "./interfaces/ITicketService.js";
 
 export class ProxyTicketService implements ITicketService {
-  private client = Client.shared;
+  client = Client.shared;
   static shared = new ProxyTicketService();
-  private constructor() {}
 
-  async getAll(projectSlug: string): Promise<Ticket[]> {
-    return this.client.get<Ticket[]>(`/projects/${projectSlug}/tickets`);
+  async getAll(projectSlug: string): Promise<TicketDTO[]> {
+    return this.client.get<TicketDTO[]>(`/projects/${projectSlug}/tickets`);
   }
-  async get(projectSlug: string, ticketSlug: string): Promise<Ticket | null> {
+  async get(projectSlug: string, ticketSlug: string): Promise<TicketDTO | null> {
     const path = `/projects/${projectSlug}/tickets/${ticketSlug}`;
-    return this.client.get<Ticket>(path);
+    return this.client.get<TicketDTO>(path);
   }
 
   async create(
     projectSlug: string,
     title: string,
     description: string
-  ): Promise<Ticket> {
+  ): Promise<TicketDTO> {
     const path = `/projects/${projectSlug}/tickets`;
     const data = { title, description };
     return this.client.post(path, data);
@@ -28,8 +27,8 @@ export class ProxyTicketService implements ITicketService {
   async update(
     projectSlug: string,
     ticketSlug: string,
-    data: Ticket
-  ): Promise<Ticket> {
+    data: TicketDTO
+  ): Promise<TicketDTO> {
     const path = `/projects/${projectSlug}/tickets/${ticketSlug}`;
     return this.client.patch(path, data);
   }

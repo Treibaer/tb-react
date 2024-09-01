@@ -1,8 +1,8 @@
 import express from "express";
 import { ITicketService } from "../services/interfaces/ITicketService.js";
-import { ProxyTicketService } from "../services/ProxyTicketService.js";
+import { SQLTicketService } from "../services/SQLTicketService.js";
 
-const ticketsService: ITicketService = ProxyTicketService.shared;
+const ticketsService: ITicketService = SQLTicketService.shared;
 const router = express.Router();
 
 router.get("/:slug/tickets", async (req, res) => {

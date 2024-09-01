@@ -3,7 +3,7 @@ const setFavicon = () => {
   favicon.rel = "icon";
   favicon.type = "image/x-icon";
 
-  if (process.env.REACT_APP_ENV === "production") {
+  if (process.env.NODE_ENV === "production") {
     favicon.href = `${process.env.PUBLIC_URL}/favicon_prod.ico`;
   } else {
     favicon.href = `${process.env.PUBLIC_URL}/favicon_dev.ico`;

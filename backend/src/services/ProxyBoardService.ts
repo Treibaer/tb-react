@@ -1,21 +1,20 @@
-import { Board, BoardStructure } from "../Models.js";
+import { BoardDTO, BoardStructureDTO } from "../models/dtos.js";
 import Client from "./Client.js";
 import { IBoardService } from "./interfaces/IBoardService.js";
 
 export class ProxyBoardService implements IBoardService {
   private client = Client.shared;
   static shared = new ProxyBoardService();
-  private constructor() {}
-
-  async getAll(projectSlug: string): Promise<Board[]> {
-    return this.client.get<Board[]>(`/projects/${projectSlug}/boards`);
+  
+  async getAll(projectSlug: string): Promise<BoardDTO[]> {
+    return this.client.get<BoardDTO[]>(`/projects/${projectSlug}/boards`);
   }
-  async get(projectSlug: string, id: number): Promise<Board | null> {
-    return this.client.get<Board>(`/projects/${projectSlug}/boards/${id}`);
+  async get(projectSlug: string, id: number): Promise<BoardDTO | null> {
+    return this.client.get<BoardDTO>(`/projects/${projectSlug}/boards/${id}`);
   }
-  async getBoardStructure(projectSlug: string): Promise<BoardStructure> {
+  async getBoardStructure(projectSlug: string): Promise<BoardStructureDTO> {
     const path = `/projects/${projectSlug}/tickets-board-structure`;
-    return this.client.get<BoardStructure>(path);
+    return this.client.get<BoardStructureDTO>(path);
   }
   async open(projectSlug: string, id: number): Promise<void> {
     return this.client.post(`/projects/${projectSlug}/boards/${id}/open`, {});
