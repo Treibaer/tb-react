@@ -17,5 +17,6 @@ export const ROUTES = {
   REGISTER: '/register',
   PROFILE: '/profile',
   SETTINGS: '/settings',
+  STATUS: '/status',
   NOT_FOUND: '/404',
 };

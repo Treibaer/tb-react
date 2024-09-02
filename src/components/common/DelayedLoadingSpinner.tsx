@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import LoadingSpinner from "./LoadingSpinner";
+import FullscreenLoadingSpinner from "./FullscreenLoadingSpinner";
 import "./LoadingSpinner.css";
 
 export const DelayedLoadingSpinner = () => {
@@ -11,7 +11,7 @@ export const DelayedLoadingSpinner = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  return showSpinner ? <LoadingSpinner /> : null;
+  return showSpinner ? <FullscreenLoadingSpinner /> : null;
 };
 
 export default DelayedLoadingSpinner;

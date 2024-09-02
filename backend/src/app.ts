@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import boardsRoutes from "./routes/boards.js";
 import projectsRoutes from "./routes/projects.js";
 import ticketsRoutes from "./routes/tickets.js";
+import statusRoutes from "./routes/status.js";
 import UserService from "./services/UserService.js";
 import { sequelize } from "./utils/database.js";
 import { global } from "./utils/global.js";
@@ -49,16 +50,21 @@ app.use(async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
   global.host = req.protocol + "://" + req.get("host");
-  await UserService.shared.setup(authorization);
+  try {
+    await UserService.shared.setup(authorization);
+  } catch (error) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   return next();
 });
 
-const port = 3052;
+const port = process.env.PORT || 3052;
 
 app.use("/api/v3/projects", projectsRoutes);
 app.use("/api/v3/projects", ticketsRoutes);
 app.use("/api/v3/projects", boardsRoutes);
+app.use("/api/v3", statusRoutes);
 
 app.get("/api/v3/app", (_, res) => {
   res.json({ allowed: true });
@@ -76,6 +82,7 @@ if (development) {
 }
 
 function startDevServer() {
+  // Status.sync();
   sequelize.sync().then(() => {
     app.listen(port);
   });

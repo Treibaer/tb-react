@@ -40,8 +40,8 @@ export default class Transformer {
             title: board.title,
           }
         : null,
-      creator: this.user(creator.toJSON()),
-      assignee: assignee ? this.user(assignee.toJSON()) : null,
+      creator: this.user(creator),
+      assignee: assignee ? this.user(assignee) : null,
       createdAt: ticket.createdAt,
       updatedAt: ticket.changedAt,
     };

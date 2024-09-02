@@ -44,6 +44,11 @@ export default function MainNavigation() {
           title="Projects"
           icon={<ChartBarIcon />}
         />
+        <NavigationLink
+          to={ROUTES.STATUS}
+          title="Status"
+          icon={<ChartPieIcon />}
+        />
         {params.projectSlug && (
           <>
             <hr className="py-2" />

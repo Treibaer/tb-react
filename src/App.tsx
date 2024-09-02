@@ -21,6 +21,7 @@ import TicketsBoardView, {
 } from "./pages/projects/TicketsBoardView";
 import RootLayout from "./pages/RootLayout";
 import Settings from "./pages/Settings";
+import StatusView from "./pages/StatusView";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
         path: "/projects/:projectSlug",
         element: <ProjectDetailView />,
         loader: projectDetailsLoader,
+      },
+      {
+        path: "/status",
+        element: <StatusView />,
       },
       {
         path: "/settings",
