@@ -1,48 +1,55 @@
+import { AsyncLocalStorage } from "async_hooks";
 import { AccessToken } from "../models/access-token.js";
 import { User } from "../models/user.js";
-import Client from "./Client.js";
+
+const asyncLocalStorage = new AsyncLocalStorage();
 
 export default class UserService {
   static shared = new UserService();
-  static user: User | null = null;
+  store: any = null;
 
   private constructor() {}
 
   async setup(authorization: string) {
-    Client.token = authorization;
-    UserService.user = null;
-    this.users = [];
-    this.users = await User.findAll();
-    await this.getUser();
+    asyncLocalStorage.run(new Map<string, string | undefined>(), async () => {
+      const store: any = asyncLocalStorage.getStore();
+      this.store = store;
+      store?.set("token", authorization);
+      store?.set("user", null);
+      store?.set("users", []);
+      store?.set("users", await User.findAll());
+      const user = await this.getUser();
+      store?.set("user", user);
+    });
   }
 
   async getUser(): Promise<User> {
+    const rawToken = this.store.get("token");
     if (
-      !Client.token ||
-      !Client.token.startsWith("Bearer ") ||
-      !Client.token.split(" ")[1]
+      !rawToken ||
+      !rawToken.startsWith("Bearer ") ||
+      !rawToken.split(" ")[1]
     ) {
       throw new Error("No token");
     }
-    if (UserService.user) {
-      return UserService.user;
+    if (this.store.get("user")) {
+      return this.store.get("user");
     }
-    const exactToken = Client.token.split(" ")[1];
+    const exactToken = rawToken.split(" ")[1];
     const token = await AccessToken.findOne({ where: { value: exactToken } });
     if (!token) {
       throw new Error("Token not found");
     }
     const user = await token.getUser();
-    UserService.user = user;
+    this.store?.set("user", user);
     return user;
   }
 
-  users: any[] = [];
   async getAll(): Promise<User[]> {
-    return this.users;
+    return this.store.get("users");
   }
 
   async getUserById(id: number): Promise<any | null> {
-    return this.users.find((user) => user.id === id);
+    return this.store.get("users").find((user: any) => user.id === id);
   }
 }

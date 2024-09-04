@@ -3,10 +3,11 @@ import fs from "fs";
 import https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
+import authRoutes from "./routes/auth.js";
 import boardsRoutes from "./routes/boards.js";
 import projectsRoutes from "./routes/projects.js";
-import ticketsRoutes from "./routes/tickets.js";
 import statusRoutes from "./routes/status.js";
+import ticketsRoutes from "./routes/tickets.js";
 import UserService from "./services/UserService.js";
 import { sequelize } from "./utils/database.js";
 import { global } from "./utils/global.js";
@@ -32,10 +33,14 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
     return res.status(200).json({});
   } else {
+    // log request
     console.log(req.method, req.url);
     return next();
   }
 });
+
+// validation for production
+// app.use(header("client").notEmpty().withMessage("header missing"));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,6 +56,7 @@ app.use(async (req, res, next) => {
   }
   global.host = req.protocol + "://" + req.get("host");
   try {
+
     await UserService.shared.setup(authorization);
   } catch (error) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -61,6 +67,7 @@ app.use(async (req, res, next) => {
 
 const port = process.env.PORT || 3052;
 
+app.use("/api/v3", authRoutes);
 app.use("/api/v3/projects", projectsRoutes);
 app.use("/api/v3/projects", ticketsRoutes);
 app.use("/api/v3/projects", boardsRoutes);

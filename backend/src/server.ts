@@ -5,7 +5,6 @@ import https from 'https';
 import boardsRoutes from "./routes/boards.js";
 import projectsRoutes from "./routes/projects.js";
 import ticketsRoutes from "./routes/tickets.js";
-import Client from "./services/Client.js";
 
 const app = express();
 
@@ -19,11 +18,6 @@ const options = {
 
 
 app.use(express.json());
-
-app.use((req, _, next) => {
-  Client.token = req.headers.authorization ?? "";
-  next();
-});
 
 // CORS
 app.use((_, res, next) => {

@@ -89,6 +89,17 @@ export default class LegacyTicketService {
         }
       }
       ticket.board_id = data.boardId === 0 ? null : data.boardId;
+      ticket.position = 10000;
+      // update position of all tickets in the board
+
+      let tickets = await Ticket.findAll({
+        where: { board_id: ticket.board_id },
+        order: [["position", "ASC"]],
+      });
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].position = i;
+        await tickets[i].save();
+      }
     }
 
     if (data.position !== undefined) {

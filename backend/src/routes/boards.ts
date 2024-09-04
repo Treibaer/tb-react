@@ -15,7 +15,8 @@ router.get("/:slug/boards", async (req, res) => {
   try {
     const projectSlug = req.params.slug;
     const boards = await boardService.getAll(projectSlug);
-    res.status(200).json(boards.map(Transformer.board));
+    const boardDTOs = await Promise.all(boards.map(Transformer.board));
+    res.status(200).json(boardDTOs);
   } catch (error: any) {
     // throw error on development mode
     // throw error;
@@ -30,7 +31,7 @@ router.get("/:slug/boards/:id", async (req, res) => {
     res.status(404).json({ message: "Board not found" });
     return;
   }
-  res.status(200).json(Transformer.board(board));
+  res.status(200).json(await Transformer.board(board));
 });
 
 router.post("/:slug/boards/:id/open", async (req, res) => {
