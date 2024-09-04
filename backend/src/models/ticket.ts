@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/database.js";
 
-export class TicketEntity extends Model {
+export class Ticket extends Model {
   declare id: number;
   declare title: string;
   declare description: string;
@@ -16,7 +16,7 @@ export class TicketEntity extends Model {
   declare board_id: number | null;
 }
 
-TicketEntity.init(
+Ticket.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -43,7 +43,7 @@ TicketEntity.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "created_at",
-      defaultValue: Date.now() / 1000,
+      defaultValue: Math.floor(Date.now() / 1000),
     },
     ticketId: {
       type: DataTypes.NUMBER,
@@ -59,7 +59,7 @@ TicketEntity.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "changed_at",
-      defaultValue: Date.now() / 1000,
+      defaultValue: Math.floor(Date.now() / 1000),
     },
     position: {
       type: DataTypes.NUMBER,

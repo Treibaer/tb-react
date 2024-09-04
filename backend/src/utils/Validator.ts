@@ -1,5 +1,5 @@
-import { ProjectDTO } from "../models/dtos.js";
-import { ProjectEntity } from "../models/project.js";
+import { ProjectDTO } from "../dtos/project-dto.js";
+import { Project } from "../models/project.js";
 
 export default class Validator {
   static async validateNewProject(project: ProjectDTO) {
@@ -10,13 +10,13 @@ export default class Validator {
       throw new Error("Slug is invalid");
     }
 
-    const projectWithTitle = await ProjectEntity.findOne({
+    const projectWithTitle = await Project.findOne({
       where: { title: project.title },
     });
     if (projectWithTitle) {
       throw new Error("Project with this title already exists");
     }
-    const projectWithSlug = await ProjectEntity.findOne({
+    const projectWithSlug = await Project.findOne({
       where: { slug: project.slug },
     });
     if (projectWithSlug) {

@@ -1,14 +1,21 @@
 import express from "express";
-import { ITicketService } from "../services/interfaces/ITicketService.js";
 import { SQLTicketService } from "../services/SQLTicketService.js";
+import Transformer from "../utils/Transformer.js";
+import { Ticket } from "../models/ticket.js";
 
-const ticketsService: ITicketService = SQLTicketService.shared;
+const ticketsService = SQLTicketService.shared;
 const router = express.Router();
 
 router.get("/:slug/tickets", async (req, res) => {
   const projectSlug = req.params.slug;
   const tickets = await ticketsService.getAll(projectSlug);
-  res.status(200).json(tickets);
+
+  const ticketDTOs = await Promise.all(
+    tickets.map(async (ticket: Ticket) =>
+      Transformer.ticket(projectSlug, ticket)
+    )
+  );
+  res.status(200).json(ticketDTOs);
 });
 
 router.post("/:slug/tickets", async (req, res) => {
@@ -33,14 +40,23 @@ router.get("/:slug/tickets/:ticketSlug", async (req, res) => {
     res.status(404).json({ message: "Ticket not found" });
     return;
   }
-  res.status(200).json(ticket);
+  const ticketDTO = await Transformer.ticket(projectSlug, ticket);
+  res.status(200).json(ticketDTO);
 });
 
 router.patch("/:slug/tickets/:ticketSlug", async (req, res) => {
   const projectSlug = req.params.slug;
   const ticketSlug = req.params.ticketSlug;
-  const ticket = await ticketsService.update(projectSlug, ticketSlug, req.body);
-  res.status(200).json(ticket);
+  try {
+    const ticket = await ticketsService.update(
+      projectSlug,
+      ticketSlug,
+      req.body
+    );
+    res.status(200).json(ticket);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 export default router;

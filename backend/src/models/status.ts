@@ -1,4 +1,4 @@
-import { sequelize } from "../utils/database";
+import { sequelize } from "../utils/database.js";
 import { DataTypes, Model } from "sequelize";
 
 export class Status extends Model {

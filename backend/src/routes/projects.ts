@@ -1,8 +1,7 @@
 import express from "express";
-import { IProjectService } from "../services/interfaces/IProjectService.js";
 import { SQLProjectService } from "../services/SQLProjectService.js";
 
-const projectsService: IProjectService = SQLProjectService.shared;
+const projectsService = SQLProjectService.shared;
 const router = express.Router();
 
 router.get("/", async (_, res) => {

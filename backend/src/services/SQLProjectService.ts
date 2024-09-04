@@ -1,16 +1,17 @@
+import { ProjectDTO } from "../dtos/project-dto.js";
+import { ProjectMetaDTO } from "../dtos/project-meta-dto.js";
 import { Board } from "../models/board.js";
-import { ProjectDTO, ProjectMetaDTO } from "../models/dtos.js";
-import { ProjectEntity } from "../models/project.js";
+import { Project } from "../models/project.js";
 import { ticketStates } from "../models/ticket-states.js";
 import { ticketTypes } from "../models/ticket-types.js";
 import Transformer from "../utils/Transformer.js";
 import Validator from "../utils/Validator.js";
-import { IProjectService } from "./interfaces/IProjectService.js";
 import UserService from "./UserService.js";
 
-export class SQLProjectService implements IProjectService {
+export class SQLProjectService {
   static shared = new SQLProjectService();
   private userService = UserService.shared;
+  private constructor() {}
 
   async create(project: ProjectDTO): Promise<ProjectDTO> {
     const user = await this.userService.getUser();
@@ -21,12 +22,12 @@ export class SQLProjectService implements IProjectService {
   }
 
   async get(slug: string): Promise<ProjectDTO | null> {
-    const project = await ProjectEntity.findOne({ where: { slug } });
+    const project = await Project.findOne({ where: { slug } });
     return project ? Transformer.project(project) : null;
   }
 
   async getAll(): Promise<ProjectDTO[]> {
-    const projects = await ProjectEntity.findAll({
+    const projects = await Project.findAll({
       where: { archived: false },
     });
     return await Promise.all(projects.map(Transformer.project));

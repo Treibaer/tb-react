@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/database.js";
-import { ProjectDTO } from "./dtos.js";
-import { ProjectEntity } from "./project.js";
+import { Project } from "./project.js";
+import { ProjectDTO } from "../dtos/project-dto.js";
 
 export class User extends Model {
   declare id: number;
@@ -13,7 +13,7 @@ export class User extends Model {
   declare avatar: string;
   declare language: string;
   declare openedPages: string;
-  declare closedBords: string;
+  declare closedBoards: string;
   declare hideDoneProjects: string;
   declare isAdmin: boolean;
   declare projectAccess: string;
@@ -22,7 +22,7 @@ export class User extends Model {
   declare phoneNumber: string;
   declare dateOfBirth: string;
   declare createdAt: number;
-  declare createProject: (project: ProjectDTO) => Promise<ProjectEntity>;
+  declare createProject: (project: ProjectDTO) => Promise<Project>;
 }
 
 User.init(
@@ -72,7 +72,7 @@ User.init(
       defaultValue: "",
       field: "opened_pages",
     },
-    closedBords: {
+    closedBoards: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "",

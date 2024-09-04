@@ -1,17 +1,17 @@
 import { User } from "../models/user.js";
-import { ProjectEntity } from "../models/project.js";
+import { Project } from "../models/project.js";
 import { AccessToken } from "../models/access-token.js";
-import { TicketEntity } from "../models/ticket.js";
+import { Ticket } from "../models/ticket.js";
 import { Board } from "../models/board.js";
 import { TicketHistory } from "../models/ticket-history.js";
 
 export const createRelations = () => {
-  ProjectEntity.belongsTo(User, {
+  Project.belongsTo(User, {
     constraints: false,
     as: "creator",
     foreignKey: "creator_id",
   });
-  User.hasMany(ProjectEntity, {
+  User.hasMany(Project, {
     as: "projects",
     foreignKey: "creator_id",
   });
@@ -22,30 +22,30 @@ export const createRelations = () => {
     foreignKey: "user_id",
   });
 
-  ProjectEntity.hasMany(TicketEntity, {
+  Project.hasMany(Ticket, {
     as: "tickets",
     foreignKey: "project_id",
   });
 
-  TicketEntity.belongsTo(User, {
+  Ticket.belongsTo(User, {
     constraints: false,
     as: "creator",
     foreignKey: "creator_id",
   });
 
-  TicketEntity.belongsTo(User, {
+  Ticket.belongsTo(User, {
     constraints: false,
     as: "assignee",
     foreignKey: "assigned_id",
   });
 
-  TicketEntity.belongsTo(Board, {
+  Ticket.belongsTo(Board, {
     constraints: false,
     as: "board",
     foreignKey: "board_id",
   });
 
-  Board.belongsTo(ProjectEntity, {
+  Board.belongsTo(Project, {
     constraints: false,
     as: "project",
     foreignKey: "project_id",
@@ -57,7 +57,7 @@ export const createRelations = () => {
     foreignKey: "creator_id",
   });
   
-  TicketHistory.belongsTo(TicketEntity, {
+  TicketHistory.belongsTo(Ticket, {
     constraints: false,
     as: "ticket",
     foreignKey: "ticket_id",

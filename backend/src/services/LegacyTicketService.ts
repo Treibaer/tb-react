@@ -1,8 +1,10 @@
-import { TicketDTO } from "../models/dtos.js";
-import { ProjectEntity } from "../models/project.js";
+import { TicketDTO } from "../dtos/ticket-dto.js";
+import { Project } from "../models/project.js";
 import { TicketHistory } from "../models/ticket-history.js";
-import { TicketEntity } from "../models/ticket.js";
+import { Ticket } from "../models/ticket.js";
 import Transformer from "../utils/Transformer.js";
+import { ProjectNotFoundError } from "./Errors.js";
+import SQLBoardService from "./SQLBoardService.js";
 import UserService from "./UserService.js";
 
 export default class LegacyTicketService {
@@ -14,20 +16,14 @@ export default class LegacyTicketService {
     title: string,
     description: string
   ): Promise<TicketDTO> {
-    const project = await ProjectEntity.findOne({
-      where: { slug: projectSlug },
-    });
-    if (!project) {
-      throw new Error("Project not found");
-    }
+    const project = await this.findProjectBySlug(projectSlug);
     const user = await UserService.shared.getUser();
 
     if (!title) {
       throw new Error("Title is required");
     }
 
-    // calculate new position
-    const allProjectTickets = await TicketEntity.findAll({
+    const allProjectTickets = await Ticket.findAll({
       where: { project_id: project.id },
     });
     const ticketId = allProjectTickets.length + 1;
@@ -40,7 +36,7 @@ export default class LegacyTicketService {
             return t.position > max ? t.position : max;
           }, 0) + 1;
 
-    const ticket = await TicketEntity.create({
+    const ticket = await Ticket.create({
       title,
       description,
       project_id: project.id,
@@ -48,44 +44,26 @@ export default class LegacyTicketService {
       position: position,
       creator_id: user.id,
     });
-    await this.createHistory(ticket);
-    return Transformer.ticket(projectSlug, ticket);
-  }
-
-  private async createHistory(ticket: TicketEntity) {
-    const user = await UserService.shared.getUser();
-    const lastHistory = await TicketHistory.findOne({
-      where: { ticket_id: ticket.id },
-      order: [["versionNumber", "DESC"]],
-    });
-    const versionNumber = lastHistory ? lastHistory.versionNumber + 1 : 1;
-    await TicketHistory.create({
-      description: ticket.description,
-      versionNumber: versionNumber,
-      creator_id: user.id,
-      ticket_id: ticket.id,
-    });
+    await this.createHistoryEntry(ticket);
+    return await Transformer.ticket(projectSlug, ticket);
   }
 
   async updateTicket(
     projectSlug: string,
     ticketSlug: string,
-    data: TicketDTO & {assigneeId?: number, boardId?: number, position?: number}
-  ): Promise<TicketDTO> {
-    const project = await ProjectEntity.findOne({
-      where: { slug: projectSlug },
-    });
-    if (!project) {
-      throw new Error("Project not found");
+    data: TicketDTO & {
+      assigneeId?: number;
+      boardId?: number;
+      position?: number;
     }
-    const ticket = await TicketEntity.findOne({
+  ): Promise<TicketDTO> {
+    const project = await this.findProjectBySlug(projectSlug);
+    const ticket = await Ticket.findOne({
       where: { project_id: project.id, ticketId: ticketSlug.split("-")[1] },
     });
     if (!ticket) {
       throw new Error("Ticket not found");
     }
-    const user = await UserService.shared.getUser();
-
     const oldDescription = ticket.description;
 
     if (data.title !== undefined) {
@@ -96,20 +74,26 @@ export default class LegacyTicketService {
     }
     if (data.status !== undefined) {
       ticket.status = data.status;
-      if (data.status === "inProgress" && ticket.assigned_id === null) {
-        ticket.assigned_id = user.id;
-      }
     }
     if (data.type !== undefined) {
       ticket.type = data.type;
     }
     if (data.boardId !== undefined) {
+      if (data.boardId !== 0) {
+        const board = await SQLBoardService.shared.get(data.boardId);
+        if (!board) {
+          throw new Error("Board not found");
+        }
+        if (board.project_id !== project.id) {
+          throw new Error("Board does not belong to this project");
+        }
+      }
       ticket.board_id = data.boardId === 0 ? null : data.boardId;
     }
 
     if (data.position !== undefined) {
       // get all tickets from the same board
-      let tickets = await TicketEntity.findAll({
+      let tickets = await Ticket.findAll({
         where: { board_id: ticket.board_id },
         order: [["position", "ASC"]],
       });
@@ -134,9 +118,32 @@ export default class LegacyTicketService {
 
     // write history entry
     if (ticket.description !== oldDescription) {
-      await this.createHistory(ticket);
+      await this.createHistoryEntry(ticket);
     }
     await ticket.save();
     return Transformer.ticket(projectSlug, ticket);
+  }
+
+  private async findProjectBySlug(slug: string): Promise<Project> {
+    const project = await Project.findOne({ where: { slug } });
+    if (!project) {
+      throw new ProjectNotFoundError();
+    }
+    return project;
+  }
+
+  private async createHistoryEntry(ticket: Ticket) {
+    const user = await UserService.shared.getUser();
+    const lastHistory = await TicketHistory.findOne({
+      where: { ticket_id: ticket.id },
+      order: [["versionNumber", "DESC"]],
+    });
+    const versionNumber = lastHistory ? lastHistory.versionNumber + 1 : 1;
+    await TicketHistory.create({
+      description: ticket.description,
+      versionNumber: versionNumber,
+      creator_id: user.id,
+      ticket_id: ticket.id,
+    });
   }
 }

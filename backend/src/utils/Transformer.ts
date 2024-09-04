@@ -1,14 +1,12 @@
+import { BoardDTO } from "../dtos/board-dto.js";
+import { ProjectDTO } from "../dtos/project-dto.js";
+import { SmallBoardDTO } from "../dtos/small-board-dto.js";
+import { TicketDTO } from "../dtos/ticket-dto.js";
+import { UserDTO } from "../dtos/user-dto.js";
 import { Board } from "../models/board.js";
-import {
-  BoardDTO,
-  ProjectDTO,
-  SmallBoardDTO,
-  TicketDTO,
-  TicketStatus,
-  UserDTO,
-} from "../models/dtos.js";
-import { ProjectEntity } from "../models/project.js";
-import { TicketEntity } from "../models/ticket.js";
+import { Project } from "../models/project.js";
+import { TicketStatus } from "../models/ticket-status.js";
+import { Ticket } from "../models/ticket.js";
 import { User } from "../models/user.js";
 import UserService from "../services/UserService.js";
 import { global } from "./global.js";
@@ -16,13 +14,15 @@ import { global } from "./global.js";
 export default class Transformer {
   static async ticket(
     projectSlug: String,
-    ticket: TicketEntity
+    ticket: Ticket
   ): Promise<TicketDTO> {
     const creator = await UserService.shared.getUserById(ticket.creator_id);
-    const assignee = await UserService.shared.getUserById(ticket.assigned_id ?? -1);
+    const assignee = await UserService.shared.getUserById(
+      ticket.assigned_id ?? -1
+    );
     const board = ticket.board_id
-      // ? await SQLBoardService.shared.get("", ticket.board_id)
-      ? await Board.findByPk(ticket.board_id)
+      ? // ? await SQLBoardService.shared.get("", ticket.board_id)
+        await Board.findByPk(ticket.board_id)
       : null;
 
     return {
@@ -55,7 +55,7 @@ export default class Transformer {
     };
   }
 
-  static project(project: ProjectEntity): ProjectDTO {
+  static project(project: Project): ProjectDTO {
     return {
       id: project.id,
       slug: project.slug,
@@ -66,13 +66,13 @@ export default class Transformer {
   }
 
   static async board(board: Board): Promise<BoardDTO> {
-    const project = await ProjectEntity.findByPk(board.project_id);
-    const tickets = await TicketEntity.findAll({
+    const project = await Project.findByPk(board.project_id);
+    const tickets = await Ticket.findAll({
       where: { board_id: board.id },
       order: [["position", "ASC"]],
     });
     const ticketDTOs = await Promise.all(
-      tickets.map(async (ticket: TicketEntity) =>
+      tickets.map(async (ticket: Ticket) =>
         Transformer.ticket(project!.slug, ticket)
       )
     );
@@ -82,6 +82,7 @@ export default class Transformer {
     const creatorDTO = Transformer.user(creator);
     return {
       id: board.id,
+      projectId: board.project_id,
       title: board.title,
       startDate: board.startDate,
       endDate: board.endDate,

@@ -34,5 +34,5 @@ TicketHistory.init(
       defaultValue: Date.now() / 1000,
     },
   },
-  { sequelize, tableName: "ticket_history", timestamps: false }
+  {sequelize, tableName: "ticket_history", timestamps: false}
 );

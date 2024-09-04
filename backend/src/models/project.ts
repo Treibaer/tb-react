@@ -1,8 +1,8 @@
 import { DataTypes, Model, WhereOptions } from "sequelize";
 import { sequelize } from "../utils/database.js";
-import { TicketEntity } from "./ticket.js";
+import { Ticket } from "./ticket.js";
 
-export class ProjectEntity extends Model {
+export class Project extends Model {
   declare id: number;
   declare icon: string;
   declare title: string;
@@ -22,10 +22,10 @@ export class ProjectEntity extends Model {
   declare graphicStyle: string;
   declare uniqueSellingPoints: string;
   declare coverImage: string;
-  declare getTickets: (options?: WhereOptions) => Promise<TicketEntity[]>;
+  declare getTickets: (options?: WhereOptions) => Promise<Ticket[]>;
 }
 
-ProjectEntity.init(
+Project.init(
   {
     id: {
       type: DataTypes.INTEGER,

@@ -1,18 +1,17 @@
-import { TicketDTO } from "../models/dtos.js";
-import { ProjectEntity } from "../models/project.js";
-import { TicketEntity } from "../models/ticket.js";
-import Transformer from "../utils/Transformer.js";
-import { ITicketService } from "./interfaces/ITicketService.js";
+import { TicketDTO } from "../dtos/ticket-dto.js";
+import { Project } from "../models/project.js";
+import { Ticket } from "../models/ticket.js";
 import LegacyTicketService from "./LegacyTicketService.js";
 
-export class SQLTicketService implements ITicketService {
+export class SQLTicketService {
   static shared = new SQLTicketService();
+  private constructor() {}
 
   async get(
     projectSlug: string,
     ticketSlug: string
-  ): Promise<TicketDTO | null> {
-    const project = await ProjectEntity.findOne({
+  ): Promise<Ticket | null> {
+    const project = await Project.findOne({
       where: { slug: projectSlug },
     });
     if (!project) {
@@ -27,22 +26,17 @@ export class SQLTicketService implements ITicketService {
     if (tickets.length === 0) {
       return null;
     }
-    return Transformer.ticket(projectSlug, tickets[0]);
+    return tickets[0];
   }
 
-  async getAll(projectSlug: string): Promise<TicketDTO[]> {
-    const project = await ProjectEntity.findOne({
+  async getAll(projectSlug: string): Promise<Ticket[]> {
+    const project = await Project.findOne({
       where: { slug: projectSlug },
     });
     if (!project) {
       throw new Error("Project not found");
     }
-    let tickets = await project.getTickets();
-    return await Promise.all(
-      tickets.map(async (ticket: TicketEntity) =>
-        Transformer.ticket(projectSlug, ticket)
-      )
-    );
+    return await project.getTickets();
   }
 
   async create(

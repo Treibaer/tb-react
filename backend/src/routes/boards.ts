@@ -1,8 +1,8 @@
 import express from "express";
-import { IBoardService } from "../services/interfaces/IBoardService.js";
 import SQLBoardService from "../services/SQLBoardService.js";
+import Transformer from "../utils/Transformer.js";
 
-const boardService: IBoardService = SQLBoardService.shared;
+const boardService = SQLBoardService.shared;
 const router = express.Router();
 
 router.get("/:slug/tickets-board-structure", async (req, res) => {
@@ -15,7 +15,7 @@ router.get("/:slug/boards", async (req, res) => {
   try {
     const projectSlug = req.params.slug;
     const boards = await boardService.getAll(projectSlug);
-    res.status(200).json(boards);
+    res.status(200).json(boards.map(Transformer.board));
   } catch (error: any) {
     // throw error on development mode
     // throw error;
@@ -24,27 +24,26 @@ router.get("/:slug/boards", async (req, res) => {
 });
 
 router.get("/:slug/boards/:id", async (req, res) => {
-  const projectSlug = req.params.slug;
   const boardId = parseInt(req.params.id);
-  const board = await boardService.get(projectSlug, boardId);
+  const board = await boardService.get(boardId);
   if (!board) {
     res.status(404).json({ message: "Board not found" });
     return;
   }
-  res.status(200).json(board);
+  res.status(200).json(Transformer.board(board));
 });
 
 router.post("/:slug/boards/:id/open", async (req, res) => {
-  const projectSlug = req.params.slug;
+  // const projectSlug = req.params.slug;
   const boardId = parseInt(req.params.id);
-  await boardService.open(projectSlug, boardId);
+  await boardService.open(boardId);
   res.status(200).json({ message: "Board opened" });
 });
 
 router.post("/:slug/boards/:id/close", async (req, res) => {
-  const projectSlug = req.params.slug;
+  // const projectSlug = req.params.slug;
   const boardId = parseInt(req.params.id);
-  await boardService.close(projectSlug, boardId);
+  await boardService.close(boardId);
   res.status(200).json({ message: "Board closed" });
 });
 

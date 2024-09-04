@@ -1,26 +1,24 @@
+import { BoardStructureDTO } from "../dtos/board-structure-dto.js";
 import { Board } from "../models/board.js";
-import { BoardDTO, BoardStructureDTO } from "../models/dtos.js";
-import { TicketEntity } from "../models/ticket.js";
+import { Ticket } from "../models/ticket.js";
 import Transformer from "../utils/Transformer.js";
-import { IBoardService } from "./interfaces/IBoardService.js";
 import { SQLProjectService } from "./SQLProjectService.js";
 import UserService from "./UserService.js";
 
-export default class SQLBoardService implements IBoardService {
+export default class SQLBoardService {
   static shared = new SQLBoardService();
+  private constructor() {}
 
-  async getAll(projectSlug: string): Promise<BoardDTO[]> {
+  async getAll(projectSlug: string): Promise<Board[]> {
     const project = await SQLProjectService.shared.get(projectSlug);
     if (!project) {
       throw new Error("Project not found");
     }
-    const boards = await Board.findAll({ where: { project_id: project.id } });
-    return await Promise.all(boards.map(Transformer.board));
+    return await Board.findAll({ where: { project_id: project.id } });
   }
 
-  async get(_: string, boardId: number): Promise<BoardDTO | null> {
-    const board = await Board.findByPk(boardId);
-    return board ? Transformer.board(board) : null;
+  async get(boardId: number): Promise<Board | null> {
+    return await Board.findByPk(boardId);
   }
 
   async getBoardStructure(projectSlug: string): Promise<BoardStructureDTO> {
@@ -32,7 +30,7 @@ export default class SQLBoardService implements IBoardService {
       where: { project_id: project.id, isActive: true },
     });
     activeBoards.sort((a, b) => a.startDate - b.startDate);
-    const backlog = await TicketEntity.findAll({
+    const backlog = await Ticket.findAll({
       where: { project_id: project.id, board_id: null },
       order: [["position", "ASC"]],
     });
@@ -56,26 +54,26 @@ export default class SQLBoardService implements IBoardService {
         .split("_")
         .map(Number)
         .includes(project.id),
-      closed: user.closedBords.split("_"),
+      closed: user.closedBoards.split("_"),
     };
   }
 
-  async open(_: string, id: number): Promise<void> {
+  async open(id: number): Promise<void> {
     const user = await UserService.shared.getUser();
-    user.closedBords = user.closedBords
+    user.closedBoards = user.closedBoards
       .split("_")
       .filter((b) => b !== "" + id)
       .join("_");
     await user.save();
   }
 
-  async close(_: string, id: number): Promise<void> {
+  async close(id: number): Promise<void> {
     const user = await UserService.shared.getUser();
-    user.closedBords = user.closedBords
+    user.closedBoards = user.closedBoards
       .split("_")
       .filter((b) => b !== "" + id)
       .join("_");
-    user.closedBords += `_${id}`;
+    user.closedBoards += `_${id}`;
     await user.save();
   }
 

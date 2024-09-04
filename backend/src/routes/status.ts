@@ -36,18 +36,15 @@ async function checkWebSocketReachability(
     const fullUrl = `${url}:${port}`;
     const socket = new WebSocket(fullUrl);
 
-    // Listen for the open event to know the connection was successful
     socket.onopen = () => {
       socket.close();
       resolve(true);
     };
 
-    // Listen for error events which indicate that the connection failed
     socket.onerror = () => {
       resolve(false);
     };
 
-    // Also handle the case where the connection is closed before being established
     socket.onclose = (event) => {
       if (!event.wasClean) {
         resolve(false);
