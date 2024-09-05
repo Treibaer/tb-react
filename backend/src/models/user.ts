@@ -51,6 +51,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       field: "last_name",
+      defaultValue: "",
     },
     password: {
       type: DataTypes.STRING,

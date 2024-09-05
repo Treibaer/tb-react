@@ -1,6 +1,7 @@
 import express from "express";
 import { body, check, validationResult } from "express-validator";
 import { User } from "../models/user.js";
+import Transformer from "../utils/Transformer.js";
 
 const router = express.Router();
 
@@ -35,7 +36,6 @@ router.post(
       }
       return true;
     }),
-
     body("username").custom(async (value) => {
       const user = await User.findOne({ where: { firstName: value } });
       if (user) {
@@ -48,7 +48,12 @@ router.post(
     // validate request
     const errors = validationResult(req);
     if (errors.isEmpty()) {
-      res.status(200).json({ message: "User not created. still mocked." });
+      const createdUser = await User.create({
+        email: req.body.email,
+        password: req.body.password,
+        firstName: req.body.username,
+      });
+      res.status(201).json(Transformer.user(createdUser));
     } else {
       return res.status(422).json({
         message: errors.array()[0].msg,

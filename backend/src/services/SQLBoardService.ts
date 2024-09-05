@@ -11,9 +11,6 @@ export default class SQLBoardService {
 
   async getAll(projectSlug: string): Promise<Board[]> {
     const project = await SQLProjectService.shared.get(projectSlug);
-    if (!project) {
-      throw new Error("Project not found");
-    }
     return await Board.findAll({ where: { project_id: project.id } });
   }
 
@@ -23,9 +20,6 @@ export default class SQLBoardService {
 
   async getBoardStructure(projectSlug: string): Promise<BoardStructureDTO> {
     const project = await SQLProjectService.shared.get(projectSlug);
-    if (!project) {
-      throw new Error("Project not found");
-    }
     const activeBoards = await Board.findAll({
       where: { project_id: project.id, isActive: true },
     });
@@ -82,9 +76,6 @@ export default class SQLBoardService {
     settings: Record<string, any>
   ): Promise<void> {
     const project = await SQLProjectService.shared.get(projectSlug);
-    if (!project) {
-      throw new Error("Project not found");
-    }
     const hideDone = settings.hideDone;
     const user = await UserService.shared.getUser();
     user.hideDoneProjects = user.hideDoneProjects

@@ -52,16 +52,14 @@ app.use("/", express.static(path.join(__dirname, "../public")));
 app.use(async (req, res, next) => {
   const authorization = req.headers.authorization ?? "";
   if (!authorization) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "not authenticated" });
   }
   global.host = req.protocol + "://" + req.get("host");
   try {
-
     await UserService.shared.setup(authorization);
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(403).json({ message: "not authorized" });
   }
-
   return next();
 });
 
@@ -79,6 +77,13 @@ app.get("/api/v3/app", (_, res) => {
 
 app.get("/", async (_, res) => {
   res.json({ api: "running" });
+});
+
+app.use((error: any, _: any, res: any, __: any) => {
+  console.error(error);
+  res
+    .status(error.status ?? 500)
+    .json({ message: error.message ?? "Internal server error" });
 });
 
 const development = true;

@@ -12,17 +12,13 @@ import UserService from "../services/UserService.js";
 import { global } from "./global.js";
 
 export default class Transformer {
-  static async ticket(
-    projectSlug: String,
-    ticket: Ticket
-  ): Promise<TicketDTO> {
+  static async ticket(projectSlug: String, ticket: Ticket): Promise<TicketDTO> {
     const creator = await UserService.shared.getUserById(ticket.creator_id);
     const assignee = await UserService.shared.getUserById(
       ticket.assigned_id ?? -1
     );
     const board = ticket.board_id
-      ? // ? await SQLBoardService.shared.get("", ticket.board_id)
-        await Board.findByPk(ticket.board_id)
+      ? await Board.findByPk(ticket.board_id)
       : null;
 
     return {
@@ -48,10 +44,13 @@ export default class Transformer {
   }
 
   static user(user: User): UserDTO {
+    const avatar = user.avatar.startsWith("http")
+      ? user.avatar
+      : `${global.host}${user.avatar}`;
     return {
       id: user.id,
       firstName: user.firstName,
-      avatar: `${global.host}${user.avatar}`,
+      avatar: avatar,
     };
   }
 

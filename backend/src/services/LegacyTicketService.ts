@@ -92,6 +92,7 @@ export default class LegacyTicketService {
       ticket.position = 10000;
       // update position of all tickets in the board
 
+      await ticket.save();
       let tickets = await Ticket.findAll({
         where: { board_id: ticket.board_id },
         order: [["position", "ASC"]],
@@ -127,7 +128,6 @@ export default class LegacyTicketService {
       }
     }
 
-    // write history entry
     if (ticket.description !== oldDescription) {
       await this.createHistoryEntry(ticket);
     }

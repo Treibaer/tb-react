@@ -7,36 +7,24 @@ export class SQLTicketService {
   static shared = new SQLTicketService();
   private constructor() {}
 
-  async get(
-    projectSlug: string,
-    ticketSlug: string
-  ): Promise<Ticket | null> {
-    const project = await Project.findOne({
-      where: { slug: projectSlug },
-    });
-    if (!project) {
-      return null;
-    }
+  async get(projectSlug: string, ticketSlug: string): Promise<Ticket> {
     if (!ticketSlug.includes("-")) {
-      return null;
+      throw new Error("Invalid ticket slug");
     }
+    const project = await Project.getBySlug(projectSlug);
+    const ticketId = ticketSlug.split("-")[1];
     const tickets = await project.getTickets({
-      where: { ticketId: ticketSlug.split("-")[1] },
+      where: { ticketId },
     });
     if (tickets.length === 0) {
-      return null;
+      throw new Error("Ticket not found");
     }
     return tickets[0];
   }
 
   async getAll(projectSlug: string): Promise<Ticket[]> {
-    const project = await Project.findOne({
-      where: { slug: projectSlug },
-    });
-    if (!project) {
-      throw new Error("Project not found");
-    }
-    return await project.getTickets();
+    const project = await Project.getBySlug(projectSlug);
+    return project.getTickets();
   }
 
   async create(

@@ -23,6 +23,15 @@ export class Project extends Model {
   declare uniqueSellingPoints: string;
   declare coverImage: string;
   declare getTickets: (options?: WhereOptions) => Promise<Ticket[]>;
+  static async getBySlug(slug: string): Promise<Project> {
+    const project = await Project.findOne({ where: { slug } });
+    if (!project) {
+      const error = new Error("Project not found") as any;
+      error.status = 404;
+      throw error;
+    }
+    return project;
+  }
 }
 
 Project.init(

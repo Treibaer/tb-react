@@ -1,7 +1,7 @@
 import express from "express";
+import { Ticket } from "../models/ticket.js";
 import { SQLTicketService } from "../services/SQLTicketService.js";
 import Transformer from "../utils/Transformer.js";
-import { Ticket } from "../models/ticket.js";
 
 const ticketsService = SQLTicketService.shared;
 const router = express.Router();
@@ -18,7 +18,7 @@ router.get("/:slug/tickets", async (req, res) => {
   res.status(200).json(ticketDTOs);
 });
 
-router.post("/:slug/tickets", async (req, res) => {
+router.post("/:slug/tickets", async (req, res, next) => {
   try {
     const projectSlug = req.params.slug;
     const ticket = await ticketsService.create(
@@ -28,7 +28,7 @@ router.post("/:slug/tickets", async (req, res) => {
     );
     res.status(201).json(ticket);
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 });
 
@@ -44,7 +44,7 @@ router.get("/:slug/tickets/:ticketSlug", async (req, res) => {
   res.status(200).json(ticketDTO);
 });
 
-router.patch("/:slug/tickets/:ticketSlug", async (req, res) => {
+router.patch("/:slug/tickets/:ticketSlug", async (req, res, next) => {
   const projectSlug = req.params.slug;
   const ticketSlug = req.params.ticketSlug;
   try {
@@ -55,7 +55,7 @@ router.patch("/:slug/tickets/:ticketSlug", async (req, res) => {
     );
     res.status(200).json(ticket);
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 });
 
