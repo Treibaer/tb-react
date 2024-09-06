@@ -9,6 +9,7 @@ export class Board extends Model {
   declare project_id: number;
   declare creator_id: number;
   declare isActive: boolean;
+  declare position: number;
 }
 
 Board.init(
@@ -37,6 +38,16 @@ Board.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       field: "active",
+    },
+    createdAt: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      field: "created_at",
+      defaultValue: Date.now() / 1000,
+    },
+    position: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
   },
   { sequelize, tableName: "board", timestamps: false }

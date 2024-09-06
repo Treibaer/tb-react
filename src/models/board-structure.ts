@@ -10,7 +10,7 @@ export interface BoardStructure {
     id: number;
     title: string;
     tickets: Ticket[];
-  }
+  };
 }
 
 export interface Board {
@@ -19,7 +19,8 @@ export interface Board {
   startDate: number;
   endDate: number;
   tickets: Ticket[];
-  creator: User;
+  creator?: User;
+  position: number;
 }
 
 export interface SmallBoard {

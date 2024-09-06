@@ -24,6 +24,15 @@ router.get("/:slug/boards", async (req, res, next) => {
   }
 });
 
+router.post("/:slug/boards", async (req, res, next) => {
+  const projectSlug = req.params.slug;
+  try {
+    const board = await boardService.create(projectSlug, req.body);
+    res.status(201).json(board);
+  } catch (error: any) {
+    next(error);
+  }
+});
 
 router.get("/:slug/boards/:id", async (req, res) => {
   const boardId = parseInt(req.params.id);
@@ -33,6 +42,23 @@ router.get("/:slug/boards/:id", async (req, res) => {
     return;
   }
   res.status(200).json(await Transformer.board(board));
+});
+
+
+
+router.patch("/:slug/boards/:id", async (req, res, next) => {
+  const projectSlug = req.params.slug;
+  const boardId = parseInt(req.params.id);
+  try {
+    const ticket = await boardService.update(
+      projectSlug,
+      boardId,
+      req.body
+    );
+    res.status(200).json(ticket);
+  } catch (error: any) {
+    next(error);
+  }
 });
 
 router.post("/:slug/boards/:id/open", async (req, res) => {

@@ -4,8 +4,7 @@ export const BoardHeaderView = () => {
       <div className="flex-1">Title</div>
       <div className="flex-1 text-center">Creator</div>
       <div className="flex-1 text-center">Tickets</div>
-      <div className="flex-1 text-center">Start Date</div>
-      <div className="flex-1 text-center">End Date</div>
+      <div className="flex-1 text-center">Actions</div>
     </div>
   );
 };

@@ -87,6 +87,7 @@ export default class Transformer {
       endDate: board.endDate,
       tickets: ticketDTOs,
       creator: creatorDTO,
+      position: board.position,
     };
   }
 

@@ -1,6 +1,6 @@
 interface ButtonIconProps {
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export const ButtonIcon: React.FC<ButtonIconProps> = ({

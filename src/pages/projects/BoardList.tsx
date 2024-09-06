@@ -16,13 +16,24 @@ const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
 
 export const Boards: React.FC = () => {
-  const { boards, project } = useLoaderData() as {
+  const data = useLoaderData() as {
     boards: Board[];
     project: Project;
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const editInputRef = useRef<HTMLInputElement>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [editBoard, setEditBoard] = useState<Board | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [boards, setBoards] = useState(data.boards);
+
+  const project = data.project;
+
+  async function updateBoardList() {
+    const updatedBoards = await boardService.getAll(data.project.slug);
+    setBoards(updatedBoards);
+  }
 
   function openDialog() {
     setIsCreating(true);
@@ -34,8 +45,44 @@ export const Boards: React.FC = () => {
   async function handleCreateBoard() {
     const title = inputRef.current?.value;
     if (title) {
-      // await createProject(title);
+      try {
+        const newBoard: Board = {
+          id: 0,
+          title,
+          startDate: 0,
+          endDate: 0,
+          tickets: [],
+          position: boards.length, // gets overridden by the server
+        };
+        await BoardService.shared.create(project.slug, newBoard);
+        setIsCreating(false);
+        updateBoardList();
+      } catch (error: Error | any) {
+        setError(error.message);
+      }
+    } else {
+      setError("Title is required");
     }
+  }
+
+  async function handleUpdateBoard() {
+    const title = editInputRef.current?.value;
+    if (title && editBoard) {
+      try {
+        await boardService.update(project.slug, editBoard.id, {title});
+        setEditBoard(null);
+        updateBoardList();
+      } catch (error: Error | any) {
+        setError(error.message);
+      }
+    } else {
+      setError("Title is required");
+    }
+  }
+
+  function toggleEdit(board: Board) {
+    setEditBoard(board);
+    console.log(board);
   }
 
   const breadcrumbs: Breadcrumb[] = [
@@ -52,6 +99,7 @@ export const Boards: React.FC = () => {
           title="Create Board"
           onClose={() => setIsCreating(false)}
           onSubmit={handleCreateBoard}
+          error={error}
         >
           <input
             type="text"
@@ -62,12 +110,36 @@ export const Boards: React.FC = () => {
           />
         </Dialog>
       )}
+      {editBoard && (
+        <Dialog
+          title="Update Board"
+          submitTitle="Update"
+          onClose={() => setEditBoard(null)}
+          onSubmit={handleUpdateBoard}
+          error={error}
+        >
+          <input
+            type="text"
+            placeholder="Board title"
+            id="dialogTitle"
+            className="tb-textarea"
+            defaultValue={editBoard?.title}
+            ref={editInputRef}
+          />
+        </Dialog>
+      )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Boards" openDialog={openDialog} />
       <div className="flex flex-col">
         <BoardHeaderView />
         {boards.map((board) => (
-          <BoardRow key={board.id} projectSlug={project.slug} board={board} />
+          <BoardRow
+            key={board.id}
+            projectSlug={project.slug}
+            board={board}
+            update={updateBoardList}
+            onEdit={toggleEdit}
+          />
         ))}
       </div>
     </>

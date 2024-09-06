@@ -10,6 +10,14 @@ export class BoardService {
   private constructor() {}
 
   /**
+   * Creates a new board.
+   * @param project - The board object containing project details.
+   * @returns A promise that resolves to the created project.
+   */
+  async create(projectSlug: string, board: Board) {
+    return this.client.post(`/projects/${projectSlug}/boards`, board);
+  }
+  /**
    * Retrieves all boards associated with a specified project.
    * @param projectSlug - The slug identifier of the project.
    * @returns A promise that resolves to an array of boards.
@@ -39,6 +47,17 @@ export class BoardService {
     return this.client.get<BoardStructure>(path);
   }
 
+  async update(
+    projectSlug: string,
+    boardId: number,
+    data: {
+      title?: string;
+      position?: number;
+    }
+  ) {
+    const url = `/projects/${projectSlug}/boards/${boardId}`;
+    return this.client.patch<Board>(url, data);
+  }
 
   /**
    * Opens a specific board by its ID within a specified project.

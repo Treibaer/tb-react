@@ -76,7 +76,8 @@ body {
 
 .tb-textarea {
   color: rgb(254, 255, 254);
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
   height: 99px;
   min-height: 1.6em;
   resize: none;

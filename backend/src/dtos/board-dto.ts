@@ -9,4 +9,5 @@ export type BoardDTO = {
   endDate: number;
   tickets: TicketDTO[];
   creator: UserDTO;
+  position: number;
 };
