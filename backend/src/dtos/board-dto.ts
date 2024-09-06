@@ -10,4 +10,5 @@ export type BoardDTO = {
   tickets: TicketDTO[];
   creator: UserDTO;
   position: number;
+  isActive: boolean;
 };

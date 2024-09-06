@@ -53,6 +53,7 @@ export class BoardService {
     data: {
       title?: string;
       position?: number;
+      isActive?: boolean
     }
   ) {
     const url = `/projects/${projectSlug}/boards/${boardId}`;

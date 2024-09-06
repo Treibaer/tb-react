@@ -53,6 +53,7 @@ export const Boards: React.FC = () => {
           endDate: 0,
           tickets: [],
           position: boards.length, // gets overridden by the server
+          isActive: true,
         };
         await BoardService.shared.create(project.slug, newBoard);
         setIsCreating(false);

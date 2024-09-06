@@ -88,6 +88,7 @@ export default class Transformer {
       tickets: ticketDTOs,
       creator: creatorDTO,
       position: board.position,
+      isActive: board.isActive,
     };
   }
 

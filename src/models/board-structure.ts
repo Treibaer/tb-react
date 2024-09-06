@@ -21,6 +21,7 @@ export interface Board {
   tickets: Ticket[];
   creator?: User;
   position: number;
+  isActive: boolean;
 }
 
 export interface SmallBoard {

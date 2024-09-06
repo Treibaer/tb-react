@@ -1,4 +1,5 @@
 import {
+  ArchiveBoxArrowDownIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   PencilIcon,
@@ -34,6 +35,15 @@ export const BoardRow: React.FC<{
     event.preventDefault();
     onEdit(board);
   }
+
+  async function handleToggleActive(event: React.MouseEvent) {
+    event.preventDefault();
+    await BoardService.shared.update(projectSlug, board.id, {
+      isActive: !board.isActive,
+    });
+    update();
+  }
+
   return (
     <NavLink
       to={ROUTES.BOARD_DETAILS(projectSlug, board.id)}
@@ -63,6 +73,12 @@ export const BoardRow: React.FC<{
         </ButtonIcon>
         <ButtonIcon onClick={handleEdit}>
           <PencilIcon className="w-5 h-5" />
+        </ButtonIcon>
+        <ButtonIcon onClick={handleToggleActive}>
+          <ArchiveBoxArrowDownIcon
+            color={board.isActive ? undefined : "olive"}
+            className="w-5 h-5"
+          />
         </ButtonIcon>
       </div>
     </NavLink>

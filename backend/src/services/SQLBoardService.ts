@@ -101,6 +101,9 @@ export default class SQLBoardService {
         await boards[i].save();
       }
     }
+    if (data.isActive !== undefined) {
+      board.isActive = data.isActive;
+    }
 
     await board.save();
 
