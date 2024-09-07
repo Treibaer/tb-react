@@ -1,9 +1,10 @@
+import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { NavLink } from "react-router-dom";
 import { Board } from "../../../models/board-structure";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
-import Button from "../../Button";
+import { ButtonIcon } from "../../ButtonIcon";
 import TicketRow from "./TicketRow";
 
 export const BoardSection: React.FC<{
@@ -28,25 +29,38 @@ export const BoardSection: React.FC<{
       (!hideDone || t.status !== "done") &&
       t.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const totalTickets = board.tickets.length;
+  const doneTickets = board.tickets.filter((e) => e.status === "done").length;
   return (
-    <div key={board.id} className="">
-      <div className="flex gap-3 px-4 h-11 bg-[rgb(32,33,46)] items-center border-b border-b-[rgb(37,38,50)] w-full">
-        <NavLink
-          to={ROUTES.BOARD_DETAILS(project.slug, board.id)}
-          className="text-base overflow-x-hidden whitespace-nowrap"
-        >
-          <div>{board.title}</div>
-        </NavLink>
-        <div className="text-gray-400">
-          {board.tickets.filter((e) => e.status === "done").length}/
-          {board.tickets.length}
+    <div key={board.id}>
+      <div className="flex justify-between px-4 h-11 bg-[rgb(32,33,46)] border-b border-b-[rgb(37,38,50)]">
+        <div className="flex gap-3 h-11 items-center">
+          <NavLink
+            to={ROUTES.BOARD_DETAILS(project.slug, board.id)}
+            className="text-base overflow-x-hidden whitespace-nowrap"
+          >
+            <div>{board.title}</div>
+          </NavLink>
+
+          <ButtonIcon onClick={toggleBoard.bind(null, board.id)}>
+            {isBoardVisible ? (
+              <ChevronDownIcon className="w-5 h-5" />
+            ) : (
+              <ChevronRightIcon className="w-5 h-5" />
+            )}
+          </ButtonIcon>
         </div>
-        {board.title !== "backlog" && (
-          <Button
-            onClick={toggleBoard.bind(null, board.id)}
-            title={isBoardVisible ? "Hide" : "Show"}
-          />
-        )}
+        <div className="flex gap-4 items-center">
+          <div className="text-gray-400 w-12 text-right">
+            {doneTickets}/{totalTickets}
+          </div>
+          <div className="h-1 w-64 bg-neutral-200 dark:bg-neutral-600">
+            <div
+              className="h-1 bg-[olive]"
+              style={{ width: `${(doneTickets / totalTickets) * 100}%` }}
+            ></div>
+          </div>
+        </div>
       </div>
       {isBoardVisible &&
         tickets.map((ticket: Ticket) => (
