@@ -1,9 +1,11 @@
+import { AccessTokenDTO } from "../dtos/access-token-dto.js";
 import { BoardDTO } from "../dtos/board-dto.js";
 import { ProjectDTO } from "../dtos/project-dto.js";
 import { SmallBoardDTO } from "../dtos/small-board-dto.js";
 import { TicketDTO } from "../dtos/ticket-dto.js";
 import { TicketHistoryDTO } from "../dtos/ticket-history-dto.js";
 import { UserDTO } from "../dtos/user-dto.js";
+import { AccessToken } from "../models/access-token.js";
 import { Board } from "../models/board.js";
 import { Project } from "../models/project.js";
 import { TicketHistory } from "../models/ticket-history.js";
@@ -66,8 +68,12 @@ export default class Transformer {
     };
   }
 
-  static async ticketHistory(ticketHistory: TicketHistory): Promise<TicketHistoryDTO> {
-    const creator = await UserService.shared.getUserById(ticketHistory.creator_id);
+  static async ticketHistory(
+    ticketHistory: TicketHistory
+  ): Promise<TicketHistoryDTO> {
+    const creator = await UserService.shared.getUserById(
+      ticketHistory.creator_id
+    );
     return {
       createdAt: ticketHistory.createdAt,
       description: ticketHistory.description,
@@ -106,6 +112,12 @@ export default class Transformer {
     return {
       id: board.id,
       title: board.title,
+    };
+  }
+
+  static accessToken(token: AccessToken): AccessTokenDTO {
+    return {
+      value: token.value,
     };
   }
 }

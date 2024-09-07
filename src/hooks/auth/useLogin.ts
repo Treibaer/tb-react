@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Constants from "../../services/Constants";
+import { AccessToken } from "../../models/access-token";
 
 export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
   const [email, setEmail] = useState("");
@@ -13,22 +14,22 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
     setError("");
 
     try {
-      const response = await fetch(`${Constants.loginBackendUrl}/api/v2/login`, {
+      const response = await fetch(`${Constants.backendUrl}/api/v3/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: email,
+          email: email,
           password: password,
           client: "tb-react",
         }),
       });
 
-      const data = await response.json();
+      const data: AccessToken = await response.json();
 
-      if (response.ok && data.token) {
-        localStorage.setItem("token", data.token);
+      if (response.ok && data.value) {
+        localStorage.setItem("token", data.value);
         setIsLoggedIn(true);
       } else {
         setError("Invalid credentials");

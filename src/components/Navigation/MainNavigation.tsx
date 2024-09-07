@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import NavigationLink from "./NavigationLink";
 import UserMenu from "./UserMenu";
+import Constants from "../../services/Constants";
 
 export default function MainNavigation() {
   const params: { projectSlug?: string } = useParams();
@@ -44,11 +45,13 @@ export default function MainNavigation() {
           title="Projects"
           icon={<ChartBarIcon />}
         />
-        <NavigationLink
-          to={ROUTES.STATUS}
-          title="Status"
-          icon={<ChartPieIcon />}
-        />
+        {!Constants.isDemoMode && (
+          <NavigationLink
+            to={ROUTES.STATUS}
+            title="Status"
+            icon={<ChartPieIcon />}
+          />
+        )}
         {params.projectSlug && (
           <>
             <hr className="py-2" />

@@ -25,6 +25,7 @@ import StatusView from "./pages/StatusView";
 import TicketHistoryView, {
   loader as ticketDetailsHistoryLoader,
 }  from "./pages/projects/TicketHistoryView";
+import Register from "./pages/Register";
 
 const router = createBrowserRouter([
   {
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
   {
     path: "/logout",
     element: <Logout />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 

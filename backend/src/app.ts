@@ -49,6 +49,9 @@ const __dirname = path.dirname(__filename);
 // serve static files
 app.use("/", express.static(path.join(__dirname, "../public")));
 
+
+app.use("/api/v3", authRoutes);
+
 // auth middleware
 app.use(async (req, res, next) => {
   const authorization = req.headers.authorization ?? "";
@@ -66,7 +69,6 @@ app.use(async (req, res, next) => {
 
 const port = process.env.PORT || 3052;
 
-app.use("/api/v3", authRoutes);
 app.use("/api/v3/projects", projectsRoutes);
 app.use("/api/v3/projects", ticketsRoutes);
 app.use("/api/v3/projects", boardsRoutes);

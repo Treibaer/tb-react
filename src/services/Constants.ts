@@ -1,6 +1,7 @@
 type Config = {
   loginBackendUrl?: string;
   backendUrl: string;
+  isDemoMode?: boolean;
 };
 
 const prod: Config = {
