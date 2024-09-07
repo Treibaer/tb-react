@@ -27,7 +27,7 @@ export class Project extends Model {
     const project = await Project.findOne({ where: { slug } });
     if (!project) {
       const error = new Error("Project not found") as any;
-      error.status = 404;
+      error.statusCode = 404;
       throw error;
     }
     return project;

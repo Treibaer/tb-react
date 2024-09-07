@@ -1,5 +1,6 @@
 import { TicketDTO } from "../dtos/ticket-dto.js";
 import { Project } from "../models/project.js";
+import { TicketHistory } from "../models/ticket-history.js";
 import { Ticket } from "../models/ticket.js";
 import LegacyTicketService from "./LegacyTicketService.js";
 
@@ -17,7 +18,9 @@ export class SQLTicketService {
       where: { ticketId },
     });
     if (tickets.length === 0) {
-      throw new Error("Ticket not found");
+      const error: any = new Error("Ticket not found");
+      error.statusCode = 404;
+      throw error;
     }
     return tickets[0];
   }
@@ -49,5 +52,13 @@ export class SQLTicketService {
       ticketSlug,
       data
     );
+  }
+
+  async getHistory(ticketSlug: string): Promise<TicketHistory[]> {
+    const ticket = await Ticket.getBySlug(ticketSlug);
+    return await TicketHistory.findAll({
+      where: { ticket_id: ticket.id },
+      order: [["createdAt", "DESC"]],
+    });
   }
 }

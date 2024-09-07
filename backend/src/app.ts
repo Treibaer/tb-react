@@ -34,7 +34,8 @@ app.use((req, res, next) => {
     return res.status(200).json({});
   } else {
     // log request
-    console.log(req.method, req.url);
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    console.log(req.method, req.url, ip);
     return next();
   }
 });
@@ -79,10 +80,11 @@ app.get("/", async (_, res) => {
   res.json({ api: "running" });
 });
 
-app.use((error: any, _: any, res: any, __: any) => {
+app.use((error: any, req: any, res: any, __: any) => {
+  console.error(res.method, req.url, error.message, error.statusCode ?? 500);
   console.error(error);
   res
-    .status(error.status ?? 500)
+    .status(error.statusCode ?? 500)
     .json({ message: error.message ?? "Internal server error" });
 });
 

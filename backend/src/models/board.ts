@@ -4,8 +4,6 @@ import { sequelize } from "../utils/database.js";
 export class Board extends Model {
   declare id: number;
   declare title: string;
-  declare startDate: number;
-  declare endDate: number;
   declare project_id: number;
   declare creator_id: number;
   declare isActive: boolean;
@@ -23,16 +21,6 @@ Board.init(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    startDate: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-      field: "start_date",
-    },
-    endDate: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-      field: "end_date",
     },
     isActive: {
       type: DataTypes.BOOLEAN,

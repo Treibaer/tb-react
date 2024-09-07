@@ -49,8 +49,6 @@ export const Boards: React.FC = () => {
         const newBoard: Board = {
           id: 0,
           title,
-          startDate: 0,
-          endDate: 0,
           tickets: [],
           position: boards.length, // gets overridden by the server
           isActive: true,
@@ -83,7 +81,9 @@ export const Boards: React.FC = () => {
 
   function toggleEdit(board: Board) {
     setEditBoard(board);
-    console.log(board);
+    setTimeout(() => {
+      editInputRef.current?.focus();
+    }, 100);
   }
 
   const breadcrumbs: Breadcrumb[] = [

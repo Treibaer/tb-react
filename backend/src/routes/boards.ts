@@ -5,10 +5,14 @@ import Transformer from "../utils/Transformer.js";
 const boardService = SQLBoardService.shared;
 const router = express.Router();
 
-router.get("/:slug/tickets-board-structure", async (req, res) => {
+router.get("/:slug/tickets-board-structure", async (req, res, next) => {
   const projectSlug = req.params.slug;
-  const boardStructure = await boardService.getBoardStructure(projectSlug);
-  res.status(200).json(boardStructure);
+  try {
+    const boardStructure = await boardService.getBoardStructure(projectSlug);
+    res.status(200).json(boardStructure);
+  } catch (error: any) {
+    next(error);
+  }
 });
 
 router.get("/:slug/boards", async (req, res, next) => {
@@ -18,7 +22,7 @@ router.get("/:slug/boards", async (req, res, next) => {
     const boardDTOs = await Promise.all(boards.map(Transformer.board));
     res.status(200).json(boardDTOs);
   } catch (error: any) {
-    error.status = 404;
+    error.statusCode = 404;
     error.message = "Boards not found";
     next(error);
   }

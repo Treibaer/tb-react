@@ -32,16 +32,16 @@ router.post("/:slug/tickets", async (req, res, next) => {
   }
 });
 
-router.get("/:slug/tickets/:ticketSlug", async (req, res) => {
+router.get("/:slug/tickets/:ticketSlug", async (req, res, next) => {
   const projectSlug = req.params.slug;
   const ticketSlug = req.params.ticketSlug;
-  const ticket = await ticketsService.get(projectSlug, ticketSlug);
-  if (!ticket) {
-    res.status(404).json({ message: "Ticket not found" });
-    return;
+  try {
+    const ticket = await ticketsService.get(projectSlug, ticketSlug);
+    const ticketDTO = await Transformer.ticket(projectSlug, ticket);
+    res.status(200).json(ticketDTO);
+  } catch (error: any) {
+    next(error);
   }
-  const ticketDTO = await Transformer.ticket(projectSlug, ticket);
-  res.status(200).json(ticketDTO);
 });
 
 router.patch("/:slug/tickets/:ticketSlug", async (req, res, next) => {
@@ -54,6 +54,19 @@ router.patch("/:slug/tickets/:ticketSlug", async (req, res, next) => {
       req.body
     );
     res.status(200).json(ticket);
+  } catch (error: any) {
+    next(error);
+  }
+});
+
+router.get("/:slug/tickets/:ticketSlug/history", async (req, res, next) => {
+  const ticketSlug = req.params.ticketSlug;
+  try {
+    const historyList = await ticketsService.getHistory(ticketSlug);
+    const historyDTOs = await Promise.all(
+      historyList.map(async (history) => Transformer.ticketHistory(history))
+    );
+    res.status(200).json(historyDTOs);
   } catch (error: any) {
     next(error);
   }

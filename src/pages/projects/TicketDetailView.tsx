@@ -21,9 +21,11 @@ export default function TicketDetailView() {
   const data = useLoaderData() as {
     metadata: ProjectMeta;
     ticket: Ticket;
+    isOldVersion: boolean;
   };
   const { metadata } = data;
   const project = metadata.project;
+  const isOldVersion = data.isOldVersion;
   const [ticket, setTicket] = useState<Ticket>(data.ticket);
   const currentTitle = useRef<HTMLInputElement>(null);
   const currentDescription = useRef(ticket.description);
@@ -38,6 +40,9 @@ export default function TicketDetailView() {
   ];
 
   async function toggleEdit() {
+    if (isOldVersion) {
+      return;
+    }
     if (isEditing) {
       const title = currentTitle.current?.value;
       const description = currentDescription.current;
@@ -61,6 +66,11 @@ export default function TicketDetailView() {
       <div className="flex">
         <div className="w-[calc(100%-240px)] h-[calc(100vh-56px)] overflow-auto max-h-full px-2 flex flex-col">
           <div className="border-b-[rgb(37,38,50)] border-b mb-4">
+            {isOldVersion && (
+              <div className="text-red-500 text-center">
+                You are viewing an old version of this ticket
+              </div>
+            )}
             <div className="flex h-12 items-center gap-2">
               {isEditing && (
                 <input
@@ -84,7 +94,7 @@ export default function TicketDetailView() {
                     />
                   </div>
                 )}
-                {!isEditing && (
+                {!isEditing && !isOldVersion && (
                   <ButtonIcon onClick={toggleEdit}>
                     <PencilSquareIcon className="size-5" />
                   </ButtonIcon>
@@ -114,12 +124,30 @@ export default function TicketDetailView() {
 export const loader: LoaderFunction<{
   projectSlug: string;
   ticketSlug: string;
-}> = async ({ params }) => {
+}> = async ({ request, params }) => {
   const projectSlug = params.projectSlug ?? "";
   const ticketSlug = params.ticketSlug ?? "";
 
   const metadata = await projectService.getMetadata(projectSlug);
   const ticket = await ticketService.get(projectSlug, ticketSlug);
 
-  return { metadata, ticket };
+  const queryParameters = new URL(request.url).searchParams;
+  const version = queryParameters.get("version");
+
+  let isOldVersion = false;
+
+  if (version) {
+    const history = await ticketService.getHistory(projectSlug, ticketSlug);
+
+    const historyItem = history.find(
+      (h) => h.versionNumber === Number(version)
+    );
+    if (historyItem) {
+      ticket.description = historyItem.description;
+      if (Number(version) < history.length) {
+        isOldVersion = true;
+      }
+    }
+  }
+  return { metadata, ticket, isOldVersion };
 };

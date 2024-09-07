@@ -134,52 +134,53 @@ const TicketsBoardView: React.FC = () => {
         <TicketCreationDialog project={project} onClose={onClose} />
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
+      <div className=" overflow-auto max-h-[calc(100vh-57px)]">
+        <div className="flex justify-between items-center gap-4">
+          <TitleView title="Board View" openDialog={openDialog} />
+          <div className="flex items-center gap-4 me-2">
+            <Toggle
+              title="Hide done"
+              defaultChecked={hideDone}
+              onChange={toggleHideDone}
+            />
+            <input
+              type="text"
+              placeholder="Search"
+              className="bg-customBlue text-gray-400 rounded-md p-2"
+              style={{ boxShadow: "none", outline: "none" }}
+              onChange={handleSearch}
+            />
+            <NavLink to={ROUTES.BOARDS(project.slug)}>
+              <Button title="Boards" />
+            </NavLink>
 
-      <div className="flex justify-between items-center gap-4">
-        <TitleView title="Board View" openDialog={openDialog} />
-        <div className="flex items-center gap-4 me-2">
-          <Toggle
-            title="Hide done"
-            defaultChecked={hideDone}
-            onChange={toggleHideDone}
-          />
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-customBlue text-gray-400 rounded-md p-2"
-            style={{ boxShadow: "none", outline: "none" }}
-            onChange={handleSearch}
-          />
-          <NavLink to={ROUTES.BOARDS(project.slug)}>
-            <Button title="Boards" />
-          </NavLink>
-
-          <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
-            <Button title="All Tickets" />
-          </NavLink>
+            <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
+              <Button title="All Tickets" />
+            </NavLink>
+          </div>
         </div>
-      </div>
 
-      <div className="board-structure">
-        {config.show && (
-          <ContextMenu
-            metadata={data.metadata}
-            config={config}
-            onClose={closeContextMenu}
-          />
-        )}
-        {activeBoards.map((board: Board) => (
-          <BoardSection
-            key={board.id}
-            board={board}
-            isBoardVisible={isBoardVisible(board.id)}
-            onContextMenu={onContextMenu}
-            toggleBoard={toggleBoard}
-            hideDone={hideDone}
-            searchTerm={searchTerm}
-            project={project}
-          />
-        ))}
+        <div className="board-structure">
+          {config.show && (
+            <ContextMenu
+              metadata={data.metadata}
+              config={config}
+              onClose={closeContextMenu}
+            />
+          )}
+          {activeBoards.map((board: Board) => (
+            <BoardSection
+              key={board.id}
+              board={board}
+              isBoardVisible={isBoardVisible(board.id)}
+              onContextMenu={onContextMenu}
+              toggleBoard={toggleBoard}
+              hideDone={hideDone}
+              searchTerm={searchTerm}
+              project={project}
+            />
+          ))}
+        </div>
       </div>
     </>
   );

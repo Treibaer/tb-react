@@ -21,8 +21,6 @@ export default class SQLBoardService {
     // await Validator.validateNewProject(project);
     const createdBoard = await Board.create({
       title: board.title,
-      startDate: 0,
-      endDate: 0,
       isActive: true,
       project_id: project.id,
       creator_id: user.id,
@@ -49,12 +47,10 @@ export default class SQLBoardService {
       where: { project_id: project.id, isActive: true },
       order: [["position", "ASC"]],
     });
-    activeBoards.sort((a, b) => a.startDate - b.startDate);
     const backlog = await Ticket.findAll({
       where: { project_id: project.id, board_id: null },
       order: [["position", "ASC"]],
     });
-    backlog.sort((a, b) => a.position - b.position);
     const backlogTicketDTOs = await Promise.all(
       backlog.map((ticket) => Transformer.ticket(projectSlug, ticket))
     );

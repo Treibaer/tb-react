@@ -50,6 +50,9 @@ export default class UserService {
   }
 
   async getUserById(id: number): Promise<any | null> {
+    if (this.store.get("users").length === 0) {
+      this.store.set("users", await User.findAll());
+    }
     return this.store.get("users").find((user: any) => user.id === id);
   }
 }

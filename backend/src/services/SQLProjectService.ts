@@ -38,8 +38,8 @@ export class SQLProjectService {
     const users = await UserService.shared.getAll();
     const userDTOs = users.map(Transformer.user);
     const boards = await Board.findAll({
-      where: { project_id: project.id },
-      order: [["startDate", "ASC"]],
+      where: { project_id: project.id, isActive: true },
+      order: [["position", "ASC"]],
     });
     const smallBoardDTOs = await Promise.all(
       boards.map(Transformer.smallBoard)
@@ -54,7 +54,9 @@ export class SQLProjectService {
   }
 
   async update(slug: string, project: ProjectDTO): Promise<ProjectDTO> {
-    throw new Error("Method not implemented. Slug: " + slug + ", Project ID: " + project.id);
+    throw new Error(
+      "Method not implemented. Slug: " + slug + ", Project ID: " + project.id
+    );
   }
 
   async deleteProject(slug: string): Promise<boolean> {

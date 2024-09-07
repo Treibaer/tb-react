@@ -20,7 +20,7 @@ export const formatUnixTimestamp = (
       return date.toLocaleDateString("de-DE", {
         year: "numeric",
         month: "2-digit",
-        day: "numeric",
+        day: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
       });

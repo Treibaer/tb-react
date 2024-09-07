@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/database.js";
+import { Project } from "./project.js";
 
 export class Ticket extends Model {
   declare id: number;
@@ -14,6 +15,18 @@ export class Ticket extends Model {
   declare creator_id: number;
   declare assigned_id: number | null;
   declare board_id: number | null;
+  static async getBySlug(slug: string): Promise<Ticket> {
+    const projectSlug = slug.split("-")[0];
+    const ticketId = slug.split("-")[1];
+    const project = await Project.getBySlug(projectSlug);
+    const ticket = await Ticket.findOne({ where: { ticket_id: ticketId, project_id: project.id } });
+    if (!ticket) {
+      const error = new Error("Ticket not found") as any;
+      error.statusCode = 404;
+      throw error;
+    }
+    return ticket;
+  }
 }
 
 Ticket.init(

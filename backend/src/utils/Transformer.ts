@@ -2,9 +2,11 @@ import { BoardDTO } from "../dtos/board-dto.js";
 import { ProjectDTO } from "../dtos/project-dto.js";
 import { SmallBoardDTO } from "../dtos/small-board-dto.js";
 import { TicketDTO } from "../dtos/ticket-dto.js";
+import { TicketHistoryDTO } from "../dtos/ticket-history-dto.js";
 import { UserDTO } from "../dtos/user-dto.js";
 import { Board } from "../models/board.js";
 import { Project } from "../models/project.js";
+import { TicketHistory } from "../models/ticket-history.js";
 import { TicketStatus } from "../models/ticket-status.js";
 import { Ticket } from "../models/ticket.js";
 import { User } from "../models/user.js";
@@ -64,6 +66,16 @@ export default class Transformer {
     };
   }
 
+  static async ticketHistory(ticketHistory: TicketHistory): Promise<TicketHistoryDTO> {
+    const creator = await UserService.shared.getUserById(ticketHistory.creator_id);
+    return {
+      createdAt: ticketHistory.createdAt,
+      description: ticketHistory.description,
+      versionNumber: ticketHistory.versionNumber,
+      creator: this.user(creator),
+    };
+  }
+
   static async board(board: Board): Promise<BoardDTO> {
     const project = await Project.findByPk(board.project_id);
     const tickets = await Ticket.findAll({
@@ -83,8 +95,6 @@ export default class Transformer {
       id: board.id,
       projectId: board.project_id,
       title: board.title,
-      startDate: board.startDate,
-      endDate: board.endDate,
       tickets: ticketDTOs,
       creator: creatorDTO,
       position: board.position,

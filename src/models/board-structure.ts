@@ -16,8 +16,6 @@ export interface BoardStructure {
 export interface Board {
   id: number;
   title: string;
-  startDate: number;
-  endDate: number;
   tickets: Ticket[];
   creator?: User;
   position: number;

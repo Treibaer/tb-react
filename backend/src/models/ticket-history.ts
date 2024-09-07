@@ -5,7 +5,7 @@ export class TicketHistory extends Model {
   declare id: number;
   declare description: string;
   declare createdAt: number;
-  declare versionNumber: string;
+  declare versionNumber: number;
   declare creator_id: number;
   declare ticket_id: number;
 }
@@ -23,7 +23,7 @@ TicketHistory.init(
       allowNull: false,
     },
     versionNumber: {
-      type: DataTypes.STRING,
+      type: DataTypes.NUMBER,
       allowNull: false,
       field: "version_number",
     },

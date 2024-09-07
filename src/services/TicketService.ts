@@ -1,4 +1,5 @@
 import { Ticket } from "../models/ticket";
+import { TicketHistory } from "../models/ticket-history";
 import { TicketStatus } from "../models/ticket-status";
 import Client from "./Client";
 
@@ -95,5 +96,10 @@ export default class TicketService {
       creator: null,
       assignee: null,
     };
+  }
+
+  async getHistory(projectSlug: string, ticketSlug: string) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}/history`;
+    return this.client.get<TicketHistory[]>(url);
   }
 }

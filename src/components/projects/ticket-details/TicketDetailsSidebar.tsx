@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DropdownType } from "../../../models/dropdown-type";
 import { ProjectMeta } from "../../../models/project-meta";
 import { Ticket } from "../../../models/ticket";
@@ -12,6 +12,8 @@ import AssigneeDropdown from "./dropdowns/AssigneeDropdown";
 import BoardDropdown from "./dropdowns/BoardDropdown";
 import StatusDropdown from "./dropdowns/StatusDropdown";
 import TypeDropdown from "./dropdowns/TypeDropdown";
+import { NavLink } from "react-router-dom";
+import { TicketHistory } from "../../../models/ticket-history";
 
 const ticketService = TicketService.shared;
 
@@ -22,6 +24,7 @@ export const TicketDetailsSidebar: React.FC<{
 }> = ({ ticket, update, metadata }) => {
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
   const project = metadata.project;
+  const [history, setHistory] = useState<TicketHistory[]>([]);
 
   async function updateStatus(status: TicketStatus | null) {
     setDropdown(DropdownType.NONE);
@@ -74,6 +77,14 @@ export const TicketDetailsSidebar: React.FC<{
     );
     update(updatedTicket);
   }
+
+  useEffect(() => {
+    async function loadHistory() {
+      const history = await ticketService.getHistory(project.slug, ticket.slug);
+      setHistory(history);
+    }
+    loadHistory();
+  }, [project, ticket]);
 
   return (
     <div className="h-[calc(100vh-56px)] overflow-auto max-h-full bg-[rgb(32,33,46)] border-t border-t-[rgb(53,56,74)] border-r border-r-[rgb(53,56,74)] w-[254px] cursor-default">
@@ -175,6 +186,11 @@ export const TicketDetailsSidebar: React.FC<{
           >
             {formatUnixTimestamp(ticket.createdAt, FormatType.DAY)}
           </div>
+        </TicketDetailsRow>
+        <TicketDetailsRow title="History">
+          <NavLink to={`history`}>
+            {history.length} Version{history.length !== 1 ? "s" : undefined}
+          </NavLink>
         </TicketDetailsRow>
       </div>
     </div>
