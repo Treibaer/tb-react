@@ -26,6 +26,9 @@ import TicketHistoryView, {
   loader as ticketDetailsHistoryLoader,
 }  from "./pages/projects/TicketHistoryView";
 import Register from "./pages/Register";
+import FinanceDashboard from "./pages/finances/FinanceDashboard";
+import FinanceDetailView , {loader as detailViewLoader }from "./pages/finances/FinanceDetailView";
+import FinanceSummaryView from "./pages/finances/FinanceSummaryView";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +75,19 @@ const router = createBrowserRouter([
         path: "/projects/:projectSlug",
         element: <ProjectDetailView />,
         loader: projectDetailsLoader,
+      },
+      {
+        path: "/finances",
+        element: <FinanceDashboard />,
+      },
+      {
+        path: "/finances/details",
+        element: <FinanceDetailView />,
+        loader: detailViewLoader,
+      },
+      {
+        path: "/finances/summary",
+        element: <FinanceSummaryView />,
       },
       {
         path: "/status",

@@ -4,6 +4,9 @@ import { AccessToken } from "../models/access-token.js";
 import { Ticket } from "../models/ticket.js";
 import { Board } from "../models/board.js";
 import { TicketHistory } from "../models/ticket-history.js";
+import { AccountEntry } from "../models/finances/account-entry.js";
+import { Account } from "../models/finances/account.js";
+import { AccountTag } from "../models/finances/account-tag.js";
 
 export const createRelations = () => {
   Project.belongsTo(User, {
@@ -67,5 +70,23 @@ export const createRelations = () => {
     constraints: false,
     as: "creator",
     foreignKey: "creator_id",
+  });
+
+  AccountEntry.belongsTo(User, {
+    constraints: false,
+    as: "creator",
+    foreignKey: "creator_id",
+  });
+
+  AccountEntry.belongsTo(Account, {
+    constraints: false,
+    as: "account",
+    foreignKey: "account_id",
+  });
+
+  AccountEntry.belongsTo(AccountTag, {
+    constraints: false,
+    as: "tag",
+    foreignKey: "tag_id",
   });
 };

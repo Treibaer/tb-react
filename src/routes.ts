@@ -18,5 +18,8 @@ export const ROUTES = {
   PROFILE: '/profile',
   SETTINGS: '/settings',
   STATUS: '/status',
+  FINANCE_DASHBOARD: '/finances',
+  FINANCE_DETAILS: '/finances/details',
+  FINANCE_SUMMARY: '/finances/summary',
   NOT_FOUND: '/404',
 };

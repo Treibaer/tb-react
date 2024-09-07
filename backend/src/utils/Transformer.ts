@@ -1,5 +1,8 @@
 import { AccessTokenDTO } from "../dtos/access-token-dto.js";
 import { BoardDTO } from "../dtos/board-dto.js";
+import { AccountDTO } from "../dtos/finances/account-dto.js";
+import { AccountEntryDTO } from "../dtos/finances/account-entry-dto.js";
+import { AccountTagDTO } from "../dtos/finances/account-tag-dto.js";
 import { ProjectDTO } from "../dtos/project-dto.js";
 import { SmallBoardDTO } from "../dtos/small-board-dto.js";
 import { TicketDTO } from "../dtos/ticket-dto.js";
@@ -7,6 +10,9 @@ import { TicketHistoryDTO } from "../dtos/ticket-history-dto.js";
 import { UserDTO } from "../dtos/user-dto.js";
 import { AccessToken } from "../models/access-token.js";
 import { Board } from "../models/board.js";
+import { AccountEntry } from "../models/finances/account-entry.js";
+import { AccountTag } from "../models/finances/account-tag.js";
+import { Account } from "../models/finances/account.js";
 import { Project } from "../models/project.js";
 import { TicketHistory } from "../models/ticket-history.js";
 import { TicketStatus } from "../models/ticket-status.js";
@@ -118,6 +124,41 @@ export default class Transformer {
   static accessToken(token: AccessToken): AccessTokenDTO {
     return {
       value: token.value,
+    };
+  }
+
+  static account(account: Account): AccountDTO {
+    return {
+      id: account.id,
+      title: account.title,
+      valueInCents: account.valueInCents,
+    };
+  }
+
+  static tags: AccountTagDTO[] = [];
+
+  static async accountEntry(accountEntry: AccountEntry): Promise<AccountEntryDTO> {
+    if (!this.tags.length) {
+      this.tags = await AccountTag.findAll();
+    }
+    const tag = this.tags.find((tag) => tag.id === accountEntry.tag_id);
+    return {
+      id: accountEntry.id,
+      title: accountEntry.title,
+      createdAt: accountEntry.createdAt,
+      valueInCents: accountEntry.valueInCents,
+      purchasedAt: accountEntry.purchasedAt,
+      tagId: accountEntry.tag_id,
+      icon: tag?.icon ?? "",
+      tag: tag?.title ?? "",
+    };
+  }
+
+  static accountTag(accountTag: AccountTag): AccountTagDTO {
+    return {
+      id: accountTag.id,
+      title: accountTag.title,
+      icon: accountTag.icon,
     };
   }
 }

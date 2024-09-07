@@ -15,6 +15,9 @@ import Constants from "../../services/Constants";
 export default function MainNavigation() {
   const params: { projectSlug?: string } = useParams();
 
+  // check if current url starts with /finances
+  const isFinancePage = window.location.pathname.startsWith(ROUTES.FINANCE_DASHBOARD);
+
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
   const toggleSettings = () => {
@@ -46,11 +49,19 @@ export default function MainNavigation() {
           icon={<ChartBarIcon />}
         />
         {!Constants.isDemoMode && (
+          <>
           <NavigationLink
             to={ROUTES.STATUS}
             title="Status"
             icon={<ChartPieIcon />}
           />
+          
+          <NavigationLink
+            to={ROUTES.FINANCE_DETAILS}
+            title="Finances"
+            icon={<ChartPieIcon />}
+          />
+          </>
         )}
         {params.projectSlug && (
           <>
@@ -73,6 +84,21 @@ export default function MainNavigation() {
             <NavigationLink
               to={ROUTES.TICKETS_LIST(params.projectSlug)}
               title="All Tickets"
+              icon={<TicketIcon />}
+            />
+          </>
+        )}
+        { isFinancePage && (
+          <>
+            <hr className="py-2" />
+            <NavigationLink
+              to={ROUTES.FINANCE_DETAILS}
+              title="Details"
+              icon={<TicketIcon />}
+            />
+            <NavigationLink
+              to={ROUTES.FINANCE_SUMMARY}
+              title="Summary"
               icon={<TicketIcon />}
             />
           </>

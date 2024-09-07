@@ -8,6 +8,7 @@ import boardsRoutes from "./routes/boards.js";
 import projectsRoutes from "./routes/projects.js";
 import statusRoutes from "./routes/status.js";
 import ticketsRoutes from "./routes/tickets.js";
+import financesRoutes from "./routes/finances.js";
 import UserService from "./services/UserService.js";
 import { sequelize } from "./utils/database.js";
 import { global } from "./utils/global.js";
@@ -69,6 +70,7 @@ app.use(async (req, res, next) => {
 
 const port = process.env.PORT || 3052;
 
+app.use("/api/v3/finances", financesRoutes);
 app.use("/api/v3/projects", projectsRoutes);
 app.use("/api/v3/projects", ticketsRoutes);
 app.use("/api/v3/projects", boardsRoutes);
