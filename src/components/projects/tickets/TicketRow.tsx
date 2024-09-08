@@ -1,7 +1,8 @@
 import {
+  Bars4Icon,
   CheckCircleIcon,
   EllipsisHorizontalCircleIcon,
-  InformationCircleIcon,
+  InformationCircleIcon
 } from "@heroicons/react/24/solid";
 import { NavLink } from "react-router-dom";
 import { Project } from "../../../models/project";
@@ -45,7 +46,14 @@ export default function TicketRow({
             )}
           </div>
           <div className="text-gray-400 w-16">{ticket.slug}</div>
+          <div className="flex gap-2 items-center">
           <div>{ticket.title}</div>
+            <div>
+              {ticket.description && (
+                <Bars4Icon className="h-4 w-4 text-gray-400" />
+              )}
+            </div>
+          </div>
         </div>
         {ticket.type && (
           <div className="rounded border-gray-500 border px-2">

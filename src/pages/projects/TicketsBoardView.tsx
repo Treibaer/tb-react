@@ -14,8 +14,8 @@ import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
-import ProjectService from "../../services/ProjectService";
 import { BoardService } from "../../services/BoardService";
+import ProjectService from "../../services/ProjectService";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;

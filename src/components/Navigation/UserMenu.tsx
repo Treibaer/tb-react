@@ -1,3 +1,4 @@
+import { AdjustmentsHorizontalIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import { useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -38,10 +39,16 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
       className="tb-container active tb-transparent-menu tb-context-menu show absolute right-2 pt-1 top-12 w-[140px]"
     >
       <NavLink className="tb-dropdown-item" to="/settings">
-        Settings
+        <div className="flex items-center">
+          <AdjustmentsHorizontalIcon className="h-5 w-5 mr-2" />
+          <div>Settings</div>
+        </div>
       </NavLink>
       <NavLink className="tb-dropdown-item" to="/logout">
-        Logout
+        <div className="flex items-center">
+          <LockClosedIcon className="h-5 w-5 mr-2" />
+          <div>Logout</div>
+        </div>
       </NavLink>
     </div>
   );

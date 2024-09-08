@@ -70,21 +70,57 @@ export class SQLFinanceService {
     return Transformer.accountEntry(existingEntry);
   }
 
-  async getAllEntries(year: number): Promise<AccountEntry[]> {
+  async updateAccountBalance(valueInCents: number): Promise<void> {
+    const account = await Account.findByPk(3);
+    if (!account) {
+      throw new Error("Account not found");
+    }
+    account.valueInCents = valueInCents;
+    await account.save();
+  }
+
+  async getAllEntries(
+    year: number,
+    filter?: {
+      tag_id?: number;
+      dateFrom?: string;
+      dateTo?: string;
+      type?: string;
+    }
+  ): Promise<AccountEntry[]> {
     const user = await this.userService.getUser();
 
     // find all entries, so that their unix timestamp (purchaseAt) is between the start and end of the year
-    const startOfYear =
-      new Date(year, 0, 1).getTime() / 1000;
-    const endOfYear =
-      new Date(year, 11, 31, 23, 59, 59).getTime() / 1000;
+    const dateFrom = filter?.dateFrom
+      ? new Date(filter.dateFrom)
+      : new Date(year, 0, 1);
+
+    const dateTo = filter?.dateTo
+      ? new Date(filter.dateTo).getTime() / 1000 + 4 * 3600
+      : new Date(year, 11, 31, 23, 59, 59).getTime() / 1000;
+
+    const moreWhere: any = {};
+    if (filter?.tag_id) {
+      moreWhere.tag_id = filter.tag_id;
+    }
+    if (filter?.type === "income") {
+      moreWhere.valueInCents = {
+        [Op.gt]: 0,
+      };
+    }
+    if (filter?.type === "expenses") {
+      moreWhere.valueInCents = {
+        [Op.lt]: 0,
+      };
+    }
 
     return await AccountEntry.findAll({
       where: {
+        ...moreWhere,
         creator_id: user.id,
         purchasedAt: {
-          [Op.gte]: startOfYear,
-          [Op.lte]: endOfYear,
+          [Op.gte]: dateFrom.getTime() / 1000,
+          [Op.lte]: dateTo,
         },
       },
       order: [

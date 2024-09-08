@@ -1,18 +1,26 @@
 import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import { Op } from "sequelize";
 import { AccountEntryDTO } from "../dtos/finances/account-entry-dto.js";
+import { FinanceSummary } from "../dtos/finances/finance-summary-dto.js";
 import { AccountTag } from "../models/finances/account-tag.js";
 import { Account } from "../models/finances/account.js";
 import { SQLFinanceService } from "../services/SQLFinanceService.js";
 import Transformer from "../utils/Transformer.js";
-import { FinanceSummary } from "../dtos/finances/finance-summary-dto.js";
 
 const financeService = SQLFinanceService.shared;
 
-export const getAllEntries = async (_: Request, res: Response) => {
+export const getAllEntries = async (req: Request, res: Response) => {
   try {
-    const accountEntries = await financeService.getAllEntries(2024);
+    const dateFrom = req.query.dateFrom
+      ? String(req.query.dateFrom)
+      : undefined;
+    const dateTo = req.query.dateTo ? String(req.query.dateTo) : undefined;
+    const accountEntries = await financeService.getAllEntries(2024, {
+      tag_id: req.query.tag ? Number(req.query.tag) : undefined,
+      dateFrom,
+      dateTo,
+      type: (req.query.type as string) ?? undefined,
+    });
     const transformedEntries = await Promise.all(
       accountEntries.map(async (entry) => await Transformer.accountEntry(entry))
     );
@@ -67,6 +75,24 @@ export const updateAccountEntry = async (
       req.body as AccountEntryDTO
     );
     res.status(200).json(accountEntry);
+  } catch (error: any) {
+    return next(new Error(error.message));
+  }
+};
+
+export const updateAccount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+
+  const value = req.body.value;
+  if (isNaN(value)) {
+    return res.status(422).json({ message: "value is invalid" });
+  }
+  try {
+    await financeService.updateAccountBalance(value);
+    res.status(200).json({});
   } catch (error: any) {
     return next(new Error(error.message));
   }

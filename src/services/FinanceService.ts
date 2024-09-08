@@ -8,12 +8,33 @@ export class FinanceService {
   private client = Client.shared;
   private constructor() {}
 
-  async getAccountEntries() {
+  async getAccountEntries(filter?: {
+    tag?: number;
+    dateFrom?: string;
+    dateTo?: string;
+    type?: string;
+  }) {
+    let suffix = "";
+    if (filter?.tag) {
+      suffix += `?tag=${filter.tag}`;
+    }
+    if (filter?.dateFrom) {
+      suffix += suffix ? "&" : "?";
+      suffix += `dateFrom=${filter.dateFrom}`;
+    }
+    if (filter?.dateTo) {
+      suffix += suffix ? "&" : "?";
+      suffix += `dateTo=${filter.dateTo}`;
+    }
+    if (filter?.type) {
+      suffix += suffix ? "&" : "?";
+      suffix += `type=${filter.type}`;
+    }
     return this.client.get<{
       entries: AccountEntry[];
       tags: AcccountTag[];
       balanceInCents: number;
-    }>("/finances/entries");
+    }>(`/finances/entries${suffix}`);
   }
 
   async createOrUpdateEntry(
@@ -37,6 +58,10 @@ export class FinanceService {
       return this.client.patch(`/finances/entries/${id}`, entry);
     }
     return this.client.post("/finances/entries", entry);
+  }
+
+  async updateBalance(value: number) {
+    return this.client.patch(`/finances`, { value });
   }
 
   async getAccountSummary(year: number) {

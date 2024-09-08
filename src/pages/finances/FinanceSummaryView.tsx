@@ -9,10 +9,17 @@ import { ROUTES } from "../../routes";
 import { FinanceService } from "../../services/FinanceService";
 import Col from "./Col";
 
+enum SearchType {
+  income = "income",
+  expenses = "expenses",
+  all = "all",
+}
+
 const FinanceSummaryView = () => {
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
-    { title: "Finances", link: "" },
+    { title: "Finances", link: ROUTES.FINANCE_DASHBOARD },
+    { title: "Summary", link: "" },
   ];
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,9 +35,33 @@ const FinanceSummaryView = () => {
   const balanceTotal = summary.balance.reduce(sum, 0);
   const balancePercentage = `(${percentage(balanceTotal, incomingTotal)}%)`;
 
-  const year =
-    new URLSearchParams(location.search).get("year") ??
-    new Date().getFullYear();
+  const year = Number(
+    new URLSearchParams(location.search).get("year") ?? new Date().getFullYear()
+  );
+
+  const linkForMonth = (
+    tag: number,
+    month: number,
+    type: SearchType = SearchType.all
+  ) =>
+    `/finances/details?tag=${tag}&dateFrom=${year}-${month}-01&dateTo=${year}-${month}-${
+      daysInMonth[month - 1]
+    }&type=${type}`;
+
+  const daysInMonth = [
+    31,
+    year % 4 === 0 ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ];
 
   return (
     <div>
@@ -80,20 +111,26 @@ const FinanceSummaryView = () => {
           </tr>
         </thead>
         <tbody>
-          {summary.byTag.map((month: FinanceTagEntry) => (
-            <tr key={month.name} className="bg-[#b69367]">
-              <Col>{month.name}</Col>
-              {month.byMonth.map((value: number, index: number) => (
-                <Col key={index}>{value}</Col>
+          {summary.byTag.map((tagEntry: FinanceTagEntry) => (
+            <tr key={tagEntry.name} className="bg-[#b69367]">
+              <Col link={`/finances/details?tag=${tagEntry.id}`}>
+                {tagEntry.name}
+              </Col>
+              {tagEntry.byMonth.map((value: number, index: number) => (
+                <Col key={index} link={linkForMonth(tagEntry.id, index + 1)}>
+                  {value}
+                </Col>
               ))}
-              <Col>{month.average}</Col>
-              <Col>{month.total}</Col>
+              <Col>{tagEntry.average}</Col>
+              <Col>{tagEntry.total}</Col>
             </tr>
           ))}
           <tr className="bg-[#316241]">
             <Col>Incoming</Col>
             {summary.incoming.map((v: number, i: number) => (
-              <Col key={i}>{v}</Col>
+              <Col key={i} link={linkForMonth(0, i + 1, SearchType.income)}>
+                {v}
+              </Col>
             ))}
             <Col>
               {summary.incoming.reduce((a: number, b: number) => a + b, 0) /
@@ -106,7 +143,10 @@ const FinanceSummaryView = () => {
           <tr className="bg-[#813550]">
             <Col>Expenses</Col>
             {summary.expenses.map((v: number, index: number) => (
-              <Col key={index}>
+              <Col
+                key={index}
+                link={linkForMonth(0, index + 1, SearchType.expenses)}
+              >
                 <div>{Math.abs(v / 100).toFixed(2)}€</div>
                 {v !== 0 && (
                   <div>
@@ -131,7 +171,10 @@ const FinanceSummaryView = () => {
           <tr className="bg-[#1f2e40]">
             <Col>Balance</Col>
             {summary.balance.map((v: number, index: number) => (
-              <Col key={index}>
+              <Col
+                key={index}
+                link={linkForMonth(0, index + 1, SearchType.all)}
+              >
                 <div>{(v / 100).toFixed(2)}€</div>
                 {v !== 0 && (
                   <div>

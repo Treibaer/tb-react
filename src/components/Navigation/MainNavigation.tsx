@@ -3,7 +3,9 @@ import { ROUTES } from "../../routes";
 import {
   ChartBarIcon,
   ChartPieIcon,
+  CreditCardIcon,
   HomeIcon,
+  SignalIcon,
   TagIcon,
   TicketIcon,
 } from "@heroicons/react/24/solid";
@@ -53,13 +55,13 @@ export default function MainNavigation() {
           <NavigationLink
             to={ROUTES.STATUS}
             title="Status"
-            icon={<ChartPieIcon />}
+            icon={<SignalIcon />}
           />
           
           <NavigationLink
             to={ROUTES.FINANCE_DETAILS}
             title="Finances"
-            icon={<ChartPieIcon />}
+            icon={<CreditCardIcon />}
           />
           </>
         )}
@@ -94,12 +96,12 @@ export default function MainNavigation() {
             <NavigationLink
               to={ROUTES.FINANCE_DETAILS}
               title="Details"
-              icon={<TicketIcon />}
+              icon={<ChartPieIcon />}
             />
             <NavigationLink
               to={ROUTES.FINANCE_SUMMARY}
               title="Summary"
-              icon={<TicketIcon />}
+              icon={<ChartBarIcon />}
             />
           </>
         )}

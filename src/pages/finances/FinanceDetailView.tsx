@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import FinanceDetailDialogView from "../../components/finances/FinanceDetailDialogView";
+import FinanceDetailEditBalanceDialogView from "../../components/finances/FinanceDetailEditBalanceDialogView";
 import HeaderView from "../../components/HeaderView";
 import TitleView from "../../components/TitleView";
 import { Breadcrumb } from "../../models/breadcrumb";
@@ -14,7 +15,7 @@ const FinanceDetailView = () => {
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
     { title: "Finances", link: ROUTES.FINANCE_DASHBOARD },
-    { title: "Details", link: ROUTES.FINANCE_DETAILS },
+    { title: "Details", link: "" },
   ];
 
   const data = useLoaderData() as {
@@ -26,6 +27,7 @@ const FinanceDetailView = () => {
   const [entries, setEntries] = useState<AccountEntry[]>(data.entries);
   const [balanceInCents, setBalanceInCents] = useState(data.balanceInCents);
   const [isCreating, setIsCreating] = useState(false);
+  const [editBalance, setEditBalance] = useState(false);
   const [editingEntry, setEditingEntry] = useState<AccountEntry | null>(null);
 
   function openDialog() {
@@ -51,6 +53,10 @@ const FinanceDetailView = () => {
     setIsCreating(true);
   }
 
+  function showEditBalance() {
+    setEditBalance(true);
+  }
+
   return (
     <div>
       {isCreating && (
@@ -60,11 +66,22 @@ const FinanceDetailView = () => {
           onClose={onClose}
         />
       )}
+      {editBalance && (
+        <FinanceDetailEditBalanceDialogView
+          value={balanceInCents}
+          onClose={async () => {
+            setEditBalance(false);
+            await reloadEntries();
+          }}
+        />
+      )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="overflow-auto max-h-[calc(100vh-57px)]">
         <div className="flex items-center justify-between me-8">
           <TitleView title="Finances" openDialog={openDialog} />
-          <div className="text-lg">{(balanceInCents / 100).toFixed(2)}€</div>
+          <div className="text-lg cursor-pointer" onClick={showEditBalance}>
+            {(balanceInCents / 100).toFixed(2)}€
+          </div>
         </div>
         <div className="flex flex-col items-center">
           {entries.map((entry) => (
@@ -101,6 +118,18 @@ const FinanceDetailView = () => {
 
 export default FinanceDetailView;
 
-export const loader = async () => {
-  return await FinanceService.shared.getAccountEntries();
+export const loader = async ({ request }: any) => {
+  const queryParameters = new URL(request.url).searchParams;
+  const tag = queryParameters.get("tag")
+    ? Number(queryParameters.get("tag"))
+    : undefined;
+  const dateFrom = queryParameters.get("dateFrom") ?? undefined;
+  const dateTo = queryParameters.get("dateTo") ?? undefined;
+  const type = queryParameters.get("type") ?? undefined;
+  return await FinanceService.shared.getAccountEntries({
+    tag,
+    dateFrom,
+    dateTo,
+    type,
+  });
 };

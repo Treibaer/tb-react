@@ -37,6 +37,18 @@ Board.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    startDate: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      field: "start_date",
+      defaultValue: Date.now() / 1000,
+    },
+    endDate: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      field: "end_date",
+      defaultValue: Date.now() / 1000,
+    },
   },
   { sequelize, tableName: "board", timestamps: false }
 );
