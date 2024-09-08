@@ -28,7 +28,7 @@ import TicketHistoryView, {
 import Register from "./pages/Register";
 import FinanceDashboard from "./pages/finances/FinanceDashboard";
 import FinanceDetailView , {loader as detailViewLoader }from "./pages/finances/FinanceDetailView";
-import FinanceSummaryView from "./pages/finances/FinanceSummaryView";
+import FinanceSummaryView, {loader as summaryViewLoader} from "./pages/finances/FinanceSummaryView";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +88,7 @@ const router = createBrowserRouter([
       {
         path: "/finances/summary",
         element: <FinanceSummaryView />,
+        loader: summaryViewLoader,
       },
       {
         path: "/status",

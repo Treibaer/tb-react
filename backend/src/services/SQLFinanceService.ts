@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { AccountEntryDTO } from "../dtos/finances/account-entry-dto.js";
 import { AccountEntry } from "../models/finances/account-entry.js";
 import { Account } from "../models/finances/account.js";
@@ -37,7 +38,7 @@ export class SQLFinanceService {
     accountEntry: AccountEntryDTO
   ): Promise<AccountEntryDTO> {
     const user = await this.userService.getUser();
-    
+
     // refresh account balance
     const existingEntry = await AccountEntry.findByPk(id);
     if (!existingEntry) {
@@ -57,7 +58,7 @@ export class SQLFinanceService {
       if (!account) {
         throw new Error("Account not found");
       }
-      account.valueInCents -= existingEntry.valueInCents
+      account.valueInCents -= existingEntry.valueInCents;
       account.valueInCents += accountEntry.valueInCents;
       existingEntry.valueInCents = accountEntry.valueInCents;
       await account.save();
@@ -69,18 +70,27 @@ export class SQLFinanceService {
     return Transformer.accountEntry(existingEntry);
   }
 
-  async getAllEntries(): Promise<AccountEntry[]> {
+  async getAllEntries(year: number): Promise<AccountEntry[]> {
     const user = await this.userService.getUser();
 
-    const projects = await AccountEntry.findAll({
-      where: { creator_id: user.id },
+    // find all entries, so that their unix timestamp (purchaseAt) is between the start and end of the year
+    const startOfYear =
+      new Date(year, 0, 1).getTime() / 1000;
+    const endOfYear =
+      new Date(year, 11, 31, 23, 59, 59).getTime() / 1000;
+
+    return await AccountEntry.findAll({
+      where: {
+        creator_id: user.id,
+        purchasedAt: {
+          [Op.gte]: startOfYear,
+          [Op.lte]: endOfYear,
+        },
+      },
       order: [
         ["purchasedAt", "DESC"],
         ["createdAt", "DESC"],
       ],
-      limit: 100,
     });
-    return projects;
-    // return await Promise.all(projects.map(Transformer.project));
   }
 }

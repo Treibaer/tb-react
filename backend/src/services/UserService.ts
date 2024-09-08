@@ -11,7 +11,7 @@ export default class UserService {
   private constructor() {}
 
   async setup(authorization: string) {
-    asyncLocalStorage.run(new Map<string, string | undefined>(), async () => {
+    await asyncLocalStorage.run(new Map<string, string | undefined>(), async () => {
       const store: any = asyncLocalStorage.getStore();
       this.store = store;
       store?.set("token", authorization);

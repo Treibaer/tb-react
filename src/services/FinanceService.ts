@@ -1,5 +1,6 @@
 import { AccountEntry } from "../models/finances/account-entry";
 import { AcccountTag } from "../models/finances/account-tag";
+import { FinanceSummary } from "../models/finances/finance-summary";
 import Client from "./Client";
 
 export class FinanceService {
@@ -8,9 +9,11 @@ export class FinanceService {
   private constructor() {}
 
   async getAccountEntries() {
-    return this.client.get<{ entries: AccountEntry[]; tags: AcccountTag[], balanceInCents: number }>(
-      "/finances/entries"
-    );
+    return this.client.get<{
+      entries: AccountEntry[];
+      tags: AcccountTag[];
+      balanceInCents: number;
+    }>("/finances/entries");
   }
 
   async createOrUpdateEntry(
@@ -34,5 +37,9 @@ export class FinanceService {
       return this.client.patch(`/finances/entries/${id}`, entry);
     }
     return this.client.post("/finances/entries", entry);
+  }
+
+  async getAccountSummary(year: number) {
+    return this.client.get<FinanceSummary>(`/finances/summary?year=${year}`);
   }
 }

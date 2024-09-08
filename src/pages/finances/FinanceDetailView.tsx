@@ -1,14 +1,14 @@
+import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import FinanceDetailDialogView from "../../components/finances/FinanceDetailDialogView";
 import HeaderView from "../../components/HeaderView";
+import TitleView from "../../components/TitleView";
 import { Breadcrumb } from "../../models/breadcrumb";
+import { AccountEntry } from "../../models/finances/account-entry";
+import { AcccountTag } from "../../models/finances/account-tag";
 import { ROUTES } from "../../routes";
 import { FinanceService } from "../../services/FinanceService";
-import { AccountEntry } from "../../models/finances/account-entry";
 import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
-import TitleView from "../../components/TitleView";
-import React, { useRef, useState } from "react";
-import Dialog from "../../components/common/Dialog";
-import { AcccountTag } from "../../models/finances/account-tag";
 
 const FinanceDetailView = () => {
   const breadcrumbs: Breadcrumb[] = [
@@ -22,26 +22,20 @@ const FinanceDetailView = () => {
     tags: AcccountTag[];
     balanceInCents: number;
   };
-  const tags = data.tags;
 
-  const titleRef = useRef<HTMLInputElement>(null);
-  const valueRef = useRef<HTMLInputElement>(null);
-  const signRef = useRef<HTMLSelectElement>(null);
-  const purchasedATRef = useRef<HTMLInputElement>(null);
-  const tagRef = useRef<HTMLSelectElement>(null);
-
-  const [editingEntry, setEditingEntry] = useState<AccountEntry | null>(null);
   const [entries, setEntries] = useState<AccountEntry[]>(data.entries);
   const [balanceInCents, setBalanceInCents] = useState(data.balanceInCents);
   const [isCreating, setIsCreating] = useState(false);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [editingEntry, setEditingEntry] = useState<AccountEntry | null>(null);
 
   function openDialog() {
     setIsCreating(true);
-    setError(undefined);
   }
 
-  async function onClose() {
+  async function onClose(reload: boolean) {
+    if (reload) {
+      await reloadEntries();
+    }
     setIsCreating(false);
     setEditingEntry(null);
   }
@@ -53,111 +47,18 @@ const FinanceDetailView = () => {
   }
 
   async function openEditDialog(accountEntry: AccountEntry) {
-    setIsCreating(true);
     setEditingEntry(accountEntry);
-    setError(undefined);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    titleRef.current!.value = accountEntry.title;
-    valueRef.current!.value = Math.abs(accountEntry.valueInCents / 100).toFixed(
-      2
-    );
-    purchasedATRef.current!.value = new Date(accountEntry.purchasedAt * 1000)
-      .toISOString()
-      .split("T")[0];
-    tagRef.current!.value = accountEntry.tagId.toString();
-    signRef.current!.value = accountEntry.valueInCents < 0 ? "-1" : "1";
-  }
-
-  async function onSubmit() {
-    const title = titleRef.current?.value;
-    const value = parseFloat(
-      (valueRef.current?.value ?? "0").replace(",", ".")
-    );
-    const purchasedAt = purchasedATRef.current?.value;
-    const tagId = Number(tagRef.current?.value ?? "0");
-    const sign = Number(signRef.current?.value);
-
-    if (!title || !value || !purchasedAt) {
-      setError("Title & Value are required");
-      return;
-    }
-    setError(undefined);
-
-    try {
-      await FinanceService.shared.createOrUpdateEntry(
-        editingEntry?.id ?? 0,
-        title,
-        value * sign,
-        purchasedAt,
-        tagId
-      );
-      await reloadEntries();
-      onClose();
-    } catch (error: Error | any) {
-      setError(error.message);
-    }
+    setIsCreating(true);
   }
 
   return (
     <div>
       {isCreating && (
-        <Dialog
-          title={`Finances > Create Entry`}
+        <FinanceDetailDialogView
+          editingEntry={editingEntry}
+          tags={data.tags}
           onClose={onClose}
-          onSubmit={onSubmit}
-          error={error}
-        >
-          <input
-            type="text"
-            placeholder="Title"
-            id="dialogTitle"
-            className="tb-textarea"
-            style={{
-              boxShadow: "none",
-              outline: "none",
-            }}
-            ref={titleRef}
-          />
-          <div className="flex">
-            <select className="bg-slate-500 px-2 rounded-md ml-1" ref={signRef}>
-              <option value={1}>+</option>
-              <option value={-1} selected>
-                -
-              </option>
-            </select>
-            <input
-              type="text"
-              placeholder="Value"
-              id="dialogTitle"
-              className="tb-textarea"
-              style={{
-                boxShadow: "none",
-                outline: "none",
-              }}
-              ref={valueRef}
-            />
-          </div>
-          <input
-            type="date"
-            placeholder="Title"
-            id="dialogTitle"
-            className="tb-textarea"
-            style={{
-              boxShadow: "none",
-              outline: "none",
-            }}
-            defaultValue={new Date().toISOString().split("T")[0]}
-            ref={purchasedATRef}
-          />
-          <select className="bg-slate-500" ref={tagRef}>
-            <option value={0}>None</option>
-            {tags.map((tag) => (
-              <option key={tag.id} value={tag.id}>
-                {tag.icon} {tag.title}
-              </option>
-            ))}
-          </select>
-        </Dialog>
+        />
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="overflow-auto max-h-[calc(100vh-57px)]">
