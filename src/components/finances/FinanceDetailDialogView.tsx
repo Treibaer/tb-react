@@ -112,11 +112,13 @@ const FinanceDetailDialogView: React.FC<{
         />
         <select className="bg-slate-500 rounded-md p-1 mt-1 ml-1" ref={tagRef}>
           <option value={0}>None</option>
-          {tags.map((tag) => (
-            <option key={tag.id} value={tag.id}>
-              {tag.icon} {tag.title}
-            </option>
-          ))}
+          {tags
+            .filter((tag) => tag.icon !== "")
+            .map((tag) => (
+              <option key={tag.id} value={tag.id}>
+                {tag.icon} {tag.title}
+              </option>
+            ))}
         </select>
       </Dialog>
     </>

@@ -109,7 +109,7 @@ export default function TicketDetailView() {
             ></p>
           )}
           {isEditing && <DescriptionView description={currentDescription} />}
-          <TicketCommentArea ticket={ticket} />
+          <TicketCommentArea project={project} ticket={ticket} />
         </div>
         <TicketDetailsSidebar
           metadata={metadata}

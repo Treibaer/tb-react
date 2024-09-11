@@ -142,7 +142,7 @@ export const TicketCreationDialog: React.FC<{
             selectedAssignee={selectedAssignee}
             users={metadata.users}
             onClick={updateAssignee}
-            style={{ left: 90, top: 34 }}
+            style={{ left: 82, top: 34 }}
           />
         )}
         <div
@@ -157,7 +157,7 @@ export const TicketCreationDialog: React.FC<{
             selectedBoardId={selectedBoard?.id ?? 0}
             boards={metadata.boards}
             onClose={updateBoard}
-            style={{ left: 232, top: 34 }}
+            style={{ left: 216, top: 34 }}
           />
         )}
         <div
@@ -173,7 +173,7 @@ export const TicketCreationDialog: React.FC<{
             selectedType={selectedType}
             types={metadata.types}
             onClose={updateType}
-            style={{ left: 376, top: 34 }}
+            style={{ left: 352, top: 34 }}
           />
         )}
         <div

@@ -4,6 +4,7 @@ import {
   ChartBarIcon,
   ChartPieIcon,
   CreditCardIcon,
+  DocumentTextIcon,
   HomeIcon,
   SignalIcon,
   TagIcon,
@@ -77,6 +78,11 @@ export default function MainNavigation() {
               to={ROUTES.TICKETS_BOARD_VIEW(params.projectSlug)}
               title="Board View"
               icon={<TagIcon />}
+            />
+            <NavigationLink
+              to={ROUTES.TICKETS_PAGES(params.projectSlug)}
+              title="Pages"
+              icon={<DocumentTextIcon />}
             />
             <NavigationLink
               to={ROUTES.BOARDS(params.projectSlug)}

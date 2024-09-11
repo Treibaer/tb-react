@@ -1,4 +1,5 @@
 import { Ticket } from "../models/ticket";
+import { TicketComment } from "../models/ticket-comment";
 import { TicketHistory } from "../models/ticket-history";
 import { TicketStatus } from "../models/ticket-status";
 import Client from "./Client";
@@ -18,7 +19,8 @@ export default class TicketService {
    * @param description - The description of the ticket.
    * @returns A promise that resolves to the created ticket.
    */
-  async create(projectSlug: string, 
+  async create(
+    projectSlug: string,
     data: {
       status?: TicketStatus;
       assigneeId?: number;
@@ -27,7 +29,8 @@ export default class TicketService {
       position?: number;
       title?: string;
       description?: string;
-    }) {
+    }
+  ) {
     const ticket = this.createTicketObject(data);
     return this.client.post(`/projects/${projectSlug}/tickets`, ticket);
   }
@@ -89,16 +92,15 @@ export default class TicketService {
     // return this.client.delete(url);
   }
 
-  private createTicketObject(
-    data: {
-      status?: TicketStatus;
-      assigneeId?: number;
-      type?: string;
-      boardId?: number;
-      position?: number;
-      title?: string;
-      description?: string;
-    }) {
+  private createTicketObject(data: {
+    status?: TicketStatus;
+    assigneeId?: number;
+    type?: string;
+    boardId?: number;
+    position?: number;
+    title?: string;
+    description?: string;
+  }) {
     return {
       id: 0,
       title: data.title,
@@ -113,5 +115,24 @@ export default class TicketService {
   async getHistory(projectSlug: string, ticketSlug: string) {
     const url = `/projects/${projectSlug}/tickets/${ticketSlug}/history`;
     return this.client.get<TicketHistory[]>(url);
+  }
+
+  async getComments(projectSlug: string, ticketSlug: string) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}/comments`;
+    return this.client.get<TicketComment[]>(url);
+  }
+
+  async addComment(projectSlug: string, ticketSlug: string, content: string) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}/comments`;
+    return this.client.post(url, { content });
+  }
+
+  async removeComment(
+    projectSlug: string,
+    ticketSlug: string,
+    commentId: number
+  ) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}/comments/${commentId}`;
+    await this.client.delete(url);
   }
 }

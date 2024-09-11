@@ -29,6 +29,7 @@ import Register from "./pages/Register";
 import FinanceDashboard from "./pages/finances/FinanceDashboard";
 import FinanceDetailView , {loader as detailViewLoader }from "./pages/finances/FinanceDetailView";
 import FinanceSummaryView, {loader as summaryViewLoader} from "./pages/finances/FinanceSummaryView";
+import Pages from "./pages/projects/Pages";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,11 @@ const router = createBrowserRouter([
         path: "/projects/:projectSlug",
         element: <ProjectDetailView />,
         loader: projectDetailsLoader,
+      },
+      {
+        path: "/projects/:projectSlug/pages",
+        element: <Pages />,
+        // loader: projectDetailsLoader,
       },
       {
         path: "/finances",

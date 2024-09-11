@@ -1,12 +1,13 @@
-import { User } from "../models/user.js";
-import { Project } from "../models/project.js";
 import { AccessToken } from "../models/access-token.js";
-import { Ticket } from "../models/ticket.js";
 import { Board } from "../models/board.js";
-import { TicketHistory } from "../models/ticket-history.js";
 import { AccountEntry } from "../models/finances/account-entry.js";
-import { Account } from "../models/finances/account.js";
 import { AccountTag } from "../models/finances/account-tag.js";
+import { Account } from "../models/finances/account.js";
+import { Project } from "../models/project.js";
+import { TicketComment } from "../models/ticket-comment.js";
+import { TicketHistory } from "../models/ticket-history.js";
+import { Ticket } from "../models/ticket.js";
+import { User } from "../models/user.js";
 
 export const createRelations = () => {
   Project.belongsTo(User, {
@@ -59,7 +60,7 @@ export const createRelations = () => {
     as: "creator",
     foreignKey: "creator_id",
   });
-  
+
   TicketHistory.belongsTo(Ticket, {
     constraints: false,
     as: "ticket",
@@ -88,5 +89,17 @@ export const createRelations = () => {
     constraints: false,
     as: "tag",
     foreignKey: "tag_id",
+  });
+
+  TicketComment.belongsTo(User, {
+    constraints: false,
+    as: "creator",
+    foreignKey: "creator_id",
+  });
+
+  TicketComment.belongsTo(Ticket, {
+    constraints: false,
+    as: "ticket",
+    foreignKey: "ticket_id",
   });
 };

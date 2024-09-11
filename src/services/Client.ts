@@ -81,7 +81,7 @@ export default class Client {
    * @returns A promise that resolves to the response data.
    */
   private async request<T>(url: string, options: RequestInit): Promise<T> {
-    const response = await fetch((this.api) + url, {
+    const response = await fetch(this.api + url, {
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -90,6 +90,9 @@ export default class Client {
         ...options.headers,
       },
     });
+    if (options.method === "DELETE") {
+      return null as any;
+    }
     return this.handleResponse(response);
   }
 

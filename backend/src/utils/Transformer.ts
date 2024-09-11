@@ -5,6 +5,7 @@ import { AccountEntryDTO } from "../dtos/finances/account-entry-dto.js";
 import { AccountTagDTO } from "../dtos/finances/account-tag-dto.js";
 import { ProjectDTO } from "../dtos/project-dto.js";
 import { SmallBoardDTO } from "../dtos/small-board-dto.js";
+import { TicketCommentDTO } from "../dtos/ticket-comment-dto.js";
 import { TicketDTO } from "../dtos/ticket-dto.js";
 import { TicketHistoryDTO } from "../dtos/ticket-history-dto.js";
 import { UserDTO } from "../dtos/user-dto.js";
@@ -14,6 +15,7 @@ import { AccountEntry } from "../models/finances/account-entry.js";
 import { AccountTag } from "../models/finances/account-tag.js";
 import { Account } from "../models/finances/account.js";
 import { Project } from "../models/project.js";
+import { TicketComment } from "../models/ticket-comment.js";
 import { TicketHistory } from "../models/ticket-history.js";
 import { TicketStatus } from "../models/ticket-status.js";
 import { Ticket } from "../models/ticket.js";
@@ -84,6 +86,20 @@ export default class Transformer {
       createdAt: ticketHistory.createdAt,
       description: ticketHistory.description,
       versionNumber: ticketHistory.versionNumber,
+      creator: this.user(creator),
+    };
+  }
+
+  static async ticketComment(
+    ticketComment: TicketComment
+  ): Promise<TicketCommentDTO> {
+    const creator = await UserService.shared.getUserById(
+      ticketComment.creator_id
+    );
+    return {
+      id: ticketComment.id,
+      createdAt: ticketComment.createdAt,
+      content: ticketComment.content,
       creator: this.user(creator),
     };
   }
