@@ -103,7 +103,7 @@ const FinanceSummaryView = () => {
               "October",
               "November",
               "December",
-              "Average",
+              "Avg",
               "Total",
             ].map((month: string) => (
               <td key={month}>{month.substring(0, 3)}</td>

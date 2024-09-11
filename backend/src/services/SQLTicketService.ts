@@ -32,13 +32,11 @@ export class SQLTicketService {
 
   async create(
     projectSlug: string,
-    title: string,
-    description: string
+    ticket: TicketDTO,
   ): Promise<TicketDTO> {
     return LegacyTicketService.shared.createTicket(
       projectSlug,
-      title,
-      description
+      ticket
     );
   }
 

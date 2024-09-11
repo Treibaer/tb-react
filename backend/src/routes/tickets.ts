@@ -21,11 +21,7 @@ router.get("/:slug/tickets", async (req, res) => {
 router.post("/:slug/tickets", async (req, res, next) => {
   try {
     const projectSlug = req.params.slug;
-    const ticket = await ticketsService.create(
-      projectSlug,
-      req.body.title,
-      req.body.description
-    );
+    const ticket = await ticketsService.create(projectSlug, req.body);
     res.status(201).json(ticket);
   } catch (error: any) {
     next(error);

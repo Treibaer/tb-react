@@ -43,7 +43,7 @@ export default function TicketHistoryView() {
         </div>
         {history.map((historyItem) => (
           <NavLink
-            to={`${ROUTES.TICKET_DETAILS("HK", "HK-1")}?version=${
+            to={`${ROUTES.TICKET_DETAILS(project.slug, ticket.slug)}?version=${
               historyItem.versionNumber
             }`}
             key={historyItem.createdAt}

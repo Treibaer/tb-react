@@ -93,16 +93,14 @@ export const TicketDetailsSidebar: React.FC<{
       </div>
       <div className="px-2 py-3 flex flex-col">
         <div className="flex items-center relative">
-          <div>
-            {dropdown === DropdownType.STATUS && (
-              <StatusDropdown
-                selectedStatus={ticket.status}
-                states={metadata.states}
-                onClick={updateStatus}
-                style={{ left: 80, top: 34 }}
-              />
-            )}
-          </div>
+          {dropdown === DropdownType.STATUS && (
+            <StatusDropdown
+              selectedStatus={ticket.status}
+              states={metadata.states}
+              onClick={updateStatus}
+              style={{ left: 80, top: 34 }}
+            />
+          )}
           <div className="min-w-20 h-8 px-2 text-gray-400 flex items-center ">
             Status
           </div>

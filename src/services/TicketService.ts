@@ -18,8 +18,17 @@ export default class TicketService {
    * @param description - The description of the ticket.
    * @returns A promise that resolves to the created ticket.
    */
-  async create(projectSlug: string, title: string, description: string) {
-    const ticket = this.createTicketObject(title, description);
+  async create(projectSlug: string, 
+    data: {
+      status?: TicketStatus;
+      assigneeId?: number;
+      type?: string;
+      boardId?: number;
+      position?: number;
+      title?: string;
+      description?: string;
+    }) {
+    const ticket = this.createTicketObject(data);
     return this.client.post(`/projects/${projectSlug}/tickets`, ticket);
   }
 
@@ -80,21 +89,24 @@ export default class TicketService {
     // return this.client.delete(url);
   }
 
-  private createTicketObject(title: string, description: string) {
+  private createTicketObject(
+    data: {
+      status?: TicketStatus;
+      assigneeId?: number;
+      type?: string;
+      boardId?: number;
+      position?: number;
+      title?: string;
+      description?: string;
+    }) {
     return {
       id: 0,
-      position: 0,
-      ticketId: 0,
-      slug: "",
-      title,
-      description: description,
-      type: "",
-      createdAt: 0,
-      updatedAt: 0,
-      status: "open",
-      board: null,
-      creator: null,
-      assignee: null,
+      title: data.title,
+      description: data.description,
+      type: data.type ?? "",
+      status: data.status ?? "open",
+      boardId: data.boardId ?? 0,
+      assigneeId: data.assigneeId,
     };
   }
 

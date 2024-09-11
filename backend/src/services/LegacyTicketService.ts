@@ -13,13 +13,15 @@ export default class LegacyTicketService {
 
   async createTicket(
     projectSlug: string,
-    title: string,
-    description: string
+    ticket: TicketDTO & {
+      assigneeId?: number;
+      boardId?: number;
+    }
   ): Promise<TicketDTO> {
     const project = await this.findProjectBySlug(projectSlug);
     const user = await UserService.shared.getUser();
 
-    if (!title) {
+    if (!ticket.title) {
       throw new Error("Title is required");
     }
 
@@ -35,17 +37,22 @@ export default class LegacyTicketService {
         : backlogTickets.reduce((max, t) => {
             return t.position > max ? t.position : max;
           }, 0) + 1;
+        console.log(ticket)
 
-    const ticket = await Ticket.create({
-      title,
-      description,
+    const createdTicket = await Ticket.create({
+      title: ticket.title,
+      description: ticket.description,
       project_id: project.id,
       ticketId: ticketId,
       position: position,
       creator_id: user.id,
+      assigned_id: ticket.assigneeId,
+      type: ticket.type,
+      status: ticket.status,
+      board_id: ticket.boardId === 0 ? null : ticket.boardId
     });
-    await this.createHistoryEntry(ticket);
-    return await Transformer.ticket(projectSlug, ticket);
+    await this.createHistoryEntry(createdTicket);
+    return await Transformer.ticket(projectSlug, createdTicket);
   }
 
   async updateTicket(

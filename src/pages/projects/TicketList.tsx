@@ -89,7 +89,7 @@ const TicketList: React.FC = () => {
         />
       )}
       {isCreating && (
-        <TicketCreationDialog project={project} onClose={onClose} />
+        <TicketCreationDialog metadata={data.metadata} onClose={onClose} />
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Tickets" openDialog={openDialog} />
