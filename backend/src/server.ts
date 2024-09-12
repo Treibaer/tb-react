@@ -5,6 +5,7 @@ import https from 'https';
 import boardsRoutes from "./routes/boards.js";
 import projectsRoutes from "./routes/projects.js";
 import ticketsRoutes from "./routes/tickets.js";
+import pagesRoutes from "./routes/pages.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ const port = process.env.PORT || 5000;
 app.use("/api/v3/projects", projectsRoutes);
 app.use("/api/v3/projects", ticketsRoutes);
 app.use("/api/v3/projects", boardsRoutes);
+app.use("/api/v3/projects", pagesRoutes);
 
 app.get("/api/v3/app", (_, res) => {
   res.json({ allowed: true });

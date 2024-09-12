@@ -19,7 +19,9 @@ export default function MainNavigation() {
   const params: { projectSlug?: string } = useParams();
 
   // check if current url starts with /finances
-  const isFinancePage = window.location.pathname.startsWith(ROUTES.FINANCE_DASHBOARD);
+  const isFinancePage = window.location.pathname.startsWith(
+    ROUTES.FINANCE_DASHBOARD
+  );
 
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
@@ -53,17 +55,17 @@ export default function MainNavigation() {
         />
         {!Constants.isDemoMode && (
           <>
-          <NavigationLink
-            to={ROUTES.STATUS}
-            title="Status"
-            icon={<SignalIcon />}
-          />
-          
-          <NavigationLink
-            to={ROUTES.FINANCE_DETAILS}
-            title="Finances"
-            icon={<CreditCardIcon />}
-          />
+            <NavigationLink
+              to={ROUTES.STATUS}
+              title="Status"
+              icon={<SignalIcon />}
+            />
+
+            <NavigationLink
+              to={ROUTES.FINANCE_DETAILS}
+              title="Finances"
+              icon={<CreditCardIcon />}
+            />
           </>
         )}
         {params.projectSlug && (
@@ -96,7 +98,7 @@ export default function MainNavigation() {
             />
           </>
         )}
-        { isFinancePage && (
+        {isFinancePage && (
           <>
             <hr className="py-2" />
             <NavigationLink

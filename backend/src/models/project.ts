@@ -1,6 +1,7 @@
 import { DataTypes, Model, WhereOptions } from "sequelize";
 import { sequelize } from "../utils/database.js";
 import { Ticket } from "./ticket.js";
+import { Page } from "./page.js";
 
 export class Project extends Model {
   declare id: number;
@@ -23,6 +24,7 @@ export class Project extends Model {
   declare uniqueSellingPoints: string;
   declare coverImage: string;
   declare getTickets: (options?: WhereOptions) => Promise<Ticket[]>;
+  declare getPages: (options?: WhereOptions) => Promise<Page[]>;
   static async getBySlug(slug: string): Promise<Project> {
     const project = await Project.findOne({ where: { slug } });
     if (!project) {

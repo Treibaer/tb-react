@@ -3,6 +3,7 @@ import { Board } from "../models/board.js";
 import { AccountEntry } from "../models/finances/account-entry.js";
 import { AccountTag } from "../models/finances/account-tag.js";
 import { Account } from "../models/finances/account.js";
+import { Page } from "../models/page.js";
 import { Project } from "../models/project.js";
 import { TicketComment } from "../models/ticket-comment.js";
 import { TicketHistory } from "../models/ticket-history.js";
@@ -28,6 +29,11 @@ export const createRelations = () => {
 
   Project.hasMany(Ticket, {
     as: "tickets",
+    foreignKey: "project_id",
+  });
+
+  Project.hasMany(Page, {
+    as: "pages",
     foreignKey: "project_id",
   });
 
@@ -101,5 +107,23 @@ export const createRelations = () => {
     constraints: false,
     as: "ticket",
     foreignKey: "ticket_id",
+  });
+
+  Page.belongsTo(User, {
+    constraints: false,
+    as: "creator",
+    foreignKey: "creator_id",
+  });
+
+  Page.belongsTo(User, {
+    constraints: false,
+    as: "updator",
+    foreignKey: "updator_id",
+  });
+
+  Page.belongsTo(Page, {
+    constraints: false,
+    as: "parent",
+    foreignKey: "parent_id",
   });
 };

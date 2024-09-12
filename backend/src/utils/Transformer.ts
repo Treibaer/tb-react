@@ -3,6 +3,7 @@ import { BoardDTO } from "../dtos/board-dto.js";
 import { AccountDTO } from "../dtos/finances/account-dto.js";
 import { AccountEntryDTO } from "../dtos/finances/account-entry-dto.js";
 import { AccountTagDTO } from "../dtos/finances/account-tag-dto.js";
+import { PageDTO } from "../dtos/page-dto.js";
 import { ProjectDTO } from "../dtos/project-dto.js";
 import { SmallBoardDTO } from "../dtos/small-board-dto.js";
 import { TicketCommentDTO } from "../dtos/ticket-comment-dto.js";
@@ -14,6 +15,7 @@ import { Board } from "../models/board.js";
 import { AccountEntry } from "../models/finances/account-entry.js";
 import { AccountTag } from "../models/finances/account-tag.js";
 import { Account } from "../models/finances/account.js";
+import { Page } from "../models/page.js";
 import { Project } from "../models/project.js";
 import { TicketComment } from "../models/ticket-comment.js";
 import { TicketHistory } from "../models/ticket-history.js";
@@ -151,9 +153,29 @@ export default class Transformer {
     };
   }
 
+  static async page(page: Page): Promise<PageDTO> {
+    const creator = await UserService.shared.getUserById(page.creator_id);
+    const updator = await UserService.shared.getUserById(page.updator_id);
+    return {
+      id: page.id,
+      title: page.title,
+      icon: page.icon,
+      position: page.position,
+      content: page.content,
+      updatedAt: page.changedAt,
+      creator: this.user(creator),
+      updator: this.user(updator),
+      createdAt: page.createdAt,
+      parentId: page.parent_id,
+      children: []
+    };
+  }
+
   static tags: AccountTagDTO[] = [];
 
-  static async accountEntry(accountEntry: AccountEntry): Promise<AccountEntryDTO> {
+  static async accountEntry(
+    accountEntry: AccountEntry
+  ): Promise<AccountEntryDTO> {
     if (!this.tags.length) {
       this.tags = await AccountTag.findAll();
     }
