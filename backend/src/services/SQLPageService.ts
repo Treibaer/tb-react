@@ -1,7 +1,7 @@
+import { PageDTO } from "../dtos/page-dto.js";
 import { TicketDTO } from "../dtos/ticket-dto.js";
 import { Page } from "../models/page.js";
 import { Project } from "../models/project.js";
-import { Ticket } from "../models/ticket.js";
 import LegacyTicketService from "./LegacyTicketService.js";
 import UserService from "./UserService.js";
 
@@ -9,21 +9,15 @@ export class SQLPageService {
   static shared = new SQLPageService();
   private constructor() {}
 
-  async get(projectSlug: string, ticketSlug: string): Promise<Ticket> {
-    if (!ticketSlug.includes("-")) {
-      throw new Error("Invalid ticket slug");
-    }
-    const project = await Project.getBySlug(projectSlug);
-    const ticketId = ticketSlug.split("-")[1];
-    const tickets = await project.getTickets({
-      where: { ticketId },
-    });
-    if (tickets.length === 0) {
-      const error: any = new Error("Ticket not found");
+  async get(_: string, pageId: number): Promise<Page> {
+    // const project = await Project.getBySlug(projectSlug);
+    const page = await Page.findByPk(pageId);
+    if (!page) {
+      const error: any = new Error("Page not found");
       error.statusCode = 404;
       throw error;
     }
-    return tickets[0];
+    return page;
   }
 
   async getAll(projectSlug: string): Promise<Page[]> {
@@ -51,13 +45,18 @@ export class SQLPageService {
 
   async update(
     projectSlug: string,
-    ticketSlug: string,
-    data: TicketDTO
-  ): Promise<TicketDTO> {
-    return LegacyTicketService.shared.updateTicket(
-      projectSlug,
-      ticketSlug,
-      data
-    );
+    pageId: number,
+    data: PageDTO
+  ): Promise<Page> {
+    const page = await Page.findByPk(pageId);
+    if (!page) {
+      const error: any = new Error("Page not found");
+      error.statusCode = 404;
+      throw error;
+    }
+    page.title = data.title;
+    page.content = data.content;
+    await page.save();
+    return page;
   }
 }

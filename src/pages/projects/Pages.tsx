@@ -4,44 +4,35 @@ import { Page } from "../../models/page";
 import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 import PageStructure from "./PageStructure";
 import { useState } from "react";
+import { Breadcrumb } from "../../models/breadcrumb";
+import { ROUTES } from "../../routes";
+import HeaderView from "../../components/HeaderView";
+import ProjectService from "../../services/ProjectService";
+import { Project } from "../../models/project";
+import PageStructureView from "./PageStructureView";
 
 const pageService = PageService.shared;
+const projectService = ProjectService.shared;
 
 const Pages: React.FC = () => {
   const data = useLoaderData() as {
-    projectSlug: string;
+    project: Project;
     pages: Page[];
     openedPages: number[];
   };
-  const [openedPages, setOpenedPages] = useState<number[]>(data.openedPages);
+  const { project } = data;
 
-  async function toggle(id: number) {
-    if (openedPages.includes(id)) {
-      setOpenedPages(openedPages.filter((pageId) => pageId !== id));
-    } else {
-      setOpenedPages([...openedPages, id]);
-    }
-    pageService.togglePage(data.projectSlug, id);
-  }
-
+  const breadcrumbs: Breadcrumb[] = [
+    { title: "Home", link: ROUTES.HOME },
+    { title: "Projects", link: ROUTES.PROJECTS },
+    { title: project.title, link: ROUTES.PROJECT_DETAILS(project.slug) },
+    { title: "Pages", link: "" },
+  ];
   return (
     <div>
-      <h1>Pages</h1>
+      <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex">
-        <div className="w-64">
-          {data.pages
-            .filter((page) => page.parentId === null)
-            .map((page) => (
-              <div key={page.id} className="ml-2">
-                <PageStructure
-                  openedPages={openedPages}
-                  projectSlug={data.projectSlug}
-                  page={page}
-                  toggle={toggle}
-                />
-              </div>
-            ))}
-        </div>
+        <PageStructureView open={data.openedPages} pages={data.pages} projectSlug={project.slug} />
         <div className="w-[calc(100%-16rem)]">
           <div className="flex border-b border-b-[rgb(37,38,50)] p-2 justify-start items-center bg-[rgb(32,33,46)]">
             <div className="flex-1">Title</div>
@@ -54,7 +45,7 @@ const Pages: React.FC = () => {
               className="flex border-b border-b-[rgb(37,38,50)] p-2 justify-start items-center hover:bg-[rgb(28,29,42)]"
             >
               <div className=" flex-1">
-                <Link to={`/projects/${data.projectSlug}/pages/${page.id}`}>
+                <Link to={`/projects/${project.slug}/pages/${page.id}`}>
                   {page.title}
                 </Link>
               </div>
@@ -89,24 +80,10 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,
 }) => {
   const projectSlug = params.projectSlug ?? "";
-  const pages = await pageService.getAll(projectSlug);
+  const pages = await pageService.getAllStructured(projectSlug);
 
-  // iterate over the pages, check the parent of every page and add itlself to the children array of the parent
-  pages.forEach((pageDTO) => {
-    if (pageDTO.parentId) {
-      const parent = pages.find((page) => page.id === pageDTO.parentId);
-      if (parent) {
-        parent.children.push(pageDTO);
-      }
-    }
-  });
-  // sort all children by position
-  pages.forEach((page) => {
-    page.children.sort((a, b) => a.position - b.position);
-  });
-  // sort pages
-  pages.sort((a, b) => a.position - b.position);
   const openedPages = await pageService.getOpenedPages(projectSlug);
+  const project = await projectService.get(projectSlug);
   // const metadata = await projectService.getMetadata(slug);
-  return { pages, projectSlug, openedPages };
+  return { project, pages, openedPages };
 };

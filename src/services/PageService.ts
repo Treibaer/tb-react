@@ -44,14 +44,41 @@ export default class PageService {
   }
 
   /**
+   * Retrieves all pages associated with a specified project in a structured way.
+   * @param projectSlug - The slug identifier of the project.
+   * @returns A promise that resolves to an array of pages.
+   */
+  async getAllStructured(projectSlug: string) {
+    const pages = await this.client.get<Page[]>(
+      `/projects/${projectSlug}/pages`
+    );
+    // iterate over the pages, check the parent of every page and add itlself to the children array of the parent
+    pages.forEach((pageDTO) => {
+      if (pageDTO.parentId) {
+        const parent = pages.find((page) => page.id === pageDTO.parentId);
+        if (parent) {
+          parent.children.push(pageDTO);
+        }
+      }
+    });
+    // sort all children by position
+    pages.forEach((page) => {
+      page.children.sort((a, b) => a.position - b.position);
+    });
+    // sort pages
+    pages.sort((a, b) => a.position - b.position);
+    return pages;
+  }
+
+  /**
    * Retrieves a specific page by its slug within a specified project.
    * @param projectSlug - The slug identifier of the project.
    * @param ticketSlug - The slug identifier of the page.
    * @returns A promise that resolves to the page details.
    */
 
-  async get(projectSlug: string, ticketSlug: string) {
-    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+  async get(projectSlug: string, pageId: number) {
+    const url = `/projects/${projectSlug}/pages/${pageId}`;
     return this.client.get<Ticket>(url);
   }
 
@@ -65,19 +92,14 @@ export default class PageService {
    */
   async update(
     projectSlug: string,
-    ticketSlug: string,
+    pageId: number,
     data: {
-      status?: TicketStatus;
-      assigneeId?: number;
-      type?: string;
-      boardId?: number;
-      position?: number;
       title?: string;
-      description?: string;
+      content?: string;
     }
   ) {
-    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
-    return this.client.patch<Ticket>(url, data);
+    const url = `/projects/${projectSlug}/pages/${pageId}`;
+    return this.client.patch<Page>(url, data);
   }
 
   /**
@@ -98,7 +120,7 @@ export default class PageService {
 
   async togglePage(projectSlug: string, pageId: number) {
     const url = `/projects/${projectSlug}/opened-pages`;
-    return this.client.post<void>(url, {pageId});
+    return this.client.post<void>(url, { pageId });
   }
 
   private createTicketObject(data: {

@@ -162,13 +162,68 @@ export default class Transformer {
       icon: page.icon,
       position: page.position,
       content: page.content,
+      enrichedContent: await this.enrichContent(page.project_id, page.content),
       updatedAt: page.changedAt,
       creator: this.user(creator),
       updator: this.user(updator),
       createdAt: page.createdAt,
       parentId: page.parent_id,
-      children: []
+      children: [],
     };
+  }
+
+  private static pages: Page[] = [];
+  private static pageMap: Record<number, Page> = {};
+  private static projects: Project[] = [];
+  private static lastCheckTimestamp = 0;
+
+  private static async enrichContent(
+    projectId: number,
+    content: string
+  ): Promise<string> {
+    const now = Date.now();
+    if (now - this.lastCheckTimestamp > 1000 * 60 * 5) {
+      this.pages = await Page.findAll();
+      this.projects = await Project.findAll();
+      this.pageMap = this.pages.reduce((acc, page) => {
+        acc[page.id] = page;
+        return acc;
+      }, {} as Record<number, Page>);
+      this.lastCheckTimestamp = now;
+    }
+    const project = this.projects.find((project) => project.id === projectId);
+
+    const regex = /page\(\d+\)/g;
+
+    const matches = content.match(regex) || [];
+
+    for (const match of matches) {
+      const innerMatch = match.match(/\d+/);
+      if (innerMatch && innerMatch[0]) {
+        const page = this.pageMap[parseInt(innerMatch[0])];
+        if (page) {
+          let newContent = page.icon + " " + page.title;
+          const url = `/projects/${project?.slug}/pages/${
+            page.id
+          }`;
+          newContent = `<a href="${url}">${newContent}</a>`;
+          content = content.replace(match, newContent);
+        }
+      }
+    }
+    for (const match of matches) {
+      const innerMatch = match.match(/\((.*?)\)/);
+      if (innerMatch && innerMatch[1]) {
+        // console.log(innerMatch[1]);
+        // const toReplace = `page(${innerMatch[1]})`;
+        // const page = this.pageRepository.find(innerMatch[1]);
+        // if (page !== null) {
+        //   const url = this.page(page, showPageSlugIfNeeded);
+        //   content = content.replace(toReplace, url);
+        // }
+      }
+    }
+    return content;
   }
 
   static tags: AccountTagDTO[] = [];

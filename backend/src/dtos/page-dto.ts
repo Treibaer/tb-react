@@ -4,6 +4,7 @@ export type PageDTO = {
   id: number;
   title: string;
   content: string;
+  enrichedContent: string;
   icon: string;
   position: number;
   creator: UserDTO;

@@ -82,7 +82,7 @@ export default function MainNavigation() {
               icon={<TagIcon />}
             />
             <NavigationLink
-              to={ROUTES.TICKETS_PAGES(params.projectSlug)}
+              to={ROUTES.PROJECTS_PAGES(params.projectSlug)}
               title="Pages"
               icon={<DocumentTextIcon />}
             />

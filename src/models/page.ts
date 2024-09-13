@@ -5,6 +5,7 @@ export type Page = {
   title: string;
   position: number;
   content: string;
+  enrichedContent: string;
   icon: string;
   creator: User;
   updator: User;

@@ -36,6 +36,7 @@ const PageStructure: React.FC<{
         <div className="ml-4">
           {page.children.map((child) => (
             <PageStructure
+              key={child.id}
               openedPages={openedPages}
               projectSlug={projectSlug}
               page={child}

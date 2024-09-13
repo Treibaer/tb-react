@@ -6,14 +6,18 @@ import Transformer from "../utils/Transformer.js";
 const pageService = SQLPageService.shared;
 const router = express.Router();
 
-router.get("/:slug/pages", async (req, res) => {
-  const projectSlug = req.params.slug;
-  const tickets = await pageService.getAll(projectSlug);
-
-  const pageDTOs = await Promise.all(
-    tickets.map(async (page: Page) => Transformer.page(page))
-  );
-  res.status(200).json(pageDTOs);
+router.get("/:slug/pages", async (req, res, next) => {
+  try {
+    const projectSlug = req.params.slug;
+    const tickets = await pageService.getAll(projectSlug);
+  
+    const pageDTOs = await Promise.all(
+      tickets.map(async (page: Page) => Transformer.page(page))
+    );
+    res.status(200).json(pageDTOs);
+  } catch (error: any) {
+    next(error);
+  }
 });
 
 router.get("/:slug/opened-pages", async (_, res, next) => {
@@ -40,5 +44,27 @@ router.post("/:slug/opened-pages", async (req, res, next) => {
   }
 });
 
+router.get("/:slug/pages/:id", async (req, res, next) => {
+  try {
+    const projectSlug = req.params.slug;
+    const pageId = Number(req.params.id);
+    const page = await pageService.get(projectSlug, pageId);
+    res.status(200).json(await Transformer.page(page));
+  } catch (error: any) {
+    next(error);
+  }
+});
+
+router.patch("/:slug/pages/:id", async (req, res, next) => {
+  try {
+    const projectSlug = req.params.slug;
+    const pageId = Number(req.params.id);
+    const data = req.body;
+    const page = await pageService.update(projectSlug, pageId, data);
+    res.status(200).json(await Transformer.page(page));
+  } catch (error: any) {
+    next(error);
+  }
+});
 
 export default router;

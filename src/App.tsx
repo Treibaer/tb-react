@@ -24,12 +24,19 @@ import Settings from "./pages/Settings";
 import StatusView from "./pages/StatusView";
 import TicketHistoryView, {
   loader as ticketDetailsHistoryLoader,
-}  from "./pages/projects/TicketHistoryView";
+} from "./pages/projects/TicketHistoryView";
 import Register from "./pages/Register";
 import FinanceDashboard from "./pages/finances/FinanceDashboard";
-import FinanceDetailView , {loader as detailViewLoader }from "./pages/finances/FinanceDetailView";
-import FinanceSummaryView, {loader as summaryViewLoader} from "./pages/finances/FinanceSummaryView";
-import Pages, {loader as pagesLoader} from "./pages/projects/Pages";
+import FinanceDetailView, {
+  loader as detailViewLoader,
+} from "./pages/finances/FinanceDetailView";
+import FinanceSummaryView, {
+  loader as summaryViewLoader,
+} from "./pages/finances/FinanceSummaryView";
+import Pages, { loader as pagesLoader } from "./pages/projects/Pages";
+import PageDetailView, {
+  loader as pageDetailsLoader,
+} from "./pages/projects/PageDetailView";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +88,11 @@ const router = createBrowserRouter([
         path: "/projects/:projectSlug/pages",
         element: <Pages />,
         loader: pagesLoader,
+      },
+      {
+        path: "/projects/:projectSlug/pages/:pageId",
+        element: <PageDetailView />,
+        loader: pageDetailsLoader,
       },
       {
         path: "/finances",

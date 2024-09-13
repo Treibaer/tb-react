@@ -12,6 +12,7 @@ export class Page extends Model {
   declare creator_id: number;
   declare updator_id: number;
   declare parent_id: number;
+  declare project_id: number;
 }
 
 Page.init(
