@@ -33,7 +33,7 @@ export const BoardSection: React.FC<{
   const doneTickets = board.tickets.filter((e) => e.status === "done").length;
   return (
     <div key={board.id}>
-      <div className="flex justify-between px-4 h-11 bg-[rgb(32,33,46)] border-b border-b-[rgb(37,38,50)]">
+      <div className="flex flex-col sm:flex-row justify-between px-4 sm:h-11 bg-[rgb(32,33,46)] border-b border-b-[rgb(37,38,50)]">
         <div className="flex gap-3 h-11 items-center">
           <NavLink
             to={ROUTES.BOARD_DETAILS(project.slug, board.id)}
@@ -54,7 +54,7 @@ export const BoardSection: React.FC<{
           <div className="text-gray-400 w-12 text-right">
             {doneTickets}/{totalTickets}
           </div>
-          <div className="h-1 w-64 bg-neutral-200 dark:bg-neutral-600">
+          <div className="h-1 w-64 sm:w-64 bg-neutral-200 dark:bg-neutral-600">
             <div
               className="h-1 bg-[olive]"
               style={{ width: `${(doneTickets / totalTickets) * 100}%` }}

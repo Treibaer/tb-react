@@ -9,7 +9,8 @@ const PageStructureView: React.FC<{
   projectSlug: string;
   pages: Page[];
   open: number[];
-}> = ({ projectSlug, pages, open }) => {
+  openedPageId?: number;
+}> = ({ projectSlug, pages, open, openedPageId }) => {
   const [openedPages, setOpenedPages] = useState<number[]>(open);
 
   async function toggle(id: number) {
@@ -32,6 +33,7 @@ const PageStructureView: React.FC<{
               projectSlug={projectSlug}
               page={page}
               toggle={toggle}
+              openedPageId={openedPageId}
             />
           </div>
         ))}

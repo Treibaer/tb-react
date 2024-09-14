@@ -6,8 +6,10 @@ const PageStructure: React.FC<{
   page: Page;
   projectSlug: string;
   openedPages: number[];
+  openedPageId?: number;
   toggle: (id: number) => void;
-}> = ({ page, projectSlug, openedPages, toggle }) => {
+}> = ({ page, projectSlug, openedPages, toggle, openedPageId }) => {
+  const isOpened = openedPageId === page.id;
   return (
     <div key={page.id} className="">
       <div className="flex items-center gap-1">
@@ -27,7 +29,9 @@ const PageStructure: React.FC<{
         {page.children.length === 0 && <div className="w-4"></div>}
         <Link
           to={`/projects/${projectSlug}/pages/${page.id}`}
-          className="h-7 hover:bg-[rgb(37,34,49)] w-full items-center flex"
+          className={`h-7 hover:bg-[rgb(37,34,49)] w-full items-center flex ${
+            isOpened ? "bg-[rgb(37,34,49)]" : ""
+          }`}
         >
           {page.icon} {page.title}
         </Link>
@@ -41,6 +45,7 @@ const PageStructure: React.FC<{
               projectSlug={projectSlug}
               page={child}
               toggle={toggle}
+              openedPageId={openedPageId}
             />
           ))}
         </div>

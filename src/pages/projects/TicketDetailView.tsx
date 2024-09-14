@@ -63,15 +63,15 @@ export default function TicketDetailView() {
   return (
     <>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <div className="flex">
-        <div className="w-[calc(100%-240px)] h-[calc(100vh-56px)] overflow-auto max-h-full px-2 flex flex-col">
+      <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row">
+        <div className="w-full sm:w-[calc(100%-240px)] sm:h-[calc(100vh-56px)] overflow-auto max-h-full px-2 flex flex-col">
           <div className="border-b-[rgb(37,38,50)] border-b mb-4">
             {isOldVersion && (
               <div className="text-red-500 text-center">
                 You are viewing an old version of this ticket
               </div>
             )}
-            <div className="flex h-12 items-center gap-2">
+            <div className="flex min-h-12 items-center gap-2">
               {isEditing && (
                 <input
                   ref={currentTitle}
@@ -104,11 +104,16 @@ export default function TicketDetailView() {
           </div>
           {!isEditing && (
             <p
-              className="px-2 leading-7 flex-1 rawDescription"
+              className="px-2 leading-7 flex-1 rawDescription min-h-32"
               dangerouslySetInnerHTML={{ __html: ticket.description }}
             ></p>
           )}
-          {isEditing && <DescriptionView description={currentDescription} />}
+
+          {isEditing && (
+            <div className="h-64 sm:h-full">
+              <DescriptionView description={currentDescription} />
+            </div>
+          )}
           <TicketCommentArea project={project} ticket={ticket} />
         </div>
         <TicketDetailsSidebar

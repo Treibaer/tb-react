@@ -134,29 +134,33 @@ const TicketsBoardView: React.FC = () => {
         <TicketCreationDialog metadata={data.metadata} onClose={onClose} />
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
-      <div className=" overflow-auto max-h-[calc(100vh-57px)]">
-        <div className="flex justify-between items-center gap-4">
+      <div className="overflow-auto max-h-[calc(100vh-57px)]">
+        <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
           <TitleView title="Board View" openDialog={openDialog} />
-          <div className="flex items-center gap-4 me-2">
-            <Toggle
-              title="Hide done"
-              defaultChecked={hideDone}
-              onChange={toggleHideDone}
-            />
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-customBlue text-gray-400 rounded-md p-2"
-              style={{ boxShadow: "none", outline: "none" }}
-              onChange={handleSearch}
-            />
-            <NavLink to={ROUTES.BOARDS(project.slug)}>
-              <Button title="Boards" />
-            </NavLink>
+          <div className="flex items-center gap-4 me-2 flex-col sm:flex-row my-2">
+            <div className="flex gap-4">
+              <Toggle
+                title="Hide done"
+                defaultChecked={hideDone}
+                onChange={toggleHideDone}
+              />
+              <input
+                type="text"
+                placeholder="Search"
+                className="bg-customBlue text-gray-400 rounded-md p-2"
+                style={{ boxShadow: "none", outline: "none" }}
+                onChange={handleSearch}
+              />
+            </div>
+            <div className="flex gap-4">
+              <NavLink to={ROUTES.BOARDS(project.slug)}>
+                <Button title="Boards" />
+              </NavLink>
 
-            <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
-              <Button title="All Tickets" />
-            </NavLink>
+              <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
+                <Button title="All Tickets" />
+              </NavLink>
+            </div>
           </div>
         </div>
 

@@ -14,7 +14,7 @@ export const RootLayout: React.FC = () => {
       {serverError && <div className="text-red-500">Server error. Please try again later.</div>}
       {isLoggedIn && (
         <main className="flex">
-          <div className="hidden md:block w-[250px]">
+          <div id="menu" className="hidden md:block w-[250px]">
             <MainNavigation />
           </div>
           <div className="w-full md:w-[calc(100%-250px)] max-h-screen overflow-scroll">

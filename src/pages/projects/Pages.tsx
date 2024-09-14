@@ -1,14 +1,12 @@
 import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
-import PageService from "../../services/PageService";
-import { Page } from "../../models/page";
-import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
-import PageStructure from "./PageStructure";
-import { useState } from "react";
-import { Breadcrumb } from "../../models/breadcrumb";
-import { ROUTES } from "../../routes";
 import HeaderView from "../../components/HeaderView";
-import ProjectService from "../../services/ProjectService";
+import { Breadcrumb } from "../../models/breadcrumb";
+import { Page } from "../../models/page";
 import { Project } from "../../models/project";
+import { ROUTES } from "../../routes";
+import PageService from "../../services/PageService";
+import ProjectService from "../../services/ProjectService";
+import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 import PageStructureView from "./PageStructureView";
 
 const pageService = PageService.shared;

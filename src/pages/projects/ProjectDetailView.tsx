@@ -16,12 +16,15 @@ export const ProjectDetailView: React.FC = () => {
   return (
     <>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <div className="flex gap-4 m-2">
+      <div className="flex flex-wrap gap-4 m-2">
         <NavLink to={ROUTES.TICKETS_BOARD_VIEW(project.slug)}>
           <Button title="Board View" />
         </NavLink>
         <NavLink to={ROUTES.BOARDS(project.slug)}>
           <Button title="Boards" />
+        </NavLink>
+        <NavLink to={ROUTES.PROJECTS_PAGES(project.slug)}>
+          <Button title="Pages" />
         </NavLink>
         <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
           <Button title="All Tickets" />

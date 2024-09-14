@@ -35,8 +35,8 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
         setError("Invalid credentials");
         setIsSubmitting(false);
       }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
+    } catch (err: any) {
+      setError("An error occurred. Please try again." + err.message);
       setIsSubmitting(false);
     }
   }

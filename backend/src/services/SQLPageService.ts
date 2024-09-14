@@ -44,7 +44,7 @@ export class SQLPageService {
   }
 
   async update(
-    projectSlug: string,
+    _: string,
     pageId: number,
     data: PageDTO
   ): Promise<Page> {

@@ -121,67 +121,77 @@ export const TicketCreationDialog: React.FC<{
         ref={descriptionRef}
       ></textarea>
 
-      <div className="flex items-center relative gap-2 mx-2 mt-2">
-        {dropdown === DropdownType.STATUS && (
-          <StatusDropdown
-            selectedStatus={selectedStatus}
-            states={metadata.states}
-            onClick={updateStatus}
-            style={{ left: 0, top: 34 }}
-          />
-        )}
-        <div
-          id="statusDropdown"
-          className="select2-dropdown"
-          onClick={() => setDropdown(DropdownType.STATUS)}
-        >
-          <TicketStatusView status={selectedStatus} />
+      <div className="flex items-center flex-col sm:flex-row relative gap-2 mx-2 mt-2">
+        <div className="relative">
+          {dropdown === DropdownType.STATUS && (
+            <StatusDropdown
+              selectedStatus={selectedStatus}
+              states={metadata.states}
+              onClick={updateStatus}
+              style={{ left: -2, top: 34 }}
+            />
+          )}
+          <div
+            id="statusDropdown"
+            className="select2-dropdown relative"
+            onClick={() => setDropdown(DropdownType.STATUS)}
+          >
+            <TicketStatusView status={selectedStatus} />
+          </div>
         </div>
-        {dropdown === DropdownType.ASSIGNEE && (
-          <AssigneeDropdown
-            selectedAssignee={selectedAssignee}
-            users={metadata.users}
-            onClick={updateAssignee}
-            style={{ left: 82, top: 34 }}
-          />
-        )}
-        <div
-          id="assigneeDropdown"
-          className="select2-dropdown"
-          onClick={() => setDropdown(DropdownType.ASSIGNEE)}
-        >
-          <TicketAssigneeField user={selectedAssignee} />
+        <div className="relative">
+          {dropdown === DropdownType.ASSIGNEE && (
+            <AssigneeDropdown
+              selectedAssignee={selectedAssignee}
+              users={metadata.users}
+              onClick={updateAssignee}
+              style={{ left: -2, top: 34 }}
+            />
+          )}
+          <div
+            id="assigneeDropdown"
+            className="select2-dropdown"
+            onClick={() => setDropdown(DropdownType.ASSIGNEE)}
+          >
+            <TicketAssigneeField user={selectedAssignee} />
+          </div>
         </div>
-        {dropdown === DropdownType.BOARD && (
-          <BoardDropdown
-            selectedBoardId={selectedBoard?.id ?? 0}
-            boards={metadata.boards}
-            onClose={updateBoard}
-            style={{ left: 216, top: 34 }}
-          />
-        )}
-        <div
-          id="boardDropdown"
-          className="select2-dropdown overflow-x-hidden whitespace-nowrap w-32"
-          title={selectedBoard?.title}
-          onClick={() => setDropdown(DropdownType.BOARD)}
-        >
-          {selectedBoard?.title ?? "No board"}
+        <div className="relative">
+          {dropdown === DropdownType.BOARD && (
+            <BoardDropdown
+              selectedBoardId={selectedBoard?.id ?? 0}
+              boards={metadata.boards}
+              onClose={updateBoard}
+              style={{ left: -4, top: 34 }}
+            />
+          )}
+          <div
+            id="boardDropdown"
+            className="select2-dropdown"
+            title={selectedBoard?.title}
+            onClick={() => setDropdown(DropdownType.BOARD)}
+          >
+            <div className=" overflow-x-hidden whitespace-nowrap w-32">
+              {selectedBoard?.title ?? "No board"}
+            </div>
+          </div>
         </div>
-        {dropdown === DropdownType.TYPE && (
-          <TypeDropdown
-            selectedType={selectedType}
-            types={metadata.types}
-            onClose={updateType}
-            style={{ left: 352, top: 34 }}
-          />
-        )}
-        <div
-          id="typeDropdown"
-          className="select2-dropdown w-32"
-          onClick={() => setDropdown(DropdownType.TYPE)}
-        >
-          {selectedType === "" ? "None" : selectedType}
+        <div className="relative">
+          {dropdown === DropdownType.TYPE && (
+            <TypeDropdown
+              selectedType={selectedType}
+              types={metadata.types}
+              onClose={updateType}
+              style={{ left: -4, top: 34 }}
+            />
+          )}
+          <div
+            id="typeDropdown"
+            className="select2-dropdown w-32"
+            onClick={() => setDropdown(DropdownType.TYPE)}
+          >
+            {selectedType === "" ? "None" : selectedType}
+          </div>
         </div>
       </div>
     </Dialog>
