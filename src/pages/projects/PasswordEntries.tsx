@@ -19,6 +19,7 @@ const PasswordEntries: React.FC = () => {
   };
   const [entries, setEntries] = useState<PasswordEntry[]>(data.entries);
   const [editingEntry, setEditingEntry] = useState<PasswordEntry | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
@@ -28,6 +29,10 @@ const PasswordEntries: React.FC = () => {
 
   function openDialog() {
     setIsCreating(true);
+  }
+
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(e.target.value);
   }
 
   async function openEditDialog(entry: PasswordEntry) {
@@ -48,23 +53,35 @@ const PasswordEntries: React.FC = () => {
       {isCreating && (
         <PasswordEntryCreationDialog
           editingEntry={editingEntry}
-          environmentId={data.environment.id}
+          environment={data.environment}
           onClose={onClose}
         />
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
-      <TitleView title={data.environment.title} openDialog={openDialog} />
+      <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
+        <TitleView title={data.environment.title} openDialog={openDialog} />
+        <input
+          type="text"
+          placeholder="Search"
+          className="bg-mediumBlue rounded-xl px-3 w-64 py-1 h-10 me-4"
+          onChange={handleSearch}
+        />
+      </div>
       <div className="flex flex-col">
-        {entries.map((entry) => (
-          <div
-            className="tb-row cursor-pointer"
-            key={entry.id}
-            onClick={() => openEditDialog(entry)}
-          >
-            <div className="flex-1">{entry.title}</div>
-            <div className="flex-1 text-gray-400">{entry.login}</div>
-          </div>
-        ))}
+        {entries
+          .filter((entry) =>
+            entry.title.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .map((entry) => (
+            <div
+              className="tb-row cursor-pointer"
+              key={entry.id}
+              onClick={() => openEditDialog(entry)}
+            >
+              <div className="flex-1">{entry.title}</div>
+              <div className="flex-1 text-gray-400">{entry.login}</div>
+            </div>
+          ))}
       </div>
     </div>
   );
@@ -76,7 +93,5 @@ export const loader: LoaderFunction<{ environmentId: string }> = async ({
   params,
 }) => {
   const { environmentId } = params as { environmentId: string };
-  console.log("environmentId", environmentId);
-
   return await passwordService.getAllEntries(Number(environmentId));
 };

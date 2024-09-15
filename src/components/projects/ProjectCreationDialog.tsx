@@ -65,25 +65,19 @@ export const ProjectCreationDialog: React.FC<{
         <input
           type="text"
           placeholder="Project title"
-          id="dialogTitle"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input"
           ref={inputRef}
         />
         <textarea
           placeholder="Description"
-          id="dialogDescription"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input"
           ref={descriptionRef}
         ></textarea>
         <input
           type="text"
           placeholder="Slug"
-          id="dialogSlug"
-          className="tb-textarea"
+          className="tb-input"
           onChange={onSlugChange}
-          style={{ boxShadow: "none", outline: "none" }}
           ref={slugRef}
         />
         <div>

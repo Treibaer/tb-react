@@ -3,6 +3,7 @@ import { PasswordEnvironmentDTO } from "../dtos/passwords/password-environment-d
 import { PasswordEntryHistory } from "../models/passwords/password-entry-history.js";
 import { PasswordEntry } from "../models/passwords/password-entry.js";
 import { PasswordEnvironment } from "../models/passwords/password-environment.js";
+import { Encryption } from "../utils/Encryption.js";
 import Transformer from "../utils/Transformer.js";
 import UserService from "./UserService.js";
 
@@ -58,7 +59,9 @@ export class SQLPasswordService {
     if (entry.login !== undefined) {
       existingEntry.login = entry.login;
     }
-    if (entry.password !== undefined) {
+    if (entry.password !== undefined && entry.password !== "") {
+      // encrypt password for storage and history entry
+      entry.password = Encryption.shared.encryptPassword(entry.password);
       existingEntry.password = entry.password;
     }
     if (entry.url !== undefined) {

@@ -18,6 +18,10 @@ body {
   @apply overflow-y-auto absolute select-none;
 }
 
+.tb-input {
+  @apply bg-transparent p-2 rounded w-full border border-lightBlue outline-none resize-none
+}
+
 .ck-editor,
 .ck-editor__main,
 .ck-content {

@@ -40,13 +40,8 @@ const FinanceDetailEditBalanceDialogView: React.FC<{
         <input
           type="text"
           placeholder="Balance"
-          id="dialogTitle"
-          className="tb-textarea"
+          className="tb-input mb-10"
           defaultValue={(value / 100).toFixed(2)}
-          style={{
-            boxShadow: "none",
-            outline: "none",
-          }}
           ref={valueRef}
         />
       </Dialog>

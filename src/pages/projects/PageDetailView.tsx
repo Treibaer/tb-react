@@ -40,7 +40,6 @@ const PageDetailView: React.FC = () => {
   const currentContent = useRef(page.enrichedContent);
   const [isEditing, setIsEditing] = useState(false);
 
-  // console.log(page);
   const parents = getParents(page, data.pages);
 
   for (const parent of parents) {
@@ -98,8 +97,6 @@ const PageDetailView: React.FC = () => {
     }
     setIsEditing((prev) => !prev);
   }
-
-  // console.log(page);
   return (
     <div>
       <HeaderView breadcrumbs={breadcrumbs} />

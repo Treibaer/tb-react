@@ -27,6 +27,7 @@ import { TicketStatus } from "../models/ticket-status.js";
 import { Ticket } from "../models/ticket.js";
 import { User } from "../models/user.js";
 import UserService from "../services/UserService.js";
+import { Encryption } from "./Encryption.js";
 import { global } from "./global.js";
 
 export default class Transformer {
@@ -207,24 +208,10 @@ export default class Transformer {
         const page = this.pageMap[parseInt(innerMatch[0])];
         if (page) {
           let newContent = page.icon + " " + page.title;
-          const url = `/projects/${project?.slug}/pages/${
-            page.id
-          }`;
+          const url = `/projects/${project?.slug}/pages/${page.id}`;
           newContent = `<a href="${url}">${newContent}</a>`;
           content = content.replace(match, newContent);
         }
-      }
-    }
-    for (const match of matches) {
-      const innerMatch = match.match(/\((.*?)\)/);
-      if (innerMatch && innerMatch[1]) {
-        // console.log(innerMatch[1]);
-        // const toReplace = `page(${innerMatch[1]})`;
-        // const page = this.pageRepository.find(innerMatch[1]);
-        // if (page !== null) {
-        //   const url = this.page(page, showPageSlugIfNeeded);
-        //   content = content.replace(toReplace, url);
-        // }
       }
     }
     return content;
@@ -259,9 +246,15 @@ export default class Transformer {
     };
   }
 
-  static async passwordEnvironment(env: PasswordEnvironment): Promise<PasswordEnvironmentDTO> {
+  static async passwordEnvironment(
+    env: PasswordEnvironment
+  ): Promise<PasswordEnvironmentDTO> {
     const entries = await env.getEntries({
-      where: { creator_id: env.creator_id, environment_id: env.id, archived: false },
+      where: {
+        creator_id: env.creator_id,
+        environment_id: env.id,
+        archived: false,
+      },
     });
     return {
       id: env.id,
@@ -276,7 +269,7 @@ export default class Transformer {
       id: entry.id,
       title: entry.title,
       login: entry.login,
-      password: entry.password,
+      password: Encryption.shared.decryptPassword(entry.password),
       url: entry.url,
       notes: entry.notes,
     };

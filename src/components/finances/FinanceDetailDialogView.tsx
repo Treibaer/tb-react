@@ -27,6 +27,10 @@ const FinanceDetailDialogView: React.FC<{
         .split("T")[0];
       tagRef.current!.value = editingEntry.tagId.toString();
       signRef.current!.value = editingEntry.valueInCents < 0 ? "-1" : "1";
+    } else {
+      setTimeout(() => {
+        titleRef.current?.focus();
+      }, 100);
     }
   }, [editingEntry]);
 
@@ -71,30 +75,24 @@ const FinanceDetailDialogView: React.FC<{
         <input
           type="text"
           placeholder="Title"
-          id="dialogTitle"
-          className="tb-textarea"
-          style={{
-            boxShadow: "none",
-            outline: "none",
-          }}
+          className="tb-input"
           ref={titleRef}
         />
         <div className="flex items-center gap-2">
-          <select className="bg-slate-500 px-2 rounded-md ml-1" ref={signRef}>
+          <select
+            className="bg-mediumBlue border border-lightBlue px-2 rounded-md ml-1 h-10"
+            ref={signRef}
+            defaultValue={-1}
+          >
             <option value={1}>+</option>
-            <option value={-1} selected>
+            <option value={-1}>
               -
             </option>
           </select>
           <input
-            type="text"
+            type="number"
             placeholder="Value"
-            id="dialogTitle"
-            className="tb-textarea"
-            style={{
-              boxShadow: "none",
-              outline: "none",
-            }}
+            className="tb-input"
             ref={valueRef}
           />
         </div>
@@ -102,15 +100,14 @@ const FinanceDetailDialogView: React.FC<{
           type="date"
           placeholder="Title"
           id="dialogTitle"
-          className="tb-textarea"
-          style={{
-            boxShadow: "none",
-            outline: "none",
-          }}
+          className="tb-input"
           defaultValue={new Date().toISOString().split("T")[0]}
           ref={purchasedATRef}
         />
-        <select className="bg-slate-500 rounded-md p-1 mt-1 ml-1" ref={tagRef}>
+        <select
+          className="bg-mediumBlue border border-lightBlue rounded-md p-1 mt-1 ml-1 w-48"
+          ref={tagRef}
+        >
           <option value={0}>None</option>
           {tags
             .filter((tag) => tag.icon !== "")

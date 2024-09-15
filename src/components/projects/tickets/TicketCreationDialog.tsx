@@ -100,97 +100,89 @@ export const TicketCreationDialog: React.FC<{
       <input
         type="text"
         placeholder="Title"
-        id="dialogTitle"
-        className="tb-textarea"
-        style={{
-          boxShadow: "none",
-          outline: "none",
-          marginLeft: "8px",
-        }}
+        className="tb-input"
         ref={inputRef}
       />
       <textarea
         placeholder="Description"
-        id="dialogDescription"
-        className="tb-textarea"
-        style={{
-          boxShadow: "none",
-          outline: "none",
-          marginLeft: "8px",
-        }}
+        className="tb-input h-32"
         ref={descriptionRef}
       ></textarea>
 
-      <div className="flex items-center flex-col sm:flex-row relative gap-2 mx-2 mt-2">
-        <div className="relative">
-          {dropdown === DropdownType.STATUS && (
-            <StatusDropdown
-              selectedStatus={selectedStatus}
-              states={metadata.states}
-              onClick={updateStatus}
-              style={{ left: -2, top: 34 }}
-            />
-          )}
-          <div
-            id="statusDropdown"
-            className="select2-dropdown relative"
-            onClick={() => setDropdown(DropdownType.STATUS)}
-          >
-            <TicketStatusView status={selectedStatus} />
+      <div className="flex items-center sm:flex-row gap-2 mx-2 mt-2">
+        <div className="flex flex-col sm:flex-row">
+          <div className="relative">
+            {dropdown === DropdownType.STATUS && (
+              <StatusDropdown
+                selectedStatus={selectedStatus}
+                states={metadata.states}
+                onClick={updateStatus}
+                style={{ left: -2, top: 34 }}
+              />
+            )}
+            <div
+              id="statusDropdown"
+              className="select2-dropdown relative"
+              onClick={() => setDropdown(DropdownType.STATUS)}
+            >
+              <TicketStatusView status={selectedStatus} />
+            </div>
           </div>
-        </div>
-        <div className="relative">
-          {dropdown === DropdownType.ASSIGNEE && (
-            <AssigneeDropdown
-              selectedAssignee={selectedAssignee}
-              users={metadata.users}
-              onClick={updateAssignee}
-              style={{ left: -2, top: 34 }}
-            />
-          )}
-          <div
-            id="assigneeDropdown"
-            className="select2-dropdown"
-            onClick={() => setDropdown(DropdownType.ASSIGNEE)}
-          >
-            <TicketAssigneeField user={selectedAssignee} />
-          </div>
-        </div>
-        <div className="relative">
-          {dropdown === DropdownType.BOARD && (
-            <BoardDropdown
-              selectedBoardId={selectedBoard?.id ?? 0}
-              boards={metadata.boards}
-              onClose={updateBoard}
-              style={{ left: -4, top: 34 }}
-            />
-          )}
-          <div
-            id="boardDropdown"
-            className="select2-dropdown"
-            title={selectedBoard?.title}
-            onClick={() => setDropdown(DropdownType.BOARD)}
-          >
-            <div className=" overflow-x-hidden whitespace-nowrap w-32">
-              {selectedBoard?.title ?? "No board"}
+          <div className="relative">
+            {dropdown === DropdownType.ASSIGNEE && (
+              <AssigneeDropdown
+                selectedAssignee={selectedAssignee}
+                users={metadata.users}
+                onClick={updateAssignee}
+                style={{ left: -2, top: 34 }}
+              />
+            )}
+            <div
+              id="assigneeDropdown"
+              className="select2-dropdown  w-32"
+              onClick={() => setDropdown(DropdownType.ASSIGNEE)}
+            >
+              <TicketAssigneeField user={selectedAssignee} />
             </div>
           </div>
         </div>
-        <div className="relative">
-          {dropdown === DropdownType.TYPE && (
-            <TypeDropdown
-              selectedType={selectedType}
-              types={metadata.types}
-              onClose={updateType}
-              style={{ left: -4, top: 34 }}
-            />
-          )}
-          <div
-            id="typeDropdown"
-            className="select2-dropdown w-32"
-            onClick={() => setDropdown(DropdownType.TYPE)}
-          >
-            {selectedType === "" ? "None" : selectedType}
+        <div className="flex flex-col sm:flex-row">
+          <div className="relative">
+            {dropdown === DropdownType.BOARD && (
+              <BoardDropdown
+                selectedBoardId={selectedBoard?.id ?? 0}
+                boards={metadata.boards}
+                onClose={updateBoard}
+                style={{ left: -4, top: 34 }}
+              />
+            )}
+            <div
+              id="boardDropdown"
+              className="select2-dropdown"
+              title={selectedBoard?.title}
+              onClick={() => setDropdown(DropdownType.BOARD)}
+            >
+              <div className=" overflow-x-hidden whitespace-nowrap w-32">
+                {selectedBoard?.title ?? "No board"}
+              </div>
+            </div>
+          </div>
+          <div className="relative">
+            {dropdown === DropdownType.TYPE && (
+              <TypeDropdown
+                selectedType={selectedType}
+                types={metadata.types}
+                onClose={updateType}
+                style={{ left: -4, top: 34 }}
+              />
+            )}
+            <div
+              id="typeDropdown"
+              className="select2-dropdown w-32"
+              onClick={() => setDropdown(DropdownType.TYPE)}
+            >
+              {selectedType === "" ? "None" : selectedType}
+            </div>
           </div>
         </div>
       </div>

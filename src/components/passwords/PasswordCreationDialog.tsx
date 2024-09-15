@@ -50,15 +50,13 @@ export const PasswordCreationDialog: React.FC<{
         <input
           type="text"
           placeholder="Title"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input"
           ref={inputRef}
         />
         <input
           type="text"
           placeholder="Default Login"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input mb-10"
           ref={defaultLoginRef}
         />
       </Dialog>

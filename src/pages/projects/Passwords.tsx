@@ -38,6 +38,7 @@ const Passwords: React.FC = () => {
       <div className="flex flex-wrap">
         {environments.map((environment: any) => (
           <NavLink
+            key={environment.id}
             to={ROUTES.PASSWORDS_ENTRIES(environment.id)}
             className="w-[45%] md:w-[240px] h-[300px] gap-4 flex flex-col items-center justify-center p-8 m-2 border hover:bg-slate-800 rounded-md text-white"
           >

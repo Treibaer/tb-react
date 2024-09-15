@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import Dialog from "../../components/common/Dialog";
 import HeaderView from "../../components/HeaderView";
@@ -29,6 +29,12 @@ export const Boards: React.FC = () => {
   const [boards, setBoards] = useState(data.boards);
 
   const project = data.project;
+
+  useEffect(() => {
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+  }, []);
 
   async function updateBoardList() {
     const updatedBoards = await boardService.getAll(data.project.slug);
@@ -68,7 +74,7 @@ export const Boards: React.FC = () => {
     const title = editInputRef.current?.value;
     if (title && editBoard) {
       try {
-        await boardService.update(project.slug, editBoard.id, {title});
+        await boardService.update(project.slug, editBoard.id, { title });
         setEditBoard(null);
         updateBoardList();
       } catch (error: Error | any) {
@@ -105,8 +111,7 @@ export const Boards: React.FC = () => {
           <input
             type="text"
             placeholder="Board title"
-            id="dialogTitle"
-            className="tb-textarea"
+            className="tb-input mb-10"
             ref={inputRef}
           />
         </Dialog>
@@ -122,8 +127,7 @@ export const Boards: React.FC = () => {
           <input
             type="text"
             placeholder="Board title"
-            id="dialogTitle"
-            className="tb-textarea"
+            className="tb-input mb-10"
             defaultValue={editBoard?.title}
             ref={editInputRef}
           />

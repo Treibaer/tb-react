@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import Dialog from "../../components/common/Dialog";
 import { PasswordEntry } from "../../models/passwords/password-entry";
 import { PasswordService } from "../../services/PasswordService";
+import { PasswordEnvironment } from "../../models/passwords/password-environment";
 
 export const PasswordEntryCreationDialog: React.FC<{
-  environmentId: number;
+  environment: PasswordEnvironment;
   editingEntry: PasswordEntry | null;
   onClose: () => void;
-}> = ({ onClose, environmentId, editingEntry }) => {
+}> = ({ onClose, environment, editingEntry }) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,11 +27,13 @@ export const PasswordEntryCreationDialog: React.FC<{
     if (editingEntry) {
       inputRef.current!.value = editingEntry.title;
       loginRef.current!.value = editingEntry.login;
-      passwordRef.current!.value = editingEntry.password;
+      // passwordRef.current!.value = editingEntry.password;
       urlRef.current!.value = editingEntry.url;
       notesRef.current!.value = editingEntry.notes;
+    } else {
+      loginRef.current!.value = environment.defaultLogin;
     }
-  }, [editingEntry]);
+  }, [editingEntry, environment]);
 
   async function handleCreateEntry() {
     setError(undefined);
@@ -48,12 +51,12 @@ export const PasswordEntryCreationDialog: React.FC<{
         };
         if (editingEntry) {
           await PasswordService.shared.updateEntry(
-            environmentId,
+            environment.id,
             editingEntry.id,
             entry
           );
         } else {
-          await PasswordService.shared.createEntry(environmentId, entry);
+          await PasswordService.shared.createEntry(environment.id, entry);
         }
         onClose();
       } catch (error: Error | any) {
@@ -68,46 +71,42 @@ export const PasswordEntryCreationDialog: React.FC<{
     <>
       <Dialog
         error={error}
-        title="Create Entry"
+        title={editingEntry ? "Edit Entry" : "Create Entry"}
         onClose={onClose}
         onSubmit={handleCreateEntry}
+        submitTitle={editingEntry ? "Update" : "Create"}
       >
         <input
           type="text"
           autoComplete="new-password"
           placeholder="Title"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input"
           ref={inputRef}
         />
         <input
           type="text"
           autoComplete="new-password"
           placeholder="Login"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input"
           ref={loginRef}
         />
         <input
           type="text"
           autoComplete="new-password"
           placeholder="Password"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input"
           ref={passwordRef}
         />
         <input
           type="text"
           autoComplete="new-password"
           placeholder="Url"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input"
           ref={urlRef}
         />
         <textarea
           placeholder="Notes"
-          className="tb-textarea"
-          style={{ boxShadow: "none", outline: "none" }}
+          className="tb-input mb-10 h-32"
           ref={notesRef}
         ></textarea>
       </Dialog>

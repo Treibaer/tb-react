@@ -7,7 +7,6 @@ export const HeaderView: React.FC<{ breadcrumbs: Breadcrumb[] }> = ({
   breadcrumbs,
 }) => {
   function showMenu() {
-    console.log("show menu");
     const menu = document.getElementById("menu");
     if (!menu) {
       return;

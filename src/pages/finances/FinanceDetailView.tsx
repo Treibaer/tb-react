@@ -29,6 +29,7 @@ const FinanceDetailView = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [editBalance, setEditBalance] = useState(false);
   const [editingEntry, setEditingEntry] = useState<AccountEntry | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   function openDialog() {
     setIsCreating(true);
@@ -57,6 +58,10 @@ const FinanceDetailView = () => {
     setEditBalance(true);
   }
 
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(e.target.value);
+  }
+
   return (
     <div>
       {isCreating && (
@@ -77,20 +82,32 @@ const FinanceDetailView = () => {
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="overflow-auto max-h-[calc(100vh-57px)]">
-        <div className="flex items-center justify-between me-2">
+        <div className="flex flex-col sm:flex-row items-center justify-between me-2">
           <TitleView title="Finances" openDialog={openDialog} />
-          <div className="text-lg cursor-pointer" onClick={showEditBalance}>
-            {(balanceInCents / 100).toFixed(2)}€
+          <div className="flex items-center">
+            <input
+              type="text"
+              placeholder="Search"
+              className="bg-mediumBlue rounded-xl px-3 w-64 py-1 h-10 me-4"
+              onChange={handleSearch}
+            />
+            <div className="text-lg cursor-pointer" onClick={showEditBalance}>
+              {(balanceInCents / 100).toFixed(2)}€
+            </div>
           </div>
         </div>
         <div className="flex flex-col items-center">
-          {entries.map((entry) => (
-            <FinanceEntryRow
-              key={entry.id}
-              entry={entry}
-              onClick={() => openEditDialog(entry)}
-            />
-          ))}
+          {entries
+            .filter((entry) =>
+              entry.title.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((entry) => (
+              <FinanceEntryRow
+                key={entry.id}
+                entry={entry}
+                onClick={() => openEditDialog(entry)}
+              />
+            ))}
         </div>
       </div>
     </div>

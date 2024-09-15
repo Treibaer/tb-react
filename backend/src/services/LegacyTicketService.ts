@@ -37,7 +37,6 @@ export default class LegacyTicketService {
         : backlogTickets.reduce((max, t) => {
             return t.position > max ? t.position : max;
           }, 0) + 1;
-        console.log(ticket)
 
     const createdTicket = await Ticket.create({
       title: ticket.title,
@@ -49,7 +48,7 @@ export default class LegacyTicketService {
       assigned_id: ticket.assigneeId,
       type: ticket.type,
       status: ticket.status,
-      board_id: ticket.boardId === 0 ? null : ticket.boardId
+      board_id: ticket.boardId === 0 ? null : ticket.boardId,
     });
     await this.createHistoryEntry(createdTicket);
     return await Transformer.ticket(projectSlug, createdTicket);

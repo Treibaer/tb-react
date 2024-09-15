@@ -52,9 +52,14 @@ export const getAllEntries = async (req: Request, res: Response) => {
     const environmentId = Number(req.params.id);
     const environment = await PasswordEnvironment.findByPk(environmentId);
     const entries = await passwordService.getAllEntries(environmentId);
+    const transformedEntries = await Promise.all(
+      entries.map(
+        async (entry) => await Transformer.passwordEntry(entry)
+      )
+    );
     res.status(200).json({
       environment: environment,
-      entries: entries,
+      entries: transformedEntries,
     });
   } catch (error: any) {
     res.status(400).json({ message: error.message });
