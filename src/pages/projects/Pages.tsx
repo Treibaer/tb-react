@@ -30,19 +30,20 @@ const Pages: React.FC = () => {
     <div>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex">
-        <PageStructureView open={data.openedPages} pages={data.pages} projectSlug={project.slug} />
+        <PageStructureView
+          open={data.openedPages}
+          pages={data.pages}
+          projectSlug={project.slug}
+        />
         <div className="w-[calc(100%-16rem)]">
-          <div className="flex border-b border-b-[rgb(37,38,50)] p-2 justify-start items-center bg-[rgb(32,33,46)]">
+          <div className="flex border-b border-b-lightBlue p-2 justify-start items-center bg-mediumBlue">
             <div className="flex-1">Title</div>
             <div className="flex-1">Created</div>
             <div className="flex-1">Updated</div>
           </div>
           {data.pages.map((page) => (
-            <div
-              key={page.id}
-              className="flex border-b border-b-[rgb(37,38,50)] p-2 justify-start items-center hover:bg-[rgb(28,29,42)]"
-            >
-              <div className=" flex-1">
+            <div key={page.id} className="tb-row">
+              <div className="flex-1">
                 <Link to={`/projects/${project.slug}/pages/${page.id}`}>
                   {page.title}
                 </Link>

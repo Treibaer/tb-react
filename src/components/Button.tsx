@@ -6,7 +6,7 @@ interface ButtonProps {
 export default function Button({ title, onClick }: ButtonProps) {
   return (
     <button
-      className="bg-customBlue px-3 rounded-custom-tb h-7 border-solid border border-slate-700 hover:bg-slate-700"
+      className="bg-customBlue px-3 text-nowrap inline rounded-custom-tb h-7 border-solid border border-slate-700 hover:bg-lightBlue"
       onClick={onClick}
     >
       {title}

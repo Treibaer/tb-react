@@ -87,8 +87,8 @@ export const TicketDetailsSidebar: React.FC<{
   }, [project, ticket]);
 
   return (
-    <div className="sm:h-[calc(100vh-56px)] overflow-auto max-h-full bg-[rgb(32,33,46)] border-t border-t-[rgb(53,56,74)] border-r border-r-[rgb(53,56,74)] w-full sm:w-[254px] cursor-default">
-      <div className="border-b border-b-[rgb(53,56,74)] px-4 h-14 flex items-center text-gray-400">
+    <div className="sm:h-[calc(100vh-56px)] overflow-auto max-h-full bg-mediumBlue border-t border-t-lightBlue border-r border-r-lightBlue w-full sm:w-[254px] cursor-default">
+      <div className="border-b border-b-lightBlue px-4 h-14 flex items-center text-gray-400">
         {ticket.slug}
       </div>
       <div className="px-2 py-3 flex flex-col">

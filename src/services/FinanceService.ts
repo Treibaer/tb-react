@@ -37,6 +37,17 @@ export class FinanceService {
     }>(`/finances/entries${suffix}`);
   }
 
+
+  async getDashboardData(
+  ) {
+    return this.client.get<{
+      recentEntries: AccountEntry[];
+      currentIncomeInCents: number;
+      currentExpensesInCents: number;
+      balanceInCents: number;
+    }>(`/finances/dashboard`);
+  }
+
   async createOrUpdateEntry(
     id: number,
     title: string,

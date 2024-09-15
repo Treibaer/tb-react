@@ -6,12 +6,17 @@ import LoginView from "./LoginView";
 
 export const RootLayout: React.FC = () => {
   const { state } = useNavigation();
-  const { checkingLogin, isLoggedIn, setIsLoggedIn, serverError } = useLoginCheck();
-
+  const { checkingLogin, isLoggedIn, setIsLoggedIn, serverError } =
+    useLoginCheck();
+  
   return (
     <>
       {state === "loading" && <DelayedLoadingSpinner />}
-      {serverError && <div className="text-red-500">Server error. Please try again later.</div>}
+      {serverError && (
+        <div className="text-red-500">
+          Server error. Please try again later.
+        </div>
+      )}
       {isLoggedIn && (
         <main className="flex">
           <div id="menu" className="hidden md:block w-[250px]">

@@ -30,7 +30,7 @@ export default function MainNavigation() {
   };
 
   return (
-    <header className="w-full h-screen bg-[#191a23] px-2 pt-2 border-x border-[#2c2d3c] relative">
+    <header className="w-full h-screen bg-darkBlue px-2 pt-2 border-x border-[#2c2d3c] relative">
       {showSettings && <UserMenu onClose={toggleSettings} />}
       <div className="flex justify-between mb-1 items-center">
         <div className="select-none">TB-REACT</div>
@@ -56,13 +56,18 @@ export default function MainNavigation() {
         {!Constants.isDemoMode && (
           <>
             <NavigationLink
+              to={ROUTES.TICKETS_BOARD_VIEW("HK")}
+              title="Board View"
+              icon={<TagIcon />}
+            />
+            <NavigationLink
               to={ROUTES.STATUS}
               title="Status"
               icon={<SignalIcon />}
             />
 
             <NavigationLink
-              to={ROUTES.FINANCE_DETAILS}
+              to={ROUTES.FINANCE_DASHBOARD}
               title="Finances"
               icon={<CreditCardIcon />}
             />
@@ -101,6 +106,11 @@ export default function MainNavigation() {
         {isFinancePage && (
           <>
             <hr className="py-2" />
+            <NavigationLink
+              to={ROUTES.FINANCE_DASHBOARD}
+              title="Dashboard"
+              icon={<CreditCardIcon />}
+            />
             <NavigationLink
               to={ROUTES.FINANCE_DETAILS}
               title="Details"

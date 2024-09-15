@@ -32,7 +32,7 @@ export default function TicketRow({
       key={ticket.id}
       onContextMenu={handleContextMenu}
     >
-      <div className="flex gap-4 border-b border-b-[rgb(37,38,50)] p-2 justify-start items-center bg:[rgb(25,26,35)] hover:bg-[rgb(28,29,42)]">
+      <div className="tb-row">
         <div className="flex-grow flex gap-2 sm:gap-4 items-center">
           <div>
             {ticket.status === "open" && (

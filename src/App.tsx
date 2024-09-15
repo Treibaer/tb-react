@@ -1,11 +1,30 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  NavLink,
+  RouterProvider,
+  useRouteError,
+} from "react-router-dom";
 import "./App.css";
+import Button from "./components/Button";
 import Dashboard from "./pages/Dashboard";
+import FinanceDashboard, {
+  loader as financeDashboardLoader,
+} from "./pages/finances/FinanceDashboard";
+import FinanceDetailView, {
+  loader as detailViewLoader,
+} from "./pages/finances/FinanceDetailView";
+import FinanceSummaryView, {
+  loader as summaryViewLoader,
+} from "./pages/finances/FinanceSummaryView";
 import Logout from "./pages/Logout";
 import Boards, { loader as boardsLoader } from "./pages/projects/BoardList";
 import BoardDetails, {
   loader as boardDetailsLoader,
 } from "./pages/projects/BoardView";
+import PageDetailView, {
+  loader as pageDetailsLoader,
+} from "./pages/projects/PageDetailView";
+import Pages, { loader as pagesLoader } from "./pages/projects/Pages";
 import ProjectDetailView, {
   loader as projectDetailsLoader,
 } from "./pages/projects/ProjectDetailView";
@@ -13,35 +32,25 @@ import Projects, { loader as projectsLoader } from "./pages/projects/Projects";
 import TicketDetailView, {
   loader as ticketDetailsLoader,
 } from "./pages/projects/TicketDetailView";
+import TicketHistoryView, {
+  loader as ticketDetailsHistoryLoader,
+} from "./pages/projects/TicketHistoryView";
 import TicketList, {
   loader as ticketsAllLoader,
 } from "./pages/projects/TicketList";
 import TicketsBoardView, {
   loader as ticketsLoader,
 } from "./pages/projects/TicketsBoardView";
+import Register from "./pages/Register";
 import RootLayout from "./pages/RootLayout";
 import Settings from "./pages/Settings";
 import StatusView from "./pages/StatusView";
-import TicketHistoryView, {
-  loader as ticketDetailsHistoryLoader,
-} from "./pages/projects/TicketHistoryView";
-import Register from "./pages/Register";
-import FinanceDashboard from "./pages/finances/FinanceDashboard";
-import FinanceDetailView, {
-  loader as detailViewLoader,
-} from "./pages/finances/FinanceDetailView";
-import FinanceSummaryView, {
-  loader as summaryViewLoader,
-} from "./pages/finances/FinanceSummaryView";
-import Pages, { loader as pagesLoader } from "./pages/projects/Pages";
-import PageDetailView, {
-  loader as pageDetailsLoader,
-} from "./pages/projects/PageDetailView";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <ErrorBoundary />,
     children: [
       { index: true, element: <Dashboard /> },
       {
@@ -97,6 +106,7 @@ const router = createBrowserRouter([
       {
         path: "/finances",
         element: <FinanceDashboard />,
+        loader: financeDashboardLoader,
       },
       {
         path: "/finances/details",
@@ -139,3 +149,22 @@ function App() {
 }
 
 export default App;
+
+function ErrorBoundary() {
+  const error = useRouteError() as any;
+  if (error.status === 401 || error.status === 403) {
+    return (
+      <div>
+        <h1>Error {error.status}</h1>
+        <p>{error.message || "Something went wrong!"}</p>
+        <p>
+          <NavLink to={"/"}>
+            <Button title="Go to Dashboard" />
+          </NavLink>
+        </p>
+      </div>
+    );
+  }
+  // Fallback UI for unexpected errors
+  return <div>Something went wrong!</div>;
+}

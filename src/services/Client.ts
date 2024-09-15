@@ -103,8 +103,10 @@ export default class Client {
    */
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error("Unauthorized");
+      if (response.status === 401 || response.status === 403) {
+        const error: any = new Error("Unauthorized");
+        error.status = response.status;
+        throw error;
       }
       const responseJson = await response.json();
       if (responseJson.message) {

@@ -47,7 +47,7 @@ export default function TicketHistoryView() {
               historyItem.versionNumber
             }`}
             key={historyItem.createdAt}
-            className="flex justify-between gap-4 border-b border-b-[rgb(37,38,50)] p-2 items-center bg:[rgb(25,26,35)] hover:bg-[rgb(28,29,42)]"
+            className="flex justify-between gap-4 border-b border-b-mediumBlue3 p-2 items-center bg-darkBlue hover:bg-hoverBlue"
           >
             <div className="flex-1 text-center">
               #{historyItem.versionNumber}

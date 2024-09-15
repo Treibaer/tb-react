@@ -152,7 +152,7 @@ const TicketsBoardView: React.FC = () => {
                 onChange={handleSearch}
               />
             </div>
-            <div className="flex gap-4">
+            <div className="hidden md:flex gap-4">
               <NavLink to={ROUTES.BOARDS(project.slug)}>
                 <Button title="Boards" />
               </NavLink>

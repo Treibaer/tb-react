@@ -65,7 +65,7 @@ export default function TicketDetailView() {
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row">
         <div className="w-full sm:w-[calc(100%-240px)] sm:h-[calc(100vh-56px)] overflow-auto max-h-full px-2 flex flex-col">
-          <div className="border-b-[rgb(37,38,50)] border-b mb-4">
+          <div className="border-b-borderBlue border-b mb-4">
             {isOldVersion && (
               <div className="text-red-500 text-center">
                 You are viewing an old version of this ticket
