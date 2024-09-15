@@ -19,6 +19,8 @@ const FinanceDashboard = () => {
     balanceInCents: number;
   };
 
+  const m = new Date().getMonth() + 1;
+
   return (
     <div>
       <HeaderView breadcrumbs={breadcrumbs} />
@@ -34,13 +36,13 @@ const FinanceDashboard = () => {
           <div className="flex flex-col p-4 gap-2 bg-mediumBlue rounded-xl hover:bg-hoverBlue cursor-default select-none">
             <div>Income</div>
             <div className="text-4xl">
-              {(data.currentIncomeInCents / 100).toFixed(2)}€
+              {(data.currentIncomeInCents / m / 100).toFixed(2)}€
             </div>
           </div>
           <div className="flex flex-col p-4 gap-2 bg-mediumBlue rounded-xl hover:bg-hoverBlue cursor-default select-none">
             <div>Expenses</div>
             <div className="text-4xl">
-              {(Math.abs(data.currentExpensesInCents) / 100).toFixed(2)}€
+              {(Math.abs(data.currentExpensesInCents) / m / 100).toFixed(2)}€
             </div>
           </div>
         </div>

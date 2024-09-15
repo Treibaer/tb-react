@@ -2,13 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 import { AccountEntryDTO } from "../dtos/finances/account-entry-dto.js";
 import { FinanceSummary } from "../dtos/finances/finance-summary-dto.js";
+import { AccountEntry } from "../models/finances/account-entry.js";
 import { AccountTag } from "../models/finances/account-tag.js";
 import { Account } from "../models/finances/account.js";
 import { SQLFinanceService } from "../services/SQLFinanceService.js";
-import Transformer from "../utils/Transformer.js";
-import { AccountEntry } from "../models/finances/account-entry.js";
 import UserService from "../services/UserService.js";
-import { Op } from "sequelize";
+import Transformer from "../utils/Transformer.js";
 
 const financeService = SQLFinanceService.shared;
 
@@ -49,20 +48,13 @@ export const getDashboard = async (_: Request, res: Response) => {
       limit: 10,
     });
     // find all entries of current month
-    const currentMonthEntries = await financeService.getAllEntries(2024, {
-      dateFrom: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-        .toISOString()
-        .split("T")[0],
-      dateTo: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
-        .toISOString()
-        .split("T")[0],
-    });
+    const currentMonthEntries = await financeService.getAllEntries(2024, {});
     const currentIncomeInCents = currentMonthEntries.reduce((acc, entry) => {
       return entry.valueInCents > 0 ? acc + entry.valueInCents : acc;
-    } , 0);
+    }, 0);
     const currentExpensesInCents = currentMonthEntries.reduce((acc, entry) => {
       return entry.valueInCents < 0 ? acc + entry.valueInCents : acc;
-    } , 0);
+    }, 0);
 
     const transformedEntries = await Promise.all(
       accountEntries.map(async (entry) => await Transformer.accountEntry(entry))
@@ -92,6 +84,7 @@ export const createAccountEntry = async (
   }
   try {
     const accountEntry = await financeService.createAccountEntry(
+      3,
       req.body as AccountEntryDTO
     );
     res.status(201).json(accountEntry);

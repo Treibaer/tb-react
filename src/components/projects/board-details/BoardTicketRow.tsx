@@ -8,7 +8,8 @@ export const BoardTicketRow: React.FC<{
   projectSlug: string;
   ticket: Ticket;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
-}> = ({ projectSlug, ticket, onContextMenu }) => {
+  onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
+}> = ({ projectSlug, ticket, onContextMenu, onTouchStart}) => {
 
 
   const [{ isDragging }, drag] = useDrag({
@@ -29,6 +30,7 @@ export const BoardTicketRow: React.FC<{
     <NavLink
       to={ROUTES.TICKET_DETAILS(projectSlug, ticket.slug)}
       onContextMenu={handleContextMenu}
+      onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
       ref={drag}
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >

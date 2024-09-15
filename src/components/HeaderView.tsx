@@ -15,7 +15,7 @@ export const HeaderView: React.FC<{ breadcrumbs: Breadcrumb[] }> = ({
     menu.style.display = menu.style.display === "" ? "block" : "";
   }
   return (
-    <div className="flex gap-2 text-white border-b border-b-slate-600 p-4 h-14 overflow-x-scroll">
+    <div className="flex gap-2 text-white border-b border-b-slate-600 p-4 h-14 overflow-x-scroll select-none">
       <div>
         <Bars3Icon className="h-6 w-6 md:hidden text-[#ccccd7]" onTouchStart={showMenu}/>
       </div>

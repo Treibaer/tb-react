@@ -1,19 +1,20 @@
-import { useParams } from "react-router-dom";
-import { ROUTES } from "../../routes";
 import {
   ChartBarIcon,
   ChartPieIcon,
   CreditCardIcon,
   DocumentTextIcon,
   HomeIcon,
+  LockClosedIcon,
   SignalIcon,
   TagIcon,
-  TicketIcon,
+  TicketIcon
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { ROUTES } from "../../routes";
+import Constants from "../../services/Constants";
 import NavigationLink from "./NavigationLink";
 import UserMenu from "./UserMenu";
-import Constants from "../../services/Constants";
 
 export default function MainNavigation() {
   const params: { projectSlug?: string } = useParams();
@@ -65,11 +66,15 @@ export default function MainNavigation() {
               title="Status"
               icon={<SignalIcon />}
             />
-
             <NavigationLink
               to={ROUTES.FINANCE_DASHBOARD}
               title="Finances"
               icon={<CreditCardIcon />}
+            />
+            <NavigationLink
+              to={ROUTES.PASSWORDS}
+              title="Passwords"
+              icon={<LockClosedIcon />}
             />
           </>
         )}

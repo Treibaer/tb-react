@@ -45,6 +45,12 @@ import Register from "./pages/Register";
 import RootLayout from "./pages/RootLayout";
 import Settings from "./pages/Settings";
 import StatusView from "./pages/StatusView";
+import Passwords, {
+  loader as passwordsLoader,
+} from "./pages/projects/Passwords";
+import PasswordEntries, {
+  loader as passwordEntriesLoader,
+} from "./pages/projects/PasswordEntries";
 
 const router = createBrowserRouter([
   {
@@ -119,6 +125,16 @@ const router = createBrowserRouter([
         loader: summaryViewLoader,
       },
       {
+        path: "/passwords",
+        element: <Passwords />,
+        loader: passwordsLoader,
+      },
+      {
+        path: "/passwords/:environmentId/entries",
+        element: <PasswordEntries />,
+        loader: passwordEntriesLoader,
+      },
+      {
         path: "/status",
         element: <StatusView />,
       },
@@ -166,5 +182,6 @@ function ErrorBoundary() {
     );
   }
   // Fallback UI for unexpected errors
+  console.log(error.data);
   return <div>Something went wrong!</div>;
 }

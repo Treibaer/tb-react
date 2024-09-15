@@ -86,6 +86,22 @@ export const BoardDetails: React.FC = () => {
     }
   }
 
+  const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
+    if (event.touches.length !== 2) {
+      return;
+    }
+    const touch = event.touches[0];
+    const touch1 = event.touches[1];
+    const touchX = Math.min(touch.clientX, touch1.clientX);
+    const touchY = Math.min(touch.clientY, touch1.clientY);
+    setConfig({
+      top: touchY,
+      left: touchX,
+      show: true,
+      ticket,
+    });
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       {config.show && (
@@ -105,6 +121,7 @@ export const BoardDetails: React.FC = () => {
           tickets={openTickets}
           update={updateBoard}
           onContextMenu={onContextMenu}
+          onTouchStart={handleTouchStart}
         />
         <BoardColumn
           status="inProgress"
@@ -113,6 +130,7 @@ export const BoardDetails: React.FC = () => {
           tickets={inProgressTickets}
           update={updateBoard}
           onContextMenu={onContextMenu}
+          onTouchStart={handleTouchStart}
         />
         <BoardColumn
           status="done"
@@ -121,6 +139,7 @@ export const BoardDetails: React.FC = () => {
           tickets={doneTickets}
           update={updateBoard}
           onContextMenu={onContextMenu}
+          onTouchStart={handleTouchStart}
         />
       </div>
     </DndProvider>

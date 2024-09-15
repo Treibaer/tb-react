@@ -85,8 +85,11 @@ const FinanceDetailView = () => {
         </div>
         <div className="flex flex-col items-center">
           {entries.map((entry) => (
-            <FinanceEntryRow  key={entry.id} entry={entry} 
-            onClick={() => openEditDialog(entry)} />
+            <FinanceEntryRow
+              key={entry.id}
+              entry={entry}
+              onClick={() => openEditDialog(entry)}
+            />
           ))}
         </div>
       </div>

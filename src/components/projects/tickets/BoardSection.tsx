@@ -15,6 +15,7 @@ export const BoardSection: React.FC<{
   searchTerm: string;
   toggleBoard: (boardId: number) => void;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
+  onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
 }> = ({
   board,
   project,
@@ -23,6 +24,7 @@ export const BoardSection: React.FC<{
   searchTerm,
   toggleBoard,
   onContextMenu,
+  onTouchStart,
 }) => {
   const tickets = board.tickets.filter(
     (t) =>
@@ -69,6 +71,7 @@ export const BoardSection: React.FC<{
             project={project}
             ticket={ticket}
             onContextMenu={onContextMenu}
+            onTouchStart={onTouchStart}
           />
         ))}
     </div>

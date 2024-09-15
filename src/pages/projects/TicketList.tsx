@@ -72,6 +72,22 @@ const TicketList: React.FC = () => {
     }
   }
 
+  const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
+    if (event.touches.length !== 2) {
+      return;
+    }
+    const touch = event.touches[0];
+    const touch1 = event.touches[1];
+    const touchX = Math.min(touch.clientX, touch1.clientX);
+    const touchY = Math.min(touch.clientY, touch1.clientY);
+    setConfig({
+      top: touchY,
+      left: touchX,
+      show: true,
+      ticket,
+    });
+  };
+
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
     { title: "Projects", link: ROUTES.PROJECTS },
@@ -100,6 +116,7 @@ const TicketList: React.FC = () => {
             project={project}
             ticket={ticket}
             onContextMenu={onContextMenu}
+            onTouchStart={handleTouchStart}
           />
         ))}
       </div>

@@ -12,7 +12,8 @@ export const BoardColumn: React.FC<{
   tickets: Ticket[];
   update: () => void;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
-}> = ({ status, title, project, tickets, update, onContextMenu }) => {
+  onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
+}> = ({ status, title, project, tickets, update, onContextMenu, onTouchStart }) => {
   const [{ isOver }, drop] = useDrop({
     accept: "TICKET",
     drop: async (item: { slug: string }) => {
@@ -40,6 +41,7 @@ export const BoardColumn: React.FC<{
           ticket={ticket}
           projectSlug={project.slug}
           onContextMenu={onContextMenu}
+          onTouchStart={onTouchStart}
         />
       ))}
     </div>

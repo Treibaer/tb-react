@@ -128,6 +128,22 @@ const TicketsBoardView: React.FC = () => {
     setIsCreating(false);
   }
 
+  const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
+    if (event.touches.length !== 2) {
+      return;
+    }
+    const touch = event.touches[0];
+    const touch1 = event.touches[1];
+    const touchX = Math.min(touch.clientX, touch1.clientX);
+    const touchY = Math.min(touch.clientY, touch1.clientY);
+    setConfig({
+      top: touchY,
+      left: touchX,
+      show: true,
+      ticket,
+    });
+  };
+
   return (
     <>
       {isCreating && (
@@ -178,6 +194,7 @@ const TicketsBoardView: React.FC = () => {
               board={board}
               isBoardVisible={isBoardVisible(board.id)}
               onContextMenu={onContextMenu}
+              onTouchStart={handleTouchStart}
               toggleBoard={toggleBoard}
               hideDone={hideDone}
               searchTerm={searchTerm}

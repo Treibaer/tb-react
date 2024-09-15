@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.js";
 import boardsRoutes from "./routes/boards.js";
 import projectsRoutes from "./routes/projects.js";
 import financesRoutes from "./routes/finances.js";
+import passwordsRoutes from "./routes/passwords.js";
 import statusRoutes from "./routes/status.js";
 import ticketsRoutes from "./routes/tickets.js";
 import pageRoutes from "./routes/pages.js";
@@ -70,6 +71,7 @@ app.use(async (req, res, next) => {
 
 const port = process.env.PORT || 3052;
 
+app.use("/api/v3/passwords", passwordsRoutes);
 app.use("/api/v3/finances", financesRoutes);
 app.use("/api/v3/projects", projectsRoutes);
 app.use("/api/v3/projects", ticketsRoutes);

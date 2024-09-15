@@ -4,6 +4,9 @@ import { AccountEntry } from "../models/finances/account-entry.js";
 import { AccountTag } from "../models/finances/account-tag.js";
 import { Account } from "../models/finances/account.js";
 import { Page } from "../models/page.js";
+import { PasswordEntryHistory } from "../models/passwords/password-entry-history.js";
+import { PasswordEntry } from "../models/passwords/password-entry.js";
+import { PasswordEnvironment } from "../models/passwords/password-environment.js";
 import { Project } from "../models/project.js";
 import { TicketComment } from "../models/ticket-comment.js";
 import { TicketHistory } from "../models/ticket-history.js";
@@ -125,5 +128,28 @@ export const createRelations = () => {
     constraints: false,
     as: "parent",
     foreignKey: "parent_id",
+  });
+
+  PasswordEnvironment.belongsTo(User, {
+    constraints: false,
+    as: "creator",
+    foreignKey: "creator_id",
+  });
+
+  PasswordEnvironment.hasMany(PasswordEntry, {
+    as: "entries",
+    foreignKey: "environment_id",
+  });
+
+  PasswordEntry.belongsTo(User, {
+    constraints: false,
+    as: "creator",
+    foreignKey: "creator_id",
+  });
+
+  PasswordEntryHistory.belongsTo(PasswordEntry, {
+    constraints: false,
+    as: "entry",
+    foreignKey: "entry_id",
   });
 };

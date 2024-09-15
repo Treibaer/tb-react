@@ -2,7 +2,7 @@ import {
   Bars4Icon,
   CheckCircleIcon,
   EllipsisHorizontalCircleIcon,
-  InformationCircleIcon
+  InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 import { NavLink } from "react-router-dom";
 import { Project } from "../../../models/project";
@@ -14,12 +14,14 @@ interface TicketRowProps {
   project: Project;
   ticket: Ticket;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
+  onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
 }
 
 export default function TicketRow({
   project,
   ticket,
   onContextMenu,
+  onTouchStart,
 }: TicketRowProps) {
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -31,6 +33,7 @@ export default function TicketRow({
       to={ROUTES.TICKET_DETAILS(project.slug, ticket.slug)}
       key={ticket.id}
       onContextMenu={handleContextMenu}
+      onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
     >
       <div className="tb-row">
         <div className="flex-grow flex gap-2 sm:gap-4 items-center">
@@ -47,7 +50,7 @@ export default function TicketRow({
           </div>
           <div className="text-gray-400 w-16 flex-none">{ticket.slug}</div>
           <div className="flex gap-2 items-center text-sm sm:text-base">
-          <div>{ticket.title}</div>
+            <div>{ticket.title}</div>
             <div>
               {ticket.description && (
                 <Bars4Icon className="h-4 w-4 text-gray-400" />

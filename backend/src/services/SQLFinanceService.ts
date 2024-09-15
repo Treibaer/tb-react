@@ -11,21 +11,20 @@ export class SQLFinanceService {
   private constructor() {}
 
   async createAccountEntry(
+    accountId: number,
     accountEntry: AccountEntryDTO
   ): Promise<AccountEntryDTO> {
     const user = await this.userService.getUser();
-    // todo: get project id from user
-    const projectId = 3;
 
     const createdAccountEntry = await AccountEntry.create({
       ...accountEntry,
       creator_id: user.id,
-      account_id: projectId,
+      account_id: accountId,
       tag_id: accountEntry.tagId,
       purchasedAt: accountEntry.purchasedAt + 4 * 60 * 60,
     });
     // refresh account balance
-    const account = await Account.findByPk(projectId);
+    const account = await Account.findByPk(accountId);
     if (account) {
       account.valueInCents += createdAccountEntry.valueInCents;
       await account.save();

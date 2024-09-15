@@ -108,6 +108,11 @@ export default class Client {
         error.status = response.status;
         throw error;
       }
+      if (response.status === 404) {
+        const error: any = new Error("Not found");
+        error.status = response.status;
+        throw error;
+      }
       const responseJson = await response.json();
       if (responseJson.message) {
         throw new Error(responseJson.message);
