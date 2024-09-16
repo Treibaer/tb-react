@@ -15,8 +15,12 @@ export class PasswordService {
     return this.client.get<{environment: PasswordEnvironment, entries: PasswordEntry[]}>(`/passwords/environments/${environmentId}/entries`);
   }
 
-  async create(environment: PasswordEnvironment) {
+  async createEnvironment(environment: PasswordEnvironment) {
     return this.client.post<PasswordEnvironment>(`/passwords/environments`, environment);
+  }
+
+  async updateEnvironment(environment: PasswordEnvironment) {
+    return this.client.patch<PasswordEnvironment>(`/passwords/environments/${environment.id}`, environment);
   }
 
   async createEntry(environmentId: number, entry: PasswordEntry) {

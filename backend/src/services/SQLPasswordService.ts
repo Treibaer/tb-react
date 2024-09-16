@@ -79,6 +79,29 @@ export class SQLPasswordService {
     return Transformer.passwordEntry(existingEntry);
   }
 
+  async updateEnvironment(
+    id: number,
+    entry: PasswordEnvironmentDTO
+  ): Promise<PasswordEnvironmentDTO> {
+    const user = await this.userService.getUser();
+
+    const existingEntry = await PasswordEnvironment.findByPk(id);
+    if (!existingEntry) {
+      throw new Error("Entry not found");
+    }
+    if (existingEntry.creator_id !== user.id) {
+      throw new Error("You can't update this entry");
+    }
+    if (entry.title !== undefined) {
+      existingEntry.title = entry.title;
+    }
+    if (entry.defaultLogin !== undefined) {
+      existingEntry.defaultLogin = entry.defaultLogin;
+    }
+    await existingEntry.save();
+    return Transformer.passwordEnvironment(existingEntry);
+  }
+
   async getAllEntries(environmentId: number): Promise<PasswordEntry[]> {
     const user = await this.userService.getUser();
 

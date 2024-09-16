@@ -53,9 +53,7 @@ export const getAllEntries = async (req: Request, res: Response) => {
     const environment = await PasswordEnvironment.findByPk(environmentId);
     const entries = await passwordService.getAllEntries(environmentId);
     const transformedEntries = await Promise.all(
-      entries.map(
-        async (entry) => await Transformer.passwordEntry(entry)
-      )
+      entries.map(async (entry) => await Transformer.passwordEntry(entry))
     );
     res.status(200).json({
       environment: environment,
@@ -103,6 +101,28 @@ export const updateEntry = async (
     const entry = await passwordService.updateEntry(
       Number(req.params.entryId),
       req.body as PasswordEntryDTO
+    );
+    res.status(200).json(entry);
+  } catch (error: any) {
+    return next(new Error(error.message));
+  }
+};
+
+export const updateEnvironment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(422)
+      .json({ message: errors.array()[0].msg, errors: errors.array() });
+  }
+  try {
+    const entry = await passwordService.updateEnvironment(
+      Number(req.params.id),
+      req.body as PasswordEnvironmentDTO
     );
     res.status(200).json(entry);
   } catch (error: any) {

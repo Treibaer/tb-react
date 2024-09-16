@@ -22,14 +22,26 @@ export class SQLProjectService {
   }
 
   async get(slug: string): Promise<Project> {
-    return Project.getBySlug(slug);
+    const project = await Project.getBySlug(slug);
+    const user = await this.userService.getUser();
+    if (
+      user.isAdmin ||
+      user.projectAccess.split("_").indexOf(`${project.id}`) !== -1
+    ) {
+      return project;
+    }
+    throw new Error("You are not allowed to view this project");
   }
 
   async getAll(): Promise<ProjectDTO[]> {
     const projects = await Project.findAll({
       where: { archived: false },
     });
-    return await Promise.all(projects.map(Transformer.project));
+    const user = await this.userService.getUser();
+    const allowedProjects = projects.filter((project) =>
+      user.isAdmin || user.projectAccess.split("_").includes(`${project.id}`)
+    );
+    return await Promise.all(allowedProjects.map(Transformer.project));
   }
 
   async getMetadata(slug: string): Promise<ProjectMetaDTO> {

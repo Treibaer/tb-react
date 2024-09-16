@@ -11,10 +11,11 @@ export class SQLFinanceService {
   private constructor() {}
 
   async createAccountEntry(
-    accountId: number,
     accountEntry: AccountEntryDTO
   ): Promise<AccountEntryDTO> {
     const user = await this.userService.getUser();
+
+    const accountId = user.id === 1 ? 3 : 0;
 
     const createdAccountEntry = await AccountEntry.create({
       ...accountEntry,

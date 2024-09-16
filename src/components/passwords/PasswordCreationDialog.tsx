@@ -5,7 +5,8 @@ import { PasswordService } from "../../services/PasswordService";
 
 export const PasswordCreationDialog: React.FC<{
   onClose: () => void;
-}> = ({ onClose }) => {
+  editingEntry: PasswordEnvironment | null;
+}> = ({ onClose, editingEntry }) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -17,6 +18,13 @@ export const PasswordCreationDialog: React.FC<{
     }, 100);
   }, []);
 
+  useEffect(() => {
+    if (editingEntry) {
+      inputRef.current!.value = editingEntry.title;
+      defaultLoginRef.current!.value = editingEntry.defaultLogin;
+    }
+  }, [editingEntry]);
+
   async function handleCreateEnvironment() {
     setError(undefined);
 
@@ -24,12 +32,16 @@ export const PasswordCreationDialog: React.FC<{
     if (title) {
       try {
         const newEnvironment: PasswordEnvironment = {
-          id: 0,
+          id: editingEntry?.id ?? 0,
           title,
           defaultLogin: defaultLoginRef.current?.value ?? "",
           numberOfEntries: 0,
         };
-        await PasswordService.shared.create(newEnvironment);
+        if (editingEntry) {
+          await PasswordService.shared.updateEnvironment(newEnvironment);
+        } else {
+          await PasswordService.shared.createEnvironment(newEnvironment);
+        }
         onClose();
       } catch (error: Error | any) {
         setError(error.message);
@@ -43,9 +55,10 @@ export const PasswordCreationDialog: React.FC<{
     <>
       <Dialog
         error={error}
-        title="Create Environment"
+        title={editingEntry ? "Edit Environment" : "Create Environment"}
         onClose={onClose}
         onSubmit={handleCreateEnvironment}
+        submitTitle={editingEntry ? "Save" : "Create"}
       >
         <input
           type="text"

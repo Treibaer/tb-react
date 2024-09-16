@@ -59,7 +59,9 @@ export const getDashboard = async (_: Request, res: Response) => {
     const transformedEntries = await Promise.all(
       accountEntries.map(async (entry) => await Transformer.accountEntry(entry))
     );
-    const balanceInCents = (await Account.findByPk(3))?.valueInCents || 0;
+    const accountId = user.id === 1 ? 3 : 0;
+    const balanceInCents = (await Account.findByPk(accountId))?.valueInCents || 0;
+
     res.status(200).json({
       recentEntries: transformedEntries,
       currentIncomeInCents,
@@ -84,7 +86,6 @@ export const createAccountEntry = async (
   }
   try {
     const accountEntry = await financeService.createAccountEntry(
-      3,
       req.body as AccountEntryDTO
     );
     res.status(201).json(accountEntry);

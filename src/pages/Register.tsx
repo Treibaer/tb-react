@@ -4,23 +4,27 @@ export const Register: React.FC = () => {
   return (
     <div>
       <div className="text-6xl text-center mt-8">Register</div>
-      <div>
-        <form>
+      <div className="w-64 mx-auto mt-8">
+        <form className="flex flex-col gap-2">
           <div>
             <label>Username</label>
-            <input type="text" />
+            <input type="text" className="tb-input" />
           </div>
           <div>
             <label>Email</label>
-            <input type="email" />
+            <input type="email" className="tb-input" />
           </div>
           <div>
             <label>Password</label>
-            <input type="password" />
+            <input
+              type="password"
+              className="tb-input"
+              autoComplete="new-password"
+            />
           </div>
           <div>
             <label>Confirm Password</label>
-            <input type="password" />
+            <input type="password" className="tb-input" />
           </div>
           <Button title="Register" />
         </form>

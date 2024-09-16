@@ -3,6 +3,7 @@ import { SQLProjectService } from "../services/SQLProjectService.js";
 import Transformer from "../utils/Transformer.js";
 import { body, validationResult } from "express-validator";
 import { ProjectDTO } from "../dtos/project-dto.js";
+import UserService from "../services/UserService.js";
 
 const projectsService = SQLProjectService.shared;
 
@@ -42,6 +43,15 @@ export const createProject = async (
   }
   try {
     const project = await projectsService.create(req.body as ProjectDTO);
+    const user = await UserService.shared.getUser();
+    
+    // add project to user access
+    if (!user.isAdmin) {
+      const projectAccess = user.projectAccess.split("_");
+      projectAccess.push(`${project.id}`);
+      user.projectAccess = projectAccess.join("_");
+      await user.save();
+    }
     res.status(201).json(project);
   } catch (error: any) {
     return next(new Error(error.message));
@@ -56,9 +66,16 @@ export const createProjectValidations = [
     .isLength({ min: 2, max: 2 })
     .withMessage("slug must be exactly 2 characters"),
   body("slug").custom(async (value) => {
-    const project = await projectsService.get(value);
-    if (project) {
-      throw new Error("Slug already in use");
+    try {
+      const project = await projectsService.get(value);
+      if (project) {
+        throw new Error("Slug already in use");
+      }
+    } catch (error: any) {
+      if (error.statusCode === 404) {
+        return true;
+      }
+      throw new Error(error.message);
     }
     return true;
   }),
