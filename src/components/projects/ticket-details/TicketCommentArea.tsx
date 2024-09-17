@@ -19,6 +19,7 @@ export const TicketCommentArea: React.FC<{
   const [removeCommentId, setRemoveCommentId] = useState<number | null>(null);
 
   async function addComment() {
+    if (!contentRef.current?.value) return;
     await TicketService.shared.addComment(
       project.slug,
       ticket.slug,

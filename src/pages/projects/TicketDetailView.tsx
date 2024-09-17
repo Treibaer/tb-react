@@ -76,11 +76,11 @@ export default function TicketDetailView() {
                 <input
                   ref={currentTitle}
                   type="text"
-                  className="w-full bg-transparent text-2xl"
+                  className="w-full bg-mediumBlue text-2xl border border-gray-400 rounded-md px-2"
                   defaultValue={ticket.title}
                 />
               )}
-              {!isEditing && <div className="text-2xl">{ticket.title}</div>}
+              {!isEditing && <div className="text-2xl px-2 border border-transparent">{ticket.title}</div>}
               <div>
                 {isEditing && (
                   <div className="flex gap-2">

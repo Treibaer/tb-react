@@ -52,7 +52,7 @@ export class SQLTicketService {
     const ticket = await Ticket.getBySlug(ticketSlug);
     return await TicketHistory.findAll({
       where: { ticket_id: ticket.id },
-      order: [["createdAt", "DESC"]],
+      order: [["id", "DESC"]],
     });
   }
 

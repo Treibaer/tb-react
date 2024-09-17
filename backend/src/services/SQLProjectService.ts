@@ -1,9 +1,11 @@
+import { ProjectDashboardDataDTO } from "../dtos/project-dashboard-data-dto.js";
 import { ProjectDTO } from "../dtos/project-dto.js";
 import { ProjectMetaDTO } from "../dtos/project-meta-dto.js";
 import { Board } from "../models/board.js";
 import { Project } from "../models/project.js";
 import { ticketStates } from "../models/ticket-states.js";
 import { ticketTypes } from "../models/ticket-types.js";
+import { Ticket } from "../models/ticket.js";
 import Transformer from "../utils/Transformer.js";
 import Validator from "../utils/Validator.js";
 import UserService from "./UserService.js";
@@ -38,8 +40,9 @@ export class SQLProjectService {
       where: { archived: false },
     });
     const user = await this.userService.getUser();
-    const allowedProjects = projects.filter((project) =>
-      user.isAdmin || user.projectAccess.split("_").includes(`${project.id}`)
+    const allowedProjects = projects.filter(
+      (project) =>
+        user.isAdmin || user.projectAccess.split("_").includes(`${project.id}`)
     );
     return await Promise.all(allowedProjects.map(Transformer.project));
   }
@@ -62,6 +65,32 @@ export class SQLProjectService {
       types: ticketTypes,
       states: ticketStates,
       boards: smallBoardDTOs,
+    };
+  }
+
+  async getDashboardData(
+    projectSlug: string
+  ): Promise<ProjectDashboardDataDTO> {
+    const user = await this.userService.getUser();
+    const project = await this.get(projectSlug);
+
+    const tickets = await Ticket.findAll({
+      where: {
+        state: "inProgress",
+        assigned_id: user.id,
+        project_id: project.id,
+      },
+      // order: [["position", "ASC"]],
+    });
+
+    const ticketDTOs = await Promise.all(
+      tickets.map(async (ticket: Ticket) =>
+        Transformer.ticket(projectSlug, ticket)
+      )
+    );
+    return {
+      tickets: ticketDTOs,
+      project: Transformer.project(project),
     };
   }
 

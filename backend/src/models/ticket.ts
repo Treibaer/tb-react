@@ -15,6 +15,7 @@ export class Ticket extends Model {
   declare creator_id: number;
   declare assigned_id: number | null;
   declare board_id: number | null;
+  declare project_id: number;
   static async getBySlug(slug: string): Promise<Ticket> {
     const projectSlug = slug.split("-")[0];
     const ticketId = slug.split("-")[1];

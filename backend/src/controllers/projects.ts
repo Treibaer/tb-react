@@ -44,7 +44,7 @@ export const createProject = async (
   try {
     const project = await projectsService.create(req.body as ProjectDTO);
     const user = await UserService.shared.getUser();
-    
+
     // add project to user access
     if (!user.isAdmin) {
       const projectAccess = user.projectAccess.split("_");
@@ -94,6 +94,20 @@ export async function getProjectMetadata(
       return;
     }
     res.status(200).json(project);
+  } catch (error: any) {
+    next(new Error(error.message));
+  }
+}
+
+export async function getProjectsDashboardData(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const projectSlug = req.params.slug;
+    const data = await projectsService.getDashboardData(projectSlug);
+    res.status(200).json(data);
   } catch (error: any) {
     next(new Error(error.message));
   }

@@ -1,5 +1,6 @@
 import { Project } from "../models/project";
 import { ProjectMeta } from "../models/project-meta";
+import { ProjectDashboardData } from "../models/projects/project-dashboard-data";
 import Client from "./Client";
 
 /**
@@ -66,5 +67,11 @@ export default class ProjectService {
    */
   async getMetadata(projectSlug: string) {
     return this.client.get<ProjectMeta>(`/projects/${projectSlug}/metadata`);
+  }
+
+  async getDashboardData(projectSlug: string) {
+    return this.client.get<ProjectDashboardData>(
+      `/projects/${projectSlug}/dashboard`
+    );
   }
 }

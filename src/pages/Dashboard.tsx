@@ -4,8 +4,10 @@ import HeaderView from "../components/HeaderView";
 import { Breadcrumb } from "../models/breadcrumb";
 import Constants from "../services/Constants";
 
+
 export default function Dashboard() {
   const breadcrumbs: Breadcrumb[] = [{ title: "Home", link: "" }];
+
   return (
     <>
       <HeaderView breadcrumbs={breadcrumbs} />

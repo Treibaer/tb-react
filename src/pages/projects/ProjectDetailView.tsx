@@ -1,13 +1,14 @@
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
-import { Project } from "../../models/project";
+import HeaderView from "../../components/HeaderView";
+import TicketRow from "../../components/projects/tickets/TicketRow";
+import { Breadcrumb } from "../../models/breadcrumb";
+import { ProjectDashboardData } from "../../models/projects/project-dashboard-data";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
-import HeaderView from "../../components/HeaderView";
-import { Breadcrumb } from "../../models/breadcrumb";
 
 export const ProjectDetailView: React.FC = () => {
-  const project = useLoaderData() as Project;
+  const { project, tickets } = useLoaderData() as ProjectDashboardData;
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
     { title: "Projects", link: ROUTES.PROJECTS },
@@ -33,6 +34,18 @@ export const ProjectDetailView: React.FC = () => {
       <div className="project-details-wrapper">
         <div className="text-4xl m-2">{project.title}</div>
         <div className="m-2">{project.description}</div>
+      </div>{" "}
+      <div className="flex items-center justify-between px-4 h-11 bg-mediumBlue border-b border-b-darkBlue">
+        My Tickets
+      </div>
+      <div className="flex flex-col w-full">
+        {tickets.map((ticket) => (
+          <TicketRow
+            ticket={ticket}
+            project={project}
+            onContextMenu={() => {}}
+          />
+        ))}
       </div>
     </>
   );
@@ -45,7 +58,7 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   if (!projectSlug) {
     throw new Error("Project slug is missing");
   }
-  return await ProjectService.shared.get(projectSlug);
+  return await ProjectService.shared.getDashboardData(projectSlug);
 };
 
 export default ProjectDetailView;
