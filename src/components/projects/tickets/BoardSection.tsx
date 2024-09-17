@@ -34,7 +34,7 @@ export const BoardSection: React.FC<{
   const totalTickets = board.tickets.length;
   const doneTickets = board.tickets.filter((e) => e.status === "done").length;
   return (
-    <div key={board.id}>
+    <div key={board.id} className={tickets.length === 0 ? "hidden" : ""}>
       <div className="flex flex-col sm:flex-row justify-between px-4 sm:h-11 bg-mediumBlue border-b border-b-darkBlue">
         <div className="flex gap-3 h-11 items-center">
           <NavLink
