@@ -57,7 +57,7 @@ export const DescriptionView: React.FC<{
         ],
         initialData: description.current,
       }}
-      onChange={(event, editor) => {
+      onChange={(_, editor) => {
         const data = editor.getData();
         description.current = data;
       }}
