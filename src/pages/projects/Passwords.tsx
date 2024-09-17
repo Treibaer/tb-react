@@ -48,11 +48,11 @@ const Passwords: React.FC = () => {
       <TitleView title="Environments" openDialog={openDialog} />
       <div className="flex flex-wrap">
         {environments.map((environment: any) => (
-          <div className="relative w-[45%] md:w-[240px] h-[300px] gap-4  flex justify-center items-center  p-8 m-2 border hover:bg-slate-800 rounded-md text-white">
+          <div key={environment.id} className="relative w-[45%] md:w-[240px] h-[300px] gap-4  flex justify-center items-center p-8 m-2 border hover:bg-slate-800 rounded-md text-white">
             <NavLink
               key={environment.id}
               to={ROUTES.PASSWORDS_ENTRIES(environment.id)}
-              className=" flex flex-col items-center gap-2  "
+              className="w-full flex flex-col items-center gap-2"
             >
               <div className="text-lg font-semibold text-center">
                 {environment.title}

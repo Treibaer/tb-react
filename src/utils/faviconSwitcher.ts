@@ -3,10 +3,10 @@ const setFavicon = () => {
   favicon.rel = "icon";
   favicon.type = "image/x-icon";
 
-  if (process.env.NODE_ENV === "production") {
-    favicon.href = `${process.env.PUBLIC_URL}/favicon_prod.ico`;
+  if (import.meta.env.MODE === "production") {
+    favicon.href = `/favicon_prod.ico`;
   } else {
-    favicon.href = `${process.env.PUBLIC_URL}/favicon_dev.ico`;
+    favicon.href = `/favicon_dev.ico`;
   }
 
   const head = document.querySelector("head");

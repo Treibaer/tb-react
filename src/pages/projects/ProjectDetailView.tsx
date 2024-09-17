@@ -41,6 +41,7 @@ export const ProjectDetailView: React.FC = () => {
       <div className="flex flex-col w-full">
         {tickets.map((ticket) => (
           <TicketRow
+            key={ticket.id}
             ticket={ticket}
             project={project}
             onContextMenu={() => {}}

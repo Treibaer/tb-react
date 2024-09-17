@@ -44,7 +44,7 @@ export default class ProjectService {
    * @param project - The project object containing updated details.
    * @throws Error indicating the method is not implemented.
    */
-  async update(projectSlug: string, project: Project) {
+  async update(_: string, _2: Project) {
     throw new Error("Method not implemented.");
     // return this.client.put(`/projects/${projectSlug}`, project);
   }
@@ -55,7 +55,7 @@ export default class ProjectService {
    * @param projectSlug - The slug identifier of the project.
    * @throws Error indicating the method is not implemented.
    */
-  async delete(projectSlug: string) {
+  async delete(_: string) {
     throw new Error("Method not implemented.");
     // return this.client.delete(`/projects/${projectSlug}`);
   }
