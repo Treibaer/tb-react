@@ -77,6 +77,7 @@ export default class LegacyTicketService {
     }
     if (data.description !== undefined) {
       ticket.description = data.description;
+      ticket.changedAt = Math.floor(Date.now() / 1000);
     }
     if (data.status !== undefined) {
       ticket.status = data.status;

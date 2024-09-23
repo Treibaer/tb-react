@@ -64,6 +64,6 @@ const FinanceDashboard = () => {
 
 export default FinanceDashboard;
 
-export const loader = async ({ request }: any) => {
+export const loader = async () => {
   return await FinanceService.shared.getDashboardData();
 };

@@ -107,7 +107,7 @@ export default class PageService {
    * @param projectSlug - The slug identifier of the project.
    * @param ticketSlug - The slug identifier of the page.
    */
-  async delete(projectSlug: string, ticketSlug: string) {
+  async delete(_projectSlug: string, _ticketSlug: string) {
     // const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
     throw new Error("Method not implemented.");
     // return this.client.delete(url);

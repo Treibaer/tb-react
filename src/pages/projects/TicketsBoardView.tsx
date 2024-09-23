@@ -132,6 +132,9 @@ const TicketsBoardView: React.FC = () => {
     if (event.touches.length !== 2) {
       return;
     }
+    let board = boardStructure.activeBoards.find((b) =>
+      b.tickets.find((t) => t.id === ticket.id)
+    );
     const touch = event.touches[0];
     const touch1 = event.touches[1];
     const touchX = Math.min(touch.clientX, touch1.clientX);
@@ -141,6 +144,7 @@ const TicketsBoardView: React.FC = () => {
       left: touchX,
       show: true,
       ticket,
+      board
     });
   };
 

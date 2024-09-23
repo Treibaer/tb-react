@@ -1,19 +1,17 @@
+import { useDrag } from "react-dnd";
 import { NavLink } from "react-router-dom";
 import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
 import TicketAssigneeField from "../../projects/ticket-details/TicketAssigneeField";
-import { useDrag } from "react-dnd";
 
 export const BoardTicketRow: React.FC<{
   projectSlug: string;
   ticket: Ticket;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
   onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
-}> = ({ projectSlug, ticket, onContextMenu, onTouchStart}) => {
-
-
+}> = ({ projectSlug, ticket, onContextMenu, onTouchStart }) => {
   const [{ isDragging }, drag] = useDrag({
-    type: 'TICKET',
+    type: "TICKET",
     item: { id: ticket.id, slug: ticket.slug, column: ticket.status },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -24,7 +22,6 @@ export const BoardTicketRow: React.FC<{
     e.preventDefault();
     onContextMenu(e, ticket);
   };
-
 
   return (
     <NavLink

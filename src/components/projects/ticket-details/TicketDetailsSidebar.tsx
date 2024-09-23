@@ -182,7 +182,7 @@ export const TicketDetailsSidebar: React.FC<{
           <div
             title={formatUnixTimestamp(ticket.updatedAt, FormatType.DAY_TIME)}
           >
-            {formatUnixTimestamp(ticket.createdAt, FormatType.DAY)}
+            {formatUnixTimestamp(ticket.updatedAt, FormatType.DAY)}
           </div>
         </TicketDetailsRow>
         <TicketDetailsRow title="History">
