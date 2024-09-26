@@ -62,7 +62,7 @@ app.use(async (req, res, next) => {
   try {
 
     await UserService.shared.setup(authorization);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 

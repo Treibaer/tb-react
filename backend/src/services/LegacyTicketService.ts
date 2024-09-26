@@ -97,7 +97,7 @@ export default class LegacyTicketService {
 
       await ticket.save();
       const tickets = await Ticket.findAll({
-        where: { board_id: ticket.board_id },
+        where: { board_id: ticket.board_id, project_id: project.id },
         order: [["position", "ASC"]],
       });
       for (let i = 0; i < tickets.length; i++) {
