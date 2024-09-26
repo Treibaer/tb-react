@@ -20,35 +20,31 @@ export default class LegacyTicketService {
   ): Promise<TicketDTO> {
     const project = await this.findProjectBySlug(projectSlug);
     const user = await UserService.shared.getUser();
+    const boardId = ticket.boardId === 0 ? null : ticket.boardId;
 
     if (!ticket.title) {
       throw new Error("Title is required");
     }
 
-    const allProjectTickets = await Ticket.findAll({
+    const allTickets = await Ticket.findAll({
       where: { project_id: project.id },
     });
-    const ticketId = allProjectTickets.length + 1;
-    const backlogTickets = allProjectTickets.filter((t) => t.board_id === null);
-    // find max position of backlog tickets
-    const position =
-      backlogTickets.length === 0
-        ? 0
-        : backlogTickets.reduce((max, t) => {
-            return t.position > max ? t.position : max;
-          }, 0) + 1;
+    const ticketId = allTickets.length + 1;
+    const boardTickets = allTickets.filter((t) => t.board_id === boardId);
+
+    const position = boardTickets.length;
 
     const createdTicket = await Ticket.create({
       title: ticket.title,
       description: ticket.description,
       project_id: project.id,
-      ticketId: ticketId,
-      position: position,
+      ticketId,
+      position,
       creator_id: user.id,
       assigned_id: ticket.assigneeId,
       type: ticket.type,
       status: ticket.status,
-      board_id: ticket.boardId === 0 ? null : ticket.boardId,
+      board_id: boardId,
     });
     await this.createHistoryEntry(createdTicket);
     return await Transformer.ticket(projectSlug, createdTicket);
@@ -100,7 +96,7 @@ export default class LegacyTicketService {
       // update position of all tickets in the board
 
       await ticket.save();
-      let tickets = await Ticket.findAll({
+      const tickets = await Ticket.findAll({
         where: { board_id: ticket.board_id },
         order: [["position", "ASC"]],
       });
