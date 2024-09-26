@@ -44,7 +44,7 @@ PasswordEntry.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "last_used",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
     amountUsed: {
       type: DataTypes.INTEGER,
@@ -61,13 +61,13 @@ PasswordEntry.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "created_at",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
     changedAt: {
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "changed_at",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
   },
   { sequelize, tableName: "password_entry", timestamps: false }

@@ -31,7 +31,7 @@ Board.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "created_at",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
     position: {
       type: DataTypes.INTEGER,
@@ -41,13 +41,13 @@ Board.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "start_date",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
     endDate: {
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "end_date",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
   },
   { sequelize, tableName: "board", timestamps: false }

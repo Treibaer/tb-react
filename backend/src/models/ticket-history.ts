@@ -31,7 +31,7 @@ TicketHistory.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "created_at",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
   },
   {sequelize, tableName: "ticket_history", timestamps: false}

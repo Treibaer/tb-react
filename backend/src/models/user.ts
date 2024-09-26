@@ -124,7 +124,7 @@ User.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "created_at",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
   },
   { sequelize, tableName: "user", timestamps: false }

@@ -26,13 +26,13 @@ AccessToken.init(
     lastUsed: {
       type: DataTypes.NUMBER,
       allowNull: false,
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
       field: "last_used",
     },
     createdAt: {
       type: DataTypes.NUMBER,
       allowNull: false,
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
       field: "created_at",
     },
     ip: {

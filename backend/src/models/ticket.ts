@@ -57,7 +57,7 @@ Ticket.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "created_at",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
     ticketId: {
       type: DataTypes.NUMBER,
@@ -73,7 +73,7 @@ Ticket.init(
       type: DataTypes.NUMBER,
       allowNull: false,
       field: "changed_at",
-      defaultValue: Math.floor(Date.now() / 1000),
+      defaultValue: () => Math.floor(Date.now() / 1000),
     },
     position: {
       type: DataTypes.NUMBER,
