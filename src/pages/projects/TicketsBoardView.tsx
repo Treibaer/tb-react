@@ -47,7 +47,7 @@ const TicketsBoardView: React.FC = () => {
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
     e.preventDefault();
 
-    let board = boardStructure.activeBoards.find((b) =>
+    const board = boardStructure.activeBoards.find((b) =>
       b.tickets.find((t) => t.id === ticket.id)
     );
     const maxX = window.innerWidth - 175;
@@ -132,7 +132,7 @@ const TicketsBoardView: React.FC = () => {
     if (event.touches.length !== 2) {
       return;
     }
-    let board = boardStructure.activeBoards.find((b) =>
+    const board = boardStructure.activeBoards.find((b) =>
       b.tickets.find((t) => t.id === ticket.id)
     );
     const touch = event.touches[0];

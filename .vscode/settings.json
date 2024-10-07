@@ -8,5 +8,8 @@
     "package-lock.json": true,
     "backend/dist/": true,
     "backend/node_modules/": true
-  }
+  },
+  "eslint.enable": false,
+  "typescript.suggest.autoImports": true,
+  "javascript.suggest.autoImports": true,
 }

@@ -3,6 +3,8 @@ import Dialog from "../../components/common/Dialog";
 import { PasswordEntry } from "../../models/passwords/password-entry";
 import { PasswordService } from "../../services/PasswordService";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
+import useIsMobile from "../../hooks/useIsMobile";
+import Button from "../Button";
 
 export const PasswordEntryCreationDialog: React.FC<{
   environment: PasswordEnvironment;
@@ -17,10 +19,14 @@ export const PasswordEntryCreationDialog: React.FC<{
   const urlRef = useRef<HTMLInputElement>(null);
   const notesRef = useRef<HTMLTextAreaElement>(null);
 
+  const isMobile = useIsMobile();
+
   useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
+    if (!isMobile) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
   }, []);
 
   useEffect(() => {
@@ -67,6 +73,14 @@ export const PasswordEntryCreationDialog: React.FC<{
     }
   }
 
+  function copyUser() {
+    navigator.clipboard.writeText(loginRef.current!.value);
+  }
+
+  async function copyPass() {
+    navigator.clipboard.writeText(editingEntry?.password ?? "");
+  }
+
   return (
     <>
       <Dialog
@@ -106,9 +120,13 @@ export const PasswordEntryCreationDialog: React.FC<{
         />
         <textarea
           placeholder="Notes"
-          className="tb-input mb-10 h-32"
+          className="tb-input h-32"
           ref={notesRef}
         ></textarea>
+        <div className="mb-2 flex gap-1">
+          <Button title="Copy User" onClick={copyUser} />
+          <Button title="Copy Pass" onClick={copyPass} />
+        </div>
       </Dialog>
     </>
   );

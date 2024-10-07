@@ -12,6 +12,7 @@ import AssigneeDropdown from "../ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../ticket-details/dropdowns/BoardDropdown";
 import StatusDropdown from "../ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../ticket-details/dropdowns/TypeDropdown";
+import { Toggle } from "../../Toggle";
 
 const ticketService = TicketService.shared;
 
@@ -30,6 +31,8 @@ export const TicketCreationDialog: React.FC<{
   const [selectedStatus, setSelectedStatus] = useState<TicketStatus>("open");
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedBoard, setSelectedBoard] = useState<SmallBoard | null>(null);
+
+  const [stayOpen, setStayOpen] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -53,7 +56,20 @@ export const TicketCreationDialog: React.FC<{
       type: selectedType,
       boardId: selectedBoard?.id,
     });
-    onClose(true);
+
+    if (!stayOpen) {
+      onClose(true);
+    } else {
+      inputRef.current!.value = "";
+      descriptionRef.current!.value = "";
+      setSelectedAssignee(null);
+      setSelectedStatus("open");
+      setSelectedType("");
+      setSelectedBoard(null);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
   }
 
   async function updateStatus(status: TicketStatus | null) {
@@ -90,6 +106,10 @@ export const TicketCreationDialog: React.FC<{
     setSelectedBoard(metadata.boards.find((b) => b.id === boardId) || null);
   }
 
+  function toggleStayOpen() {
+    setStayOpen(!stayOpen);
+  }
+
   return (
     <Dialog
       title={`${project.title} > Create ticket`}
@@ -109,7 +129,7 @@ export const TicketCreationDialog: React.FC<{
         ref={descriptionRef}
       ></textarea>
 
-      <div className="flex items-center sm:flex-row gap-2 mx-2 mt-2">
+      <div className="flex items-center sm:flex-row gap-2 mx-2 mt-2 mb-8">
         <div className="flex flex-col sm:flex-row">
           <div className="relative">
             {dropdown === DropdownType.STATUS && (
@@ -185,6 +205,7 @@ export const TicketCreationDialog: React.FC<{
             </div>
           </div>
         </div>
+        <Toggle title="" defaultChecked={false} onChange={toggleStayOpen} />
       </div>
     </Dialog>
   );

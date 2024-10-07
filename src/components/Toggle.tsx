@@ -1,7 +1,7 @@
 export const Toggle: React.FC<{
   title: string;
   defaultChecked: boolean;
-  onChange: () => {};
+  onChange: () => void;
 }> = ({ defaultChecked, onChange, title }) => {
   return (
     <label className="inline-flex items-center cursor-pointer">
