@@ -12,6 +12,7 @@ export const PasswordEntryCreationDialog: React.FC<{
   onClose: () => void;
 }> = ({ onClose, environment, editingEntry }) => {
   const [error, setError] = useState<string | undefined>(undefined);
+  const [isShowingPassword, setIsShowingPassword] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const loginRef = useRef<HTMLInputElement>(null);
@@ -77,8 +78,20 @@ export const PasswordEntryCreationDialog: React.FC<{
     navigator.clipboard.writeText(loginRef.current!.value);
   }
 
-  async function copyPass() {
+  function copyPass() {
     navigator.clipboard.writeText(editingEntry?.password ?? "");
+  }
+
+  function showPass() {
+    setIsShowingPassword((prev) => {
+      passwordRef.current!.value = prev ? "" : editingEntry?.password ?? "";
+      return !prev;
+    });
+    if (isShowingPassword) {
+      passwordRef.current!.value = editingEntry?.password ?? "";
+    } else {
+    }
+    passwordRef.current!.value = editingEntry?.password ?? "";
   }
 
   return (
@@ -97,20 +110,35 @@ export const PasswordEntryCreationDialog: React.FC<{
           className="tb-input"
           ref={inputRef}
         />
-        <input
-          type="text"
-          autoComplete="new-password"
-          placeholder="Login"
-          className="tb-input"
-          ref={loginRef}
-        />
-        <input
-          type="text"
-          autoComplete="new-password"
-          placeholder="Password"
-          className="tb-input"
-          ref={passwordRef}
-        />
+        <div className="flex gap-1 items-center">
+          <input
+            type="text"
+            autoComplete="new-password"
+            placeholder="Login"
+            className="tb-input"
+            ref={loginRef}
+          />
+          <Button title="Copy" onClick={copyUser} />
+        </div>
+        <div className="flex gap-1 items-center">
+          <input
+            type="text"
+            autoComplete="new-password"
+            placeholder="Password"
+            className="tb-input"
+            ref={passwordRef}
+          />
+
+          <div className="flex gap-1 items-center">
+            {editingEntry && (
+              <Button
+                title={isShowingPassword ? "Hide" : "Show"}
+                onClick={showPass}
+              />
+            )}
+            <Button title="Copy" onClick={copyPass} />
+          </div>
+        </div>
         <input
           type="text"
           autoComplete="new-password"
@@ -120,13 +148,9 @@ export const PasswordEntryCreationDialog: React.FC<{
         />
         <textarea
           placeholder="Notes"
-          className="tb-input h-32"
+          className="tb-input mb-9 h-32"
           ref={notesRef}
         ></textarea>
-        <div className="mb-2 flex gap-1">
-          <Button title="Copy User" onClick={copyUser} />
-          <Button title="Copy Pass" onClick={copyPass} />
-        </div>
       </Dialog>
     </>
   );

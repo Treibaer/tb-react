@@ -5,6 +5,7 @@ import { ProjectMeta } from "../../../models/project-meta";
 import { TicketStatus } from "../../../models/ticket-status";
 import { User } from "../../../models/user";
 import TicketService from "../../../services/TicketService";
+import { Toggle } from "../../Toggle";
 import Dialog from "../../common/Dialog";
 import TicketAssigneeField from "../ticket-details/TicketAssigneeField";
 import TicketStatusView from "../ticket-details/TicketStatusView";
@@ -12,14 +13,14 @@ import AssigneeDropdown from "../ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../ticket-details/dropdowns/BoardDropdown";
 import StatusDropdown from "../ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../ticket-details/dropdowns/TypeDropdown";
-import { Toggle } from "../../Toggle";
 
 const ticketService = TicketService.shared;
 
 export const TicketCreationDialog: React.FC<{
   metadata: ProjectMeta;
+  initialBoardId?: number;
   onClose: (update: boolean) => void;
-}> = ({ metadata, onClose }) => {
+}> = ({ metadata, onClose, initialBoardId }) => {
   const [error, setError] = useState<string | undefined>();
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -30,7 +31,9 @@ export const TicketCreationDialog: React.FC<{
   const [selectedAssignee, setSelectedAssignee] = useState<User | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<TicketStatus>("open");
   const [selectedType, setSelectedType] = useState<string>("");
-  const [selectedBoard, setSelectedBoard] = useState<SmallBoard | null>(null);
+  const [selectedBoard, setSelectedBoard] = useState<SmallBoard | null>(
+    metadata.boards.find((b) => b.id === initialBoardId) || null
+  );
 
   const [stayOpen, setStayOpen] = useState(false);
 

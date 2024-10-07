@@ -84,22 +84,28 @@ router.get("/:slug/tickets/:ticketSlug/comments", async (req, res, next) => {
 router.post("/:slug/tickets/:ticketSlug/comments", async (req, res, next) => {
   const ticketSlug = req.params.ticketSlug;
   try {
-    const comment = await ticketsService.createComment(ticketSlug, req.body.content);
+    const comment = await ticketsService.createComment(
+      ticketSlug,
+      req.body.content
+    );
     res.status(201).json(comment);
   } catch (error: any) {
     next(error);
   }
 });
 
-router.delete("/:slug/tickets/:ticketSlug/comments/:commentId", async (req, res, next) => {
-  const ticketSlug = req.params.ticketSlug;
-  const commentId = Number(req.params.commentId);
-  try {
-    await ticketsService.removeComment(ticketSlug, commentId);
-    res.status(204).end();
-  } catch (error: any) {
-    next(error);
+router.delete(
+  "/:slug/tickets/:ticketSlug/comments/:commentId",
+  async (req, res, next) => {
+    const ticketSlug = req.params.ticketSlug;
+    const commentId = Number(req.params.commentId);
+    try {
+      await ticketsService.removeComment(ticketSlug, commentId);
+      res.status(204).end();
+    } catch (error: any) {
+      next(error);
+    }
   }
-});
+);
 
 export default router;

@@ -62,16 +62,40 @@ export const getDashboard = async (_: Request, res: Response) => {
     const accountId = user.id === 1 ? 3 : 0;
     const balanceInCents = (await Account.findByPk(accountId))?.valueInCents || 0;
 
+    const chartValues = createChartValues(balanceInCents, currentMonthEntries);
+
     res.status(200).json({
       recentEntries: transformedEntries,
       currentIncomeInCents,
       currentExpensesInCents,
       balanceInCents,
+      chartValues,
     });
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };
+
+function createChartValues(balanceInCents: number, entries: AccountEntry[]): number[] {
+  const m = new Date().getMonth() + 1;
+
+  const monthlyValues = new Array(12).fill(0);
+  for (const entry of entries) {
+    const month = new Date(entry.purchasedAt * 1000).getMonth();
+    monthlyValues[month] += entry.valueInCents;
+  }
+  let balanceBefore = balanceInCents;
+  for (let i = m - 1; i >= 0; i--) {
+    const oldValue = monthlyValues[i];
+    monthlyValues[i] = balanceBefore / 100;
+    balanceBefore -= oldValue;
+  }
+  // unset future months
+  for (let i = m; i < 12; i++) {
+    monthlyValues[i] = undefined;
+  }
+  return monthlyValues;
+}
 
 export const createAccountEntry = async (
   req: Request,

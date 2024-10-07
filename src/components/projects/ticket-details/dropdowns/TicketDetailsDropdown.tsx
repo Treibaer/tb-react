@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import useIsMobile from "../../../../hooks/useIsMobile";
 
 export const TicketDetailsDropdown: React.FC<{
   children: React.ReactNode;
@@ -8,11 +9,18 @@ export const TicketDetailsDropdown: React.FC<{
 }> = ({ children, onClose, toggleId, style }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const isMobile = useIsMobile();
+
+  const height = isMobile ? 214 : 280;
+
   const style2 = {...style}
-  const maxY = window.innerHeight - 175;
+  const maxY = window.innerHeight - height - 5;
   if (Number(style2.top) > maxY) {
     style2.top = maxY;
   }
+
+
+  style2.maxHeight = height;
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -34,7 +42,7 @@ export const TicketDetailsDropdown: React.FC<{
   return (
     <div
       ref={dropdownRef}
-      className={`ticket-details-dropdown tb-transparent-menu py-1 max-w-[236px] max-h-[170px]`}
+      className={`ticket-details-dropdown tb-transparent-menu py-1 max-w-[236px]`}
       style={style2}
     >
       {children}

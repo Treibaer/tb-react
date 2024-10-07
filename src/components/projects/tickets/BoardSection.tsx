@@ -35,13 +35,13 @@ export const BoardSection: React.FC<{
   const doneTickets = board.tickets.filter((e) => e.status === "done").length;
   return (
     <div key={board.id} className={tickets.length === 0 ? "hidden" : ""}>
-      <div className="flex flex-col sm:flex-row justify-between px-4 sm:h-11 bg-mediumBlue border-b border-b-darkBlue">
-        <div className="flex gap-3 h-11 items-center">
+      <div className="flex flex-row justify-between px-4 sm:h-11 bg-mediumBlue border-b border-b-darkBlue">
+        <div className="flex gap-2 h-11 items-center w-1/2 ">
           <NavLink
             to={ROUTES.BOARD_DETAILS(project.slug, board.id)}
-            className="text-base overflow-x-hidden whitespace-nowrap"
+            className="overflow-x-hidden whitespace-nowrap"
           >
-            <div>{board.title}</div>
+            <div className="text-base overflow-x-hidden  text-ellipsis max-w-[100%]">{board.title}</div>
           </NavLink>
 
           <ButtonIcon onClick={toggleBoard.bind(null, board.id)}>
@@ -56,7 +56,7 @@ export const BoardSection: React.FC<{
           <div className="text-gray-400 w-12 text-right">
             {doneTickets}/{totalTickets}
           </div>
-          <div className="h-1 w-64 sm:w-64 bg-neutral-200 dark:bg-neutral-600">
+          <div className="h-1 w-20 sm:w-64 bg-neutral-200 dark:bg-neutral-600">
             <div
               className="h-1 bg-olive"
               style={{ width: `${(doneTickets / totalTickets) * 100}%` }}

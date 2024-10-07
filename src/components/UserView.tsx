@@ -3,7 +3,7 @@ import { User } from "../models/user";
 
 export const UserView: React.FC<{ user: User | null }> = ({ user }) => {
   return (
-    <div>
+    <div className="flex-none">
       {user ? (
         <img
           className="h-7 w-7 rounded-full"

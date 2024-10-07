@@ -18,14 +18,14 @@ export default function Dashboard() {
         </NavLink>
         {!Constants.isDemoMode && (
           <>
-            <NavLink to="/finances">
+            <NavLink to="/finances/details">
               <Button title="Finances" />
             </NavLink>
             <NavLink to="/passwords">
               <Button title="Passwords" />
             </NavLink>
             <NavLink to="/projects/HK/tickets">
-              <Button title="HK" />
+              <Button title="Board View" />
             </NavLink>
           </>
         )}

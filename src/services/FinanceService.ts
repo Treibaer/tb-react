@@ -45,6 +45,7 @@ export class FinanceService {
       currentIncomeInCents: number;
       currentExpensesInCents: number;
       balanceInCents: number;
+      chartValues: number[];
     }>(`/finances/dashboard`);
   }
 

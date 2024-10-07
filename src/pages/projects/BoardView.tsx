@@ -12,6 +12,8 @@ import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
+import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
+import TitleView from "../../components/TitleView";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
@@ -24,6 +26,7 @@ type Config = {
 };
 
 export const BoardDetails: React.FC = () => {
+  const [isCreating, setIsCreating] = useState(false);
   const data = useLoaderData() as {
     board: Board;
     metadata: ProjectMeta;
@@ -32,6 +35,17 @@ export const BoardDetails: React.FC = () => {
   const [board, setBoard] = useState<Board>(data.board);
   const { metadata } = data;
   const project = metadata.project;
+
+  function openDialog() {
+    setIsCreating(true);
+  }
+
+  async function onClose(shouldUpdate: boolean) {
+    if (shouldUpdate) {
+      await updateBoard();
+    }
+    setIsCreating(false);
+  }
 
   const [config, setConfig] = useState<Config>({
     top: 0,
@@ -103,46 +117,55 @@ export const BoardDetails: React.FC = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      {config.show && (
-        <ContextMenu
-          metadata={metadata}
-          config={config}
-          onClose={closeContextMenu}
+    <>
+      {isCreating && (
+        <TicketCreationDialog
+          metadata={data.metadata}
+          initialBoardId={board.id}
+          onClose={onClose}
         />
       )}
-      <HeaderView breadcrumbs={breadcrumbs} />
-      <div className="text-2xl p-2">{board.title}</div>
-      <div className="flex mx-2 mt-2 gap-2">
-        <BoardColumn
-          status="open"
-          title="Open"
-          project={project}
-          tickets={openTickets}
-          update={updateBoard}
-          onContextMenu={onContextMenu}
-          onTouchStart={handleTouchStart}
-        />
-        <BoardColumn
-          status="inProgress"
-          title="In Progress"
-          project={project}
-          tickets={inProgressTickets}
-          update={updateBoard}
-          onContextMenu={onContextMenu}
-          onTouchStart={handleTouchStart}
-        />
-        <BoardColumn
-          status="done"
-          title="Done"
-          project={project}
-          tickets={doneTickets}
-          update={updateBoard}
-          onContextMenu={onContextMenu}
-          onTouchStart={handleTouchStart}
-        />
-      </div>
-    </DndProvider>
+      <DndProvider backend={HTML5Backend}>
+        {config.show && (
+          <ContextMenu
+            metadata={metadata}
+            config={config}
+            onClose={closeContextMenu}
+          />
+        )}
+        <HeaderView breadcrumbs={breadcrumbs} />
+        <TitleView title={board.title} openDialog={openDialog} />
+        <div className="flex mx-2 mt-2 gap-2">
+          <BoardColumn
+            status="open"
+            title="Open"
+            project={project}
+            tickets={openTickets}
+            update={updateBoard}
+            onContextMenu={onContextMenu}
+            onTouchStart={handleTouchStart}
+          />
+          <BoardColumn
+            status="inProgress"
+            title="In Progress"
+            project={project}
+            tickets={inProgressTickets}
+            update={updateBoard}
+            onContextMenu={onContextMenu}
+            onTouchStart={handleTouchStart}
+          />
+          <BoardColumn
+            status="done"
+            title="Done"
+            project={project}
+            tickets={doneTickets}
+            update={updateBoard}
+            onContextMenu={onContextMenu}
+            onTouchStart={handleTouchStart}
+          />
+        </div>
+      </DndProvider>
+    </>
   );
 };
 

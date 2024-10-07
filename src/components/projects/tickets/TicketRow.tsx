@@ -36,7 +36,7 @@ export default function TicketRow({
       onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
     >
       <div className="tb-row">
-        <div className="flex-grow flex gap-2 sm:gap-4 items-center">
+        <div className="flex-grow flex gap-1 sm:gap-4 items-center">
           <div>
             {ticket.status === "open" && (
               <InformationCircleIcon className="h-6 w-6 text-gray-400" />
@@ -49,7 +49,7 @@ export default function TicketRow({
             )}
           </div>
           <div className="text-gray-400 w-16 flex-none">{ticket.slug}</div>
-          <div className="flex gap-2 items-center text-sm sm:text-base">
+          <div className="flex gap-1 items-center text-sm sm:text-base">
             <div>{ticket.title}</div>
             <div>
               {ticket.description && (

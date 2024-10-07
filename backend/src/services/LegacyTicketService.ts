@@ -76,6 +76,13 @@ export default class LegacyTicketService {
       ticket.changedAt = Math.floor(Date.now() / 1000);
     }
     if (data.status !== undefined) {
+      if (
+        data.assigneeId === undefined &&
+        ticket.assigned_id === null &&
+        data.status === "inProgress"
+      ) {
+        ticket.assigned_id = (await UserService.shared.getUser()).id;
+      }
       ticket.status = data.status;
     }
     if (data.type !== undefined) {
