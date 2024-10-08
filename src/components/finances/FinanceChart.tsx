@@ -16,13 +16,24 @@ ChartJS.register(
   LineElement,
   Tooltip
 );
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
-const FinanceChart: React.FC<{ data: number[]; labels: string[] }> = ({
-  data,
-  labels,
-}) => {
+const FinanceChart: React.FC<{ data: number[] }> = ({ data }) => {
   const chartData = {
-    labels,
+    labels: months,
     datasets: [
       {
         animation: false,

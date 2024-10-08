@@ -19,16 +19,16 @@ TicketHistory.init(
       primaryKey: true,
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
     versionNumber: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "version_number",
     },
     createdAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "created_at",
       defaultValue: () => Math.floor(Date.now() / 1000),

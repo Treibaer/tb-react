@@ -12,7 +12,7 @@ export default function Dashboard() {
     <>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="text-6xl text-center mt-8">Welcome!</div>
-      <div className="flex my-2 mx-2 gap-2">
+      <div className="flex flex-wrap my-2 mx-2 gap-2">
         <NavLink to="/projects">
           <Button title="Projects" />
         </NavLink>

@@ -45,6 +45,7 @@ export default class LegacyTicketService {
       type: ticket.type,
       status: ticket.status,
       board_id: boardId,
+      closedAt: ticket.status === "done" ? Math.floor(Date.now() / 1000) : null,
     });
     await this.createHistoryEntry(createdTicket);
     return await Transformer.ticket(projectSlug, createdTicket);
@@ -84,6 +85,9 @@ export default class LegacyTicketService {
         ticket.assigned_id = (await UserService.shared.getUser()).id;
       }
       ticket.status = data.status;
+      if (data.status === "done" && ticket.closedAt === null) {
+        ticket.closedAt = Math.floor(Date.now() / 1000);
+      }
     }
     if (data.type !== undefined) {
       ticket.type = data.type;

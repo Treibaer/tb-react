@@ -1,12 +1,11 @@
 import { NavLink, useLoaderData } from "react-router-dom";
+import FinanceChart from "../../components/finances/FinanceChart";
+import FinanceEntryRow from "../../components/finances/FinanceEntryRow";
 import HeaderView from "../../components/HeaderView";
 import { Breadcrumb } from "../../models/breadcrumb";
-import { ROUTES } from "../../routes";
-import FinanceEntryRow from "../../components/finances/FinanceEntryRow";
-import { FinanceService } from "../../services/FinanceService";
 import { AccountEntry } from "../../models/finances/account-entry";
-import { useState } from "react";
-import FinanceChart from "../../components/finances/FinanceChart";
+import { ROUTES } from "../../routes";
+import { FinanceService } from "../../services/FinanceService";
 
 const FinanceDashboard = () => {
   const breadcrumbs: Breadcrumb[] = [
@@ -24,26 +23,6 @@ const FinanceDashboard = () => {
 
   const m = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
-
-  const [monthlyValues, setMonthlyValues] = useState<number[]>(
-    data.chartValues
-  );
-
-  // Example labels for each month
-  const [months, _] = useState<string[]>([
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ]);
 
   const expensesInPercent = Math.abs(
     (data.currentExpensesInCents / data.currentIncomeInCents) * 100
@@ -71,7 +50,7 @@ const FinanceDashboard = () => {
           </div>
         </div>
         <div className="sm:h-72">
-          <FinanceChart data={monthlyValues} labels={months} />
+          <FinanceChart data={data.chartValues} />
         </div>
         <div className="flex flex-col gap-2 border border-mediumBlue rounded-xl mx-2">
           <div className="flex items-center justify-between">

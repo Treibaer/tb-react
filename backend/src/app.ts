@@ -3,14 +3,20 @@ import fs from "fs";
 import https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
+import { Board } from "./models/board.js";
+import { Project } from "./models/project.js";
+import { TicketComment } from "./models/ticket-comment.js";
+import { TicketHistory } from "./models/ticket-history.js";
+import { Ticket } from "./models/ticket.js";
+import { User } from "./models/user.js";
 import authRoutes from "./routes/auth.js";
 import boardsRoutes from "./routes/boards.js";
+import financesRoutes from "./routes/finances.js";
+import pagesRoutes from "./routes/pages.js";
+import passwordsRoutes from "./routes/passwords.js";
 import projectsRoutes from "./routes/projects.js";
 import statusRoutes from "./routes/status.js";
 import ticketsRoutes from "./routes/tickets.js";
-import pagesRoutes from "./routes/pages.js";
-import financesRoutes from "./routes/finances.js";
-import passwordsRoutes from "./routes/passwords.js";
 import UserService from "./services/UserService.js";
 import { sequelize } from "./utils/database.js";
 import { global } from "./utils/global.js";
@@ -105,6 +111,15 @@ if (development) {
 
 function startDevServer() {
   // Status.sync();
+
+  User.sync({ alter: true });
+  Project.sync({ alter: true });
+  Ticket.sync({ alter: true });
+  TicketComment.sync({ alter: true });
+  TicketHistory.sync({ alter: true });
+  // Project.sync({ alter: true });
+  // Page.sync({ alter: true });
+  Board.sync({ alter: true });
   sequelize.sync().then(() => {
     app.listen(port);
   });

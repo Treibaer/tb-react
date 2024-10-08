@@ -1,7 +1,7 @@
 import { DataTypes, Model, WhereOptions } from "sequelize";
 import { sequelize } from "../utils/database.js";
-import { Ticket } from "./ticket.js";
 import { Page } from "./page.js";
+import { User } from "./user.js";
 
 export class Project extends Model {
   declare id: number;
@@ -23,7 +23,6 @@ export class Project extends Model {
   declare graphicStyle: string;
   declare uniqueSellingPoints: string;
   declare coverImage: string;
-  declare getTickets: (options?: WhereOptions) => Promise<Ticket[]>;
   declare getPages: (options?: WhereOptions) => Promise<Page[]>;
   static async getBySlug(slug: string): Promise<Project> {
     const project = await Project.findOne({ where: { slug } });
@@ -63,6 +62,14 @@ Project.init(
       allowNull: false,
       field: "short",
     },
+    creator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
     archived: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -74,7 +81,7 @@ Project.init(
       defaultValue: true,
     },
     createdAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "created_at",
       defaultValue: () => Math.floor(Date.now() / 1000),

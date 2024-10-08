@@ -14,25 +14,10 @@ import { Ticket } from "../models/ticket.js";
 import { User } from "../models/user.js";
 
 export const createRelations = () => {
-  Project.belongsTo(User, {
-    constraints: false,
-    as: "creator",
-    foreignKey: "creator_id",
-  });
-  User.hasMany(Project, {
-    as: "projects",
-    foreignKey: "creator_id",
-  });
-
   AccessToken.belongsTo(User, {
     constraints: false,
     as: "user",
     foreignKey: "user_id",
-  });
-
-  Project.hasMany(Ticket, {
-    as: "tickets",
-    foreignKey: "project_id",
   });
 
   Project.hasMany(Page, {
@@ -40,23 +25,6 @@ export const createRelations = () => {
     foreignKey: "project_id",
   });
 
-  Ticket.belongsTo(User, {
-    constraints: false,
-    as: "creator",
-    foreignKey: "creator_id",
-  });
-
-  Ticket.belongsTo(User, {
-    constraints: false,
-    as: "assignee",
-    foreignKey: "assigned_id",
-  });
-
-  Ticket.belongsTo(Board, {
-    constraints: false,
-    as: "board",
-    foreignKey: "board_id",
-  });
 
   Board.belongsTo(Project, {
     constraints: false,

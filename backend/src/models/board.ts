@@ -28,7 +28,7 @@ Board.init(
       field: "active",
     },
     createdAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "created_at",
       defaultValue: () => Math.floor(Date.now() / 1000),
@@ -38,13 +38,13 @@ Board.init(
       allowNull: false,
     },
     startDate: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "start_date",
       defaultValue: () => Math.floor(Date.now() / 1000),
     },
     endDate: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "end_date",
       defaultValue: () => Math.floor(Date.now() / 1000),

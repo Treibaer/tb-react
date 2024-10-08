@@ -5,12 +5,12 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import boardsRoutes from "./routes/boards.js";
-import projectsRoutes from "./routes/projects.js";
 import financesRoutes from "./routes/finances.js";
+import pageRoutes from "./routes/pages.js";
 import passwordsRoutes from "./routes/passwords.js";
+import projectsRoutes from "./routes/projects.js";
 import statusRoutes from "./routes/status.js";
 import ticketsRoutes from "./routes/tickets.js";
-import pageRoutes from "./routes/pages.js";
 import UserService from "./services/UserService.js";
 import { sequelize } from "./utils/database.js";
 import { global } from "./utils/global.js";
@@ -60,7 +60,6 @@ app.use(async (req, res, next) => {
   }
   global.host = req.protocol + "://" + req.get("host");
   try {
-
     await UserService.shared.setup(authorization);
   } catch (error: any) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -96,7 +95,7 @@ if (development) {
 
 function startDevServer() {
   // Status.sync();
-  sequelize.sync().then(() => {
+  sequelize.sync({alter: true}).then(() => {
     app.listen(port);
   });
 }

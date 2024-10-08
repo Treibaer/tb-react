@@ -18,11 +18,11 @@ TicketComment.init(
       primaryKey: true,
     },
     content: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
     createdAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "created_at",
       defaultValue: () => Math.floor(Date.now() / 1000),

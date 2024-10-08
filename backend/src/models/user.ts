@@ -33,8 +33,15 @@ User.init(
       allowNull: false,
       primaryKey: true,
     },
+    selectedProjectId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      field: "selected_project_id",
+    },
     email: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
     },
     firstName: {
@@ -43,7 +50,7 @@ User.init(
       field: "first_name",
     },
     roles: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT("long"),
       allowNull: false,
       defaultValue: "[]",
     },
@@ -60,7 +67,6 @@ User.init(
     avatar: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "https://i.pravatar.cc/150?u=1",
     },
     language: {
       type: DataTypes.STRING,
@@ -68,19 +74,19 @@ User.init(
       defaultValue: "de",
     },
     openedPages: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT("long"),
       allowNull: false,
       defaultValue: "",
       field: "opened_pages",
     },
     closedBoards: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT("long"),
       allowNull: false,
       defaultValue: "",
       field: "closed_boards",
     },
     hideDoneProjects: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT("long"),
       allowNull: false,
       defaultValue: "",
       field: "hide_done_projects",
@@ -121,7 +127,7 @@ User.init(
       defaultValue: "",
     },
     createdAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "created_at",
       defaultValue: () => Math.floor(Date.now() / 1000),

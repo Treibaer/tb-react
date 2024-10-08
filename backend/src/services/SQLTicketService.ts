@@ -16,20 +16,23 @@ export class SQLTicketService {
     }
     const project = await Project.getBySlug(projectSlug);
     const ticketId = ticketSlug.split("-")[1];
-    const tickets = await project.getTickets({
-      where: { ticketId },
+    const ticket = await Ticket.findOne({
+      where: { ticket_id: ticketId, project_id: project.id },
     });
-    if (tickets.length === 0) {
+    if (!ticket) {
       const error: any = new Error("Ticket not found");
       error.statusCode = 404;
       throw error;
     }
-    return tickets[0];
+    return ticket;
   }
 
   async getAll(projectSlug: string): Promise<Ticket[]> {
     const project = await Project.getBySlug(projectSlug);
-    return project.getTickets();
+    return await Ticket.findAll({
+      where: { project_id: project.id },
+      order: [["id", "ASC"]],
+    });
   }
 
   async create(projectSlug: string, ticket: TicketDTO): Promise<TicketDTO> {
