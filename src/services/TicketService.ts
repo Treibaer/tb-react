@@ -135,4 +135,14 @@ export default class TicketService {
     const url = `/projects/${projectSlug}/tickets/${ticketSlug}/comments/${commentId}`;
     await this.client.delete(url);
   }
+
+  async moveTicket(
+    projectSlug: string,
+    boardId: number,
+    origin: number,
+    target: number
+  ) {
+    const url = `/projects/${projectSlug}/boards/${boardId}/move`;
+    return this.client.post(url, { origin, target });
+  }
 }

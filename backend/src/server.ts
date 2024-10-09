@@ -14,9 +14,6 @@ import ticketsRoutes from "./routes/tickets.js";
 import UserService from "./services/UserService.js";
 import { sequelize } from "./utils/database.js";
 import { global } from "./utils/global.js";
-import { createRelations } from "./utils/relations.js";
-
-createRelations();
 
 const app = express();
 app.use(express.json());

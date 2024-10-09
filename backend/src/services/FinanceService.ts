@@ -5,8 +5,8 @@ import { Account } from "../models/finances/account.js";
 import Transformer from "../utils/Transformer.js";
 import UserService from "./UserService.js";
 
-export class SQLFinanceService {
-  static shared = new SQLFinanceService();
+export class FinanceService {
+  static shared = new FinanceService();
   private userService = UserService.shared;
   private constructor() {}
 
@@ -39,13 +39,12 @@ export class SQLFinanceService {
   ): Promise<AccountEntryDTO> {
     const user = await this.userService.getUser();
 
-    // refresh account balance
     const existingEntry = await AccountEntry.findByPk(id);
     if (!existingEntry) {
       throw new Error("Entry not found");
     }
     if (existingEntry.creator_id !== user.id) {
-      throw new Error("You can't update this entry");
+      throw new Error("Not authorized");
     }
     if (accountEntry.tagId !== undefined) {
       existingEntry.tag_id = accountEntry.tagId;

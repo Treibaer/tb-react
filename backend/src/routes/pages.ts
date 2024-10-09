@@ -1,9 +1,9 @@
 import express from "express";
 import { Page } from "../models/page.js";
-import { SQLPageService } from "../services/SQLPageService.js";
+import { PageService } from "../services/PageService.js";
 import Transformer from "../utils/Transformer.js";
 
-const pageService = SQLPageService.shared;
+const pageService = PageService.shared;
 const router = express.Router();
 
 router.get("/:slug/pages", async (req, res, next) => {

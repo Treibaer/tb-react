@@ -4,8 +4,8 @@ import { User } from "./user.js";
 
 export class AccessToken extends Model {
   declare id: number;
+  declare user_id: number;
   declare value: string;
-  declare getUser: () => Promise<User>;
 }
 AccessToken.init(
   {
@@ -14,6 +14,14 @@ AccessToken.init(
       autoIncrement: true,
       allowNull: false,
       primaryKey: true,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
     },
     value: {
       type: DataTypes.STRING,
@@ -24,13 +32,13 @@ AccessToken.init(
       allowNull: false,
     },
     lastUsed: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: () => Math.floor(Date.now() / 1000),
       field: "last_used",
     },
     createdAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: () => Math.floor(Date.now() / 1000),
       field: "created_at",

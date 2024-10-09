@@ -10,7 +10,7 @@ export const BoardColumn: React.FC<{
   title: string;
   project: Project;
   tickets: Ticket[];
-  update: () => void;
+  update: () => Promise<void>;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
   onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
 }> = ({ status, title, project, tickets, update, onContextMenu, onTouchStart }) => {

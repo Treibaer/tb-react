@@ -1,5 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/database.js";
+import { Ticket } from "./ticket.js";
+import { User } from "./user.js";
 
 export class TicketHistory extends Model {
   declare id: number;
@@ -17,6 +19,22 @@ TicketHistory.init(
       autoIncrement: true,
       allowNull: false,
       primaryKey: true,
+    },
+    ticket_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Ticket,
+        key: "id",
+      },
+    },
+    creator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
     },
     description: {
       type: DataTypes.TEXT("long"),

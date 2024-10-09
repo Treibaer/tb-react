@@ -5,14 +5,19 @@ import { Project } from "../models/project.js";
 import LegacyTicketService from "./LegacyTicketService.js";
 import UserService from "./UserService.js";
 
-export class SQLPageService {
-  static shared = new SQLPageService();
+export class PageService {
+  static shared = new PageService();
   private constructor() {}
 
-  async get(_: string, pageId: number): Promise<Page> {
-    // const project = await Project.getBySlug(projectSlug);
+  async get(projectSlug: string, pageId: number): Promise<Page> {
+    const project = await Project.getBySlug(projectSlug);
     const page = await Page.findByPk(pageId);
     if (!page) {
+      const error: any = new Error("Page not found");
+      error.statusCode = 404;
+      throw error;
+    }
+    if (page.project_id !== project.id) {
       const error: any = new Error("Page not found");
       error.statusCode = 404;
       throw error;

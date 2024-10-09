@@ -3,22 +3,20 @@ import { BoardStructureDTO } from "../dtos/board-structure-dto.js";
 import { Board } from "../models/board.js";
 import { Ticket } from "../models/ticket.js";
 import Transformer from "../utils/Transformer.js";
-import { SQLProjectService } from "./SQLProjectService.js";
+import { ProjectService } from "./ProjectService.js";
 import UserService from "./UserService.js";
 
-export default class SQLBoardService {
-  static shared = new SQLBoardService();
+export default class BoardService {
+  static shared = new BoardService();
   private userService = UserService.shared;
   private constructor() {}
 
   async create(projectSlug: string, board: BoardDTO): Promise<BoardDTO> {
     const user = await this.userService.getUser();
-    const project = await SQLProjectService.shared.get(projectSlug);
+    const project = await ProjectService.shared.get(projectSlug);
 
-    // calculate position
     const boards = await this.getAll(projectSlug);
 
-    // await Validator.validateNewProject(project);
     const createdBoard = await Board.create({
       title: board.title,
       isActive: true,
@@ -30,7 +28,7 @@ export default class SQLBoardService {
   }
 
   async getAll(projectSlug: string): Promise<Board[]> {
-    const project = await SQLProjectService.shared.get(projectSlug);
+    const project = await ProjectService.shared.get(projectSlug);
     return await Board.findAll({
       where: { project_id: project.id },
       order: [["position", "ASC"]],
@@ -42,7 +40,7 @@ export default class SQLBoardService {
   }
 
   async getBoardStructure(projectSlug: string): Promise<BoardStructureDTO> {
-    const project = await SQLProjectService.shared.get(projectSlug);
+    const project = await ProjectService.shared.get(projectSlug);
     const activeBoards = await Board.findAll({
       where: { project_id: project.id, isActive: true },
       order: [["position", "ASC"]],
@@ -102,19 +100,7 @@ export default class SQLBoardService {
     }
 
     await board.save();
-
     return Transformer.board(board);
-  }
-
-  async save(board: BoardDTO): Promise<BoardDTO> {
-    const oldBoard = await Board.findByPk(board.id);
-    if (!oldBoard) {
-      throw new Error("Board not found");
-    }
-    oldBoard.title = board.title;
-    oldBoard.position = board.position;
-    await oldBoard.save();
-    return Transformer.board(oldBoard);
   }
 
   async open(id: number): Promise<void> {
@@ -140,7 +126,7 @@ export default class SQLBoardService {
     projectSlug: string,
     settings: Record<string, any>
   ): Promise<void> {
-    const project = await SQLProjectService.shared.get(projectSlug);
+    const project = await ProjectService.shared.get(projectSlug);
     const hideDone = settings.hideDone;
     const user = await UserService.shared.getUser();
     user.hideDoneProjects = user.hideDoneProjects
@@ -151,5 +137,43 @@ export default class SQLBoardService {
       user.hideDoneProjects += `_${project.id}`;
     }
     await user.save();
+  }
+
+  async moveTicket(
+    projectSlug: string,
+    boardId: number,
+    data: Record<string, any>
+  ): Promise<void> {
+    const project = await ProjectService.shared.get(projectSlug);
+    console.log(boardId);
+    let tickets = await Ticket.findAll({
+      where: {
+        project_id: project.id,
+        board_id: boardId === 0 ? null : boardId,
+      },
+      order: [["position", "ASC"]],
+    });
+
+    const origin = data.origin;
+    const target: number = data.target;
+
+    const originTicket = tickets.find((t) => t.id === origin);
+    const targetTicketIndex = tickets.findIndex((t) => t.id === target);
+
+    if (!originTicket) {
+      throw new Error("Ticket not found");
+    }
+
+    if (targetTicketIndex === -1) {
+      throw new Error("Target ticket not found");
+    }
+
+    tickets = tickets.filter((t) => t.id !== origin);
+    tickets.splice(targetTicketIndex, 0, originTicket);
+
+    for (let i = 0; i < tickets.length; i++) {
+      tickets[i].position = i;
+      await tickets[i].save();
+    }
   }
 }

@@ -7,8 +7,8 @@ import { Encryption } from "../utils/Encryption.js";
 import Transformer from "../utils/Transformer.js";
 import UserService from "./UserService.js";
 
-export class SQLPasswordService {
-  static shared = new SQLPasswordService();
+export class PasswordService {
+  static shared = new PasswordService();
   private userService = UserService.shared;
   private constructor() {}
 

@@ -10,8 +10,8 @@ import Transformer from "../utils/Transformer.js";
 import Validator from "../utils/Validator.js";
 import UserService from "./UserService.js";
 
-export class SQLProjectService {
-  static shared = new SQLProjectService();
+export class ProjectService {
+  static shared = new ProjectService();
   private userService = UserService.shared;
   private constructor() {}
 
@@ -80,7 +80,6 @@ export class SQLProjectService {
         assigned_id: user.id,
         project_id: project.id,
       },
-      // order: [["position", "ASC"]],
     });
 
     const ticketDTOs = await Promise.all(

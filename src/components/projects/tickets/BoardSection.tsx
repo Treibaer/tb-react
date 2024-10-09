@@ -1,11 +1,13 @@
 import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Board } from "../../../models/board-structure";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
+import TicketService from "../../../services/TicketService";
 import { ButtonIcon } from "../../ButtonIcon";
-import TicketRow from "./TicketRow";
+import TicketRowDnDWrapper from "./TicketRowDnDWrapper";
 
 export const BoardSection: React.FC<{
   board: Board;
@@ -16,6 +18,7 @@ export const BoardSection: React.FC<{
   toggleBoard: (boardId: number) => void;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
   onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
+  reload: () => Promise<void>;
 }> = ({
   board,
   project,
@@ -25,6 +28,7 @@ export const BoardSection: React.FC<{
   toggleBoard,
   onContextMenu,
   onTouchStart,
+  reload,
 }) => {
   const tickets = board.tickets.filter(
     (t) =>
@@ -33,6 +37,23 @@ export const BoardSection: React.FC<{
   );
   const totalTickets = board.tickets.length;
   const doneTickets = board.tickets.filter((e) => e.status === "done").length;
+
+  const [dragIndex, setDragIndex] = useState(-1);
+  const [hoverIndex, setHoverIndex] = useState(-1);
+
+  async function moveTicket(dragIndex: number, hoverIndex: number) {
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+    await TicketService.shared.moveTicket(
+      project.slug,
+      board.id,
+      dragIndex,
+      hoverIndex
+    );
+    await reload();
+  }
+
   return (
     <div key={board.id} className={tickets.length === 0 ? "hidden" : ""}>
       <div className="flex flex-row justify-between px-4 sm:h-11 bg-mediumBlue border-b border-b-darkBlue">
@@ -41,7 +62,9 @@ export const BoardSection: React.FC<{
             to={ROUTES.BOARD_DETAILS(project.slug, board.id)}
             className="overflow-x-hidden whitespace-nowrap"
           >
-            <div className="text-base overflow-x-hidden  text-ellipsis max-w-[100%]">{board.title}</div>
+            <div className="text-base overflow-x-hidden  text-ellipsis max-w-[100%]">
+              {board.title}
+            </div>
           </NavLink>
 
           <ButtonIcon onClick={toggleBoard.bind(null, board.id)}>
@@ -66,12 +89,19 @@ export const BoardSection: React.FC<{
       </div>
       {isBoardVisible &&
         tickets.map((ticket: Ticket) => (
-          <TicketRow
+          <TicketRowDnDWrapper
             key={ticket.id}
             project={project}
             ticket={ticket}
             onContextMenu={onContextMenu}
             onTouchStart={onTouchStart}
+            dragIndex={dragIndex}
+            hoverIndex={hoverIndex}
+            setDragIndex={setDragIndex}
+            setHoverIndex={setHoverIndex}
+            index={ticket.id}
+            id={ticket.id}
+            moveTicket={moveTicket}
           />
         ))}
     </div>

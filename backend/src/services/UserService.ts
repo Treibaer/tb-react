@@ -40,7 +40,10 @@ export default class UserService {
     if (!token) {
       throw new Error("Token not found");
     }
-    const user = await token.getUser();
+    const user = await User.findOne({ where: { id: token.user_id } });
+    if (!user) {
+      throw new Error("User not found");
+    }
     this.store?.set("user", user);
     return user;
   }

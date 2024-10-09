@@ -1,5 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/database.js";
+import { Project } from "./project.js";
+import { User } from "./user.js";
 
 export class Board extends Model {
   declare id: number;
@@ -27,6 +29,14 @@ Board.init(
       allowNull: false,
       field: "active",
     },
+    creator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
     createdAt: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -48,6 +58,14 @@ Board.init(
       allowNull: false,
       field: "end_date",
       defaultValue: () => Math.floor(Date.now() / 1000),
+    },
+    project_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Project,
+        key: "id",
+      },
     },
   },
   { sequelize, tableName: "board", timestamps: false }

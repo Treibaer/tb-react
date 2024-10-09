@@ -3,11 +3,11 @@ import { validationResult } from "express-validator";
 import { PasswordEntryDTO } from "../dtos/passwords/password-entry-dto.js";
 import { PasswordEnvironmentDTO } from "../dtos/passwords/password-environment-dto.js";
 import { PasswordEnvironment } from "../models/passwords/password-environment.js";
-import { SQLPasswordService } from "../services/SQLPasswordService.js";
+import { PasswordService } from "../services/PasswordService.js";
 import UserService from "../services/UserService.js";
 import Transformer from "../utils/Transformer.js";
 
-const passwordService = SQLPasswordService.shared;
+const passwordService = PasswordService.shared;
 
 export const getAllEnvironments = async (_: Request, res: Response) => {
   try {

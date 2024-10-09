@@ -4,7 +4,7 @@ import { TicketHistory } from "../models/ticket-history.js";
 import { Ticket } from "../models/ticket.js";
 import Transformer from "../utils/Transformer.js";
 import { ProjectNotFoundError } from "./Errors.js";
-import SQLBoardService from "./SQLBoardService.js";
+import BoardService from "./BoardService.js";
 import UserService from "./UserService.js";
 
 export default class LegacyTicketService {
@@ -94,7 +94,7 @@ export default class LegacyTicketService {
     }
     if (data.boardId !== undefined) {
       if (data.boardId !== 0) {
-        const board = await SQLBoardService.shared.get(data.boardId);
+        const board = await BoardService.shared.get(data.boardId);
         if (!board) {
           throw new Error("Board not found");
         }

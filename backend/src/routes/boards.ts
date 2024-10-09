@@ -1,8 +1,8 @@
 import express from "express";
-import SQLBoardService from "../services/SQLBoardService.js";
+import BoardService from "../services/BoardService.js";
 import Transformer from "../utils/Transformer.js";
 
-const boardService = SQLBoardService.shared;
+const boardService = BoardService.shared;
 const router = express.Router();
 
 router.get("/:slug/tickets-board-structure", async (req, res, next) => {
@@ -48,8 +48,6 @@ router.get("/:slug/boards/:id", async (req, res) => {
   res.status(200).json(await Transformer.board(board));
 });
 
-
-
 router.patch("/:slug/boards/:id", async (req, res, next) => {
   const projectSlug = req.params.slug;
   const boardId = parseInt(req.params.id);
@@ -80,6 +78,13 @@ router.post("/:slug/boards/:id/close", async (req, res) => {
 router.post("/:slug/settings", async (req, res) => {
   const projectSlug = req.params.slug;
   await boardService.updateSettings(projectSlug, req.body);
+  res.status(200).json({ message: "Board updated" });
+});
+
+router.post("/:slug/boards/:id/move", async (req, res) => {
+  const projectSlug = req.params.slug;
+  const boardId = parseInt(req.params.id);
+  await boardService.moveTicket(projectSlug, boardId, req.body);
   res.status(200).json({ message: "Board updated" });
 });
 

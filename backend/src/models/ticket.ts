@@ -122,8 +122,8 @@ Ticket.init(
       allowNull: true,
       field: "board_id",
       references: {
-        model: Board, // Reference to the Project model
-        key: "id", // Referencing the id column in Project
+        model: Board,
+        key: "id",
       },
     },
   },

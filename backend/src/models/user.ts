@@ -41,7 +41,10 @@ User.init(
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: {
+        name: 'unique_user_email',
+        msg: 'This email is already registered',
+      },
       allowNull: false,
     },
     firstName: {

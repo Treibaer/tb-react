@@ -1,6 +1,7 @@
 import { sequelize } from "../../utils/database.js";
 import { DataTypes, Model, WhereOptions } from "sequelize";
 import { PasswordEntry } from "./password-entry.js";
+import { User } from "../user.js";
 
 export class PasswordEnvironment extends Model {
   declare id: number;
@@ -18,6 +19,14 @@ PasswordEnvironment.init(
       allowNull: false,
       primaryKey: true,
     },
+    creator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,7 +38,7 @@ PasswordEnvironment.init(
       field: "default_login",
     },
     createdAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "created_at",
       defaultValue: () => Math.floor(Date.now() / 1000),

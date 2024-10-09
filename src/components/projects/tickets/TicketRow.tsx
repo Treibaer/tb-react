@@ -15,6 +15,8 @@ interface TicketRowProps {
   ticket: Ticket;
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
   onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
+  backgroundColor?: string;
+  opacity?: number;
 }
 
 export default function TicketRow({
@@ -22,6 +24,8 @@ export default function TicketRow({
   ticket,
   onContextMenu,
   onTouchStart,
+  backgroundColor,
+  opacity,
 }: TicketRowProps) {
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -35,7 +39,7 @@ export default function TicketRow({
       onContextMenu={handleContextMenu}
       onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
     >
-      <div className="tb-row">
+      <div className="tb-row" style={{ backgroundColor, opacity }}>
         <div className="flex-grow flex gap-1 sm:gap-4 items-center">
           <div>
             {ticket.status === "open" && (

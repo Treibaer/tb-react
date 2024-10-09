@@ -5,11 +5,11 @@ import { FinanceSummary } from "../dtos/finances/finance-summary-dto.js";
 import { AccountEntry } from "../models/finances/account-entry.js";
 import { AccountTag } from "../models/finances/account-tag.js";
 import { Account } from "../models/finances/account.js";
-import { SQLFinanceService } from "../services/SQLFinanceService.js";
+import { FinanceService } from "../services/FinanceService.js";
 import UserService from "../services/UserService.js";
 import Transformer from "../utils/Transformer.js";
 
-const financeService = SQLFinanceService.shared;
+const financeService = FinanceService.shared;
 
 export const getAllEntries = async (req: Request, res: Response) => {
   try {

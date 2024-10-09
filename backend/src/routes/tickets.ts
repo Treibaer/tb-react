@@ -1,9 +1,9 @@
 import express from "express";
 import { Ticket } from "../models/ticket.js";
-import { SQLTicketService } from "../services/SQLTicketService.js";
+import { TicketService } from "../services/TicketService.js";
 import Transformer from "../utils/Transformer.js";
 
-const ticketsService = SQLTicketService.shared;
+const ticketsService = TicketService.shared;
 const router = express.Router();
 
 router.get("/:slug/tickets", async (req, res) => {

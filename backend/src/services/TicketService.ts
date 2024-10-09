@@ -6,8 +6,8 @@ import { Ticket } from "../models/ticket.js";
 import LegacyTicketService from "./LegacyTicketService.js";
 import UserService from "./UserService.js";
 
-export class SQLTicketService {
-  static shared = new SQLTicketService();
+export class TicketService {
+  static shared = new TicketService();
   private constructor() {}
 
   async get(projectSlug: string, ticketSlug: string): Promise<Ticket> {

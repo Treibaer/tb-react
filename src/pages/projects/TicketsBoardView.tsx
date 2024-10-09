@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
 import ContextMenu from "../../components/contextmenu/ContextMenu";
@@ -68,9 +70,13 @@ const TicketsBoardView: React.FC = () => {
       ticket: null,
     });
     if (shouldUpdate) {
-      const boardStructure = await boardService.getBoardStructure(project.slug);
-      setBoardStructure(boardStructure);
+      await updateBoardStructure();
     }
+  }
+
+  async function updateBoardStructure() {
+    const boardStructure = await boardService.getBoardStructure(project.slug);
+    setBoardStructure(boardStructure);
   }
 
   async function toggleBoard(boardId: number) {
@@ -120,9 +126,8 @@ const TicketsBoardView: React.FC = () => {
 
   async function onClose(shouldUpdate: boolean) {
     if (shouldUpdate) {
-      const boardStructure = await boardService.getBoardStructure(project.slug);
+      await updateBoardStructure();
       const updatedProject = await projectService.get(project.slug);
-      setBoardStructure(boardStructure);
       setProject(updatedProject);
     }
     setIsCreating(false);
@@ -144,7 +149,7 @@ const TicketsBoardView: React.FC = () => {
       left: touchX,
       show: true,
       ticket,
-      board
+      board,
     });
   };
 
@@ -193,17 +198,19 @@ const TicketsBoardView: React.FC = () => {
             />
           )}
           {activeBoards.map((board: Board) => (
-            <BoardSection
-              key={board.id}
-              board={board}
-              isBoardVisible={isBoardVisible(board.id)}
-              onContextMenu={onContextMenu}
-              onTouchStart={handleTouchStart}
-              toggleBoard={toggleBoard}
-              hideDone={hideDone}
-              searchTerm={searchTerm}
-              project={project}
-            />
+            <DndProvider backend={HTML5Backend} key={board.id}>
+              <BoardSection
+                board={board}
+                isBoardVisible={isBoardVisible(board.id)}
+                onContextMenu={onContextMenu}
+                onTouchStart={handleTouchStart}
+                toggleBoard={toggleBoard}
+                hideDone={hideDone}
+                searchTerm={searchTerm}
+                project={project}
+                reload={updateBoardStructure}
+              />
+            </DndProvider>
           ))}
         </div>
       </div>

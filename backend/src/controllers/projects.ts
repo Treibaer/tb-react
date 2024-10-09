@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { SQLProjectService } from "../services/SQLProjectService.js";
-import Transformer from "../utils/Transformer.js";
 import { body, validationResult } from "express-validator";
 import { ProjectDTO } from "../dtos/project-dto.js";
+import { ProjectService } from "../services/ProjectService.js";
 import UserService from "../services/UserService.js";
+import Transformer from "../utils/Transformer.js";
 
-const projectsService = SQLProjectService.shared;
+const projectsService = ProjectService.shared;
 
 export const getAllProjects = async (_: Request, res: Response) => {
   try {

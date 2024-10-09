@@ -1,16 +1,16 @@
 import { sequelize } from "../../utils/database.js";
 import { DataTypes, Model } from "sequelize";
-import { PasswordEntry } from "./password-entry.js";
+import { User } from "../user.js";
 
-export class PasswordEntryHistory extends Model {
+// deprecated
+export class AccountPlace extends Model {
   declare id: number;
-  declare title: string;
-  declare login: string;
   declare creator_id: number;
-  declare environment_id: number;
+  declare title: string;
+  declare icon: string;
 }
 
-PasswordEntryHistory.init(
+AccountPlace.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -18,11 +18,11 @@ PasswordEntryHistory.init(
       allowNull: false,
       primaryKey: true,
     },
-    entry_id: {
+    creator_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: PasswordEntry,
+        model: User,
         key: "id",
       },
     },
@@ -30,20 +30,8 @@ PasswordEntryHistory.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    login: {
+    icon: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    notes: {
-      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
     createdAt: {
@@ -53,5 +41,5 @@ PasswordEntryHistory.init(
       defaultValue: () => Math.floor(Date.now() / 1000),
     },
   },
-  { sequelize, tableName: "password_entry_history", timestamps: false }
+  { sequelize, tableName: "account_place", timestamps: false }
 );

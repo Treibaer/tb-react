@@ -1,5 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/database.js";
+import { Project } from "./project.js";
+import { User } from "./user.js";
 
 export class Page extends Model {
   declare id: number;
@@ -28,7 +30,7 @@ Page.init(
       allowNull: false,
     },
     content: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT("long"),
       allowNull: false,
       defaultValue: "",
     },
@@ -38,20 +40,54 @@ Page.init(
       defaultValue: "📒",
     },
     position: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     createdAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "created_at",
       defaultValue: () => Math.floor(Date.now() / 1000),
     },
     changedAt: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "changed_at",
       defaultValue: () => Math.floor(Date.now() / 1000),
+    },
+    creator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
+    updator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
+    parent_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Page,
+        key: "id",
+      },
+    },
+    project_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Project,
+        key: "id",
+      },
+      // onDelete: "SET NULL", // Optional: Handle cascading deletes
+      // onUpdate: "CASCADE", // Optional: Handle updates to the project ID
     },
   },
   { sequelize, tableName: "page", timestamps: false }
