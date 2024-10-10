@@ -249,7 +249,7 @@ export default class Transformer {
   static async passwordEnvironment(
     env: PasswordEnvironment
   ): Promise<PasswordEnvironmentDTO> {
-    const entries = await env.getEntries({
+    const entries = await PasswordEntry.findAll({
       where: {
         creator_id: env.creator_id,
         environment_id: env.id,

@@ -145,7 +145,6 @@ export default class BoardService {
     data: Record<string, any>
   ): Promise<void> {
     const project = await ProjectService.shared.get(projectSlug);
-    console.log(boardId);
     let tickets = await Ticket.findAll({
       where: {
         project_id: project.id,

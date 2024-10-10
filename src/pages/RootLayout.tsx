@@ -1,14 +1,16 @@
 import { Outlet, useNavigation } from "react-router-dom";
 import DelayedLoadingSpinner from "../components/common/DelayedLoadingSpinner";
 import MainNavigation from "../components/Navigation/MainNavigation";
+import MobileNavigation from "../components/Navigation/MobileNavigation";
 import { useLoginCheck } from "../hooks/auth/useLoginCheck";
 import LoginView from "./LoginView";
+import Constants from "../services/Constants";
 
 export const RootLayout: React.FC = () => {
   const { state } = useNavigation();
   const { checkingLogin, isLoggedIn, setIsLoggedIn, serverError } =
     useLoginCheck();
-  
+
   return (
     <>
       {state === "loading" && <DelayedLoadingSpinner />}
@@ -22,8 +24,15 @@ export const RootLayout: React.FC = () => {
           <div id="menu" className="hidden md:block w-[250px]">
             <MainNavigation />
           </div>
-          <div className="w-full md:w-[calc(100%-250px)] max-h-screen overflow-scroll">
-            <Outlet />
+          <div className="flex flex-col h-full w-full">
+            <div className="w-full md:w-[calc(100%-250px)] max-h-screen overflow-scroll h-[calc(100vh-58px)] md:h-full">
+              <Outlet />
+            </div>
+            {!Constants.isDemoMode && (
+              <div className="h-[58px] pb-2 md:hidden border-t border-t-lightBlue text-white text-center flex">
+                <MobileNavigation />
+              </div>
+            )}
           </div>
         </main>
       )}

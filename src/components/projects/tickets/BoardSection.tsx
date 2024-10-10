@@ -33,7 +33,11 @@ export const BoardSection: React.FC<{
   const tickets = board.tickets.filter(
     (t) =>
       (!hideDone || t.status !== "done") &&
+    (
       t.title.toLowerCase().includes(searchTerm.toLowerCase())
+      ||
+      t.description.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
   const totalTickets = board.tickets.length;
   const doneTickets = board.tickets.filter((e) => e.status === "done").length;

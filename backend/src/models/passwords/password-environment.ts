@@ -1,6 +1,5 @@
+import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../../utils/database.js";
-import { DataTypes, Model, WhereOptions } from "sequelize";
-import { PasswordEntry } from "./password-entry.js";
 import { User } from "../user.js";
 
 export class PasswordEnvironment extends Model {
@@ -8,7 +7,6 @@ export class PasswordEnvironment extends Model {
   declare title: string;
   declare defaultLogin: string;
   declare creator_id: number;
-  declare getEntries: (options?: WhereOptions) => Promise<PasswordEntry[]>;
 }
 
 PasswordEnvironment.init(

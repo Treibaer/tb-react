@@ -7,7 +7,7 @@ import {
   LockClosedIcon,
   SignalIcon,
   TagIcon,
-  TicketIcon
+  TicketIcon,
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -30,8 +30,13 @@ export default function MainNavigation() {
     setShowSettings((prev) => !prev);
   };
 
+  const backgroundColor =
+    import.meta.env.MODE === "development" ? "bg-lightBlue" : "bg-darkBlue";
+
   return (
-    <header className="w-full h-screen bg-darkBlue px-2 pt-2 border-x border-[#2c2d3c] relative">
+    <header
+      className={`w-full h-screen ${backgroundColor} px-2 pt-2 border-x border-[#2c2d3c] relative`}
+    >
       {showSettings && <UserMenu onClose={toggleSettings} />}
       <div className="flex justify-between mb-1 items-center">
         <div className="select-none">TB-REACT</div>

@@ -1,8 +1,8 @@
 import { useRef } from "react";
-import { useDrop, useDrag } from "react-dnd";
-import TicketRow from "./TicketRow";
-import { Ticket } from "../../../models/ticket";
+import { useDrag, useDrop } from "react-dnd";
 import { Project } from "../../../models/project";
+import { Ticket } from "../../../models/ticket";
+import TicketRow from "./TicketRow";
 export declare type Identifier = string | symbol;
 
 interface DragItem {
@@ -48,7 +48,7 @@ const TicketRowDnDWrapper: React.FC<{
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(item: DragItem, monitor) {
+    hover(item: DragItem) {
       if (!ref.current) {
         return;
       }

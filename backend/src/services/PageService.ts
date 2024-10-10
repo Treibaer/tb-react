@@ -27,7 +27,9 @@ export class PageService {
 
   async getAll(projectSlug: string): Promise<Page[]> {
     const project = await Project.getBySlug(projectSlug);
-    const pages = await project.getPages();
+    const pages = await Page.findAll({
+      where: { project_id: project.id },
+    });
     pages.sort((a, b) => b.changedAt - a.changedAt);
     return pages;
   }
