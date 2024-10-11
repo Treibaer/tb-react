@@ -51,11 +51,16 @@ import Passwords, {
 import PasswordEntries, {
   loader as passwordEntriesLoader,
 } from "./pages/projects/PasswordEntries";
+import { AppContextProvider } from "./pages/store/AppContext";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
+    element: (
+      <AppContextProvider>
+        <RootLayout />
+      </AppContextProvider>
+    ),
     errorElement: <ErrorBoundary />,
     children: [
       { index: true, element: <Dashboard /> },

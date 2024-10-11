@@ -9,12 +9,13 @@ import {
   TagIcon,
   TicketIcon,
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ROUTES } from "../../routes";
 import Constants from "../../services/Constants";
 import NavigationLink from "./NavigationLink";
 import UserMenu from "./UserMenu";
+import AppContext from "../../pages/store/AppContext";
 
 export default function MainNavigation() {
   const params: { projectSlug?: string } = useParams();
@@ -33,6 +34,9 @@ export default function MainNavigation() {
   const backgroundColor =
     import.meta.env.MODE === "development" ? "bg-lightBlue" : "bg-darkBlue";
 
+
+    const appCtx = useContext(AppContext);
+
   return (
     <header
       className={`w-full h-screen ${backgroundColor} px-2 pt-2 border-x border-[#2c2d3c] relative`}
@@ -43,7 +47,7 @@ export default function MainNavigation() {
         <img
           id="profile"
           className="w-7 h-7 rounded-full cursor-pointer"
-          src="https://portfolio.treibaer.de:3063/hannes.svg"
+          src={appCtx.userIcon}
           alt=""
           onClick={toggleSettings}
         />

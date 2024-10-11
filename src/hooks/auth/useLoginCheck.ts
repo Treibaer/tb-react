@@ -6,6 +6,7 @@ export function useLoginCheck() {
   const [checkingLogin, setCheckingLogin] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [serverError, setServerError] = useState(false);
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -31,6 +32,7 @@ export function useLoginCheck() {
         } else {
           const data: AppResponse = await result.json();
           setIsLoggedIn(data.allowed);
+          setAvatar(data.icon);
         }
       } catch (error) {
         setServerError(true);
@@ -44,5 +46,5 @@ export function useLoginCheck() {
     checkLogin();
   }, []);
 
-  return { checkingLogin, isLoggedIn, setIsLoggedIn, serverError };
+  return { checkingLogin, isLoggedIn, setIsLoggedIn, serverError, avatar };
 }

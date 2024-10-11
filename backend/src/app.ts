@@ -76,8 +76,9 @@ app.use("/api/v3/projects", boardsRoutes);
 app.use("/api/v3/projects", pagesRoutes);
 app.use("/api/v3", statusRoutes);
 
-app.get("/api/v3/app", (_, res) => {
-  res.json({ allowed: true });
+app.get("/api/v3/app", async (_, res) => {
+  const user = await UserService.shared.getUser();
+  res.json({ allowed: true, icon: `${global.host}${user.avatar}` });
 });
 
 app.get("/", async (_, res) => {

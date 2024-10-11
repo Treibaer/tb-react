@@ -3,13 +3,21 @@ import DelayedLoadingSpinner from "../components/common/DelayedLoadingSpinner";
 import MainNavigation from "../components/Navigation/MainNavigation";
 import MobileNavigation from "../components/Navigation/MobileNavigation";
 import { useLoginCheck } from "../hooks/auth/useLoginCheck";
-import LoginView from "./LoginView";
 import Constants from "../services/Constants";
+import LoginView from "./LoginView";
+import AppContext from "./store/AppContext";
+import { useContext, useEffect } from "react";
 
 export const RootLayout: React.FC = () => {
   const { state } = useNavigation();
-  const { checkingLogin, isLoggedIn, setIsLoggedIn, serverError } =
+  const { checkingLogin, isLoggedIn, setIsLoggedIn, serverError, avatar } =
     useLoginCheck();
+
+  const appCtx = useContext(AppContext);
+
+  useEffect(() => {
+    appCtx.setUserIcon(avatar);
+  }, [isLoggedIn]);
 
   return (
     <>
@@ -24,8 +32,8 @@ export const RootLayout: React.FC = () => {
           <div id="menu" className="hidden md:block w-[250px]">
             <MainNavigation />
           </div>
-          <div className="flex flex-col h-full w-full">
-            <div className="w-full md:w-[calc(100%-250px)] max-h-screen overflow-scroll h-[calc(100vh-58px)] md:h-full">
+          <div className="flex flex-col h-full w-full md:w-[calc(100%-250px)]">
+            <div className="w-full max-h-screen overflow-scroll h-[calc(100vh-58px)] md:h-full">
               <Outlet />
             </div>
             {!Constants.isDemoMode && (
