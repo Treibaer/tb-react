@@ -46,7 +46,9 @@ const FinanceDashboard = () => {
           </div>
           <div className="flex flex-col p-4 gap-2 bg-mediumBlue rounded-xl hover:bg-hoverBlue cursor-default select-none">
             <div>Savings {currentYear}</div>
-            <div className="text-4xl text-[rgb(30,142,72)]">{savings.toFixed(2)}€</div>
+            <div className="text-4xl text-[rgb(30,142,72)]">
+              {savings.toFixed(2)}€
+            </div>
           </div>
         </div>
         <div className="sm:h-72">

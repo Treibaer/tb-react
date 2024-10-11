@@ -52,13 +52,16 @@ import PasswordEntries, {
   loader as passwordEntriesLoader,
 } from "./pages/projects/PasswordEntries";
 import { AppContextProvider } from "./pages/store/AppContext";
+import { ToastProvider } from "./pages/store/ToastContext";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <AppContextProvider>
-        <RootLayout />
+        <ToastProvider>
+          <RootLayout />
+        </ToastProvider>
       </AppContextProvider>
     ),
     errorElement: <ErrorBoundary />,

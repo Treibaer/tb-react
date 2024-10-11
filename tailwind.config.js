@@ -16,6 +16,7 @@ module.exports = {
         // mediumBlue2: "rgb(28,29,42)",
         lightBlue: "rgb(53,56,74)",
         focusBlue: "rgb(73,76,94)",
+        greyishBlue: "rgba(220,216,254,0.576)",
       },
       borderRadius: {
         "custom-tb": "4px",

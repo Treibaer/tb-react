@@ -4,6 +4,7 @@ import { Ticket } from "../../../models/ticket";
 import { TicketStatus } from "../../../models/ticket-status";
 import TicketService from "../../../services/TicketService";
 import BoardTicketRow from "./BoardTicketRow";
+import { useToast } from "../../../pages/store/ToastContext";
 
 export const BoardColumn: React.FC<{
   status: TicketStatus;
@@ -14,12 +15,15 @@ export const BoardColumn: React.FC<{
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
   onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
 }> = ({ status, title, project, tickets, update, onContextMenu, onTouchStart }) => {
+  const {showToast} = useToast();
+
   const [{ isOver }, drop] = useDrop({
     accept: "TICKET",
     drop: async (item: { slug: string }) => {
       await TicketService.shared.update(project.slug, item.slug, {
         status,
       });
+      showToast(`${item.slug} updated`, `Moved to ${title}`);
       await update();
     },
     collect: (monitor) => ({

@@ -33,11 +33,8 @@ export const BoardSection: React.FC<{
   const tickets = board.tickets.filter(
     (t) =>
       (!hideDone || t.status !== "done") &&
-    (
-      t.title.toLowerCase().includes(searchTerm.toLowerCase())
-      ||
-      t.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+      (t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
   const totalTickets = board.tickets.length;
   const doneTickets = board.tickets.filter((e) => e.status === "done").length;
@@ -62,14 +59,18 @@ export const BoardSection: React.FC<{
     <div key={board.id} className={tickets.length === 0 ? "hidden" : ""}>
       <div className="flex flex-row justify-between px-4 sm:h-11 bg-mediumBlue border-b border-b-darkBlue">
         <div className="flex gap-2 h-11 items-center w-1/2 ">
-          <NavLink
-            to={ROUTES.BOARD_DETAILS(project.slug, board.id)}
-            className="overflow-x-hidden whitespace-nowrap"
-          >
-            <div className="text-base overflow-x-hidden  text-ellipsis max-w-[100%]">
-              {board.title}
-            </div>
-          </NavLink>
+          <div className="text-base overflow-x-hidden text-ellipsis max-w-[100%]">
+            {board.id === 0 ? (
+              <div className="cursor-default">Backlog</div>
+            ) : (
+              <NavLink
+                to={ROUTES.BOARD_DETAILS(project.slug, board.id)}
+                className="overflow-x-hidden whitespace-nowrap"
+              >
+                {board.title}
+              </NavLink>
+            )}
+          </div>
 
           <ButtonIcon onClick={toggleBoard.bind(null, board.id)}>
             {isBoardVisible ? (

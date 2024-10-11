@@ -25,14 +25,14 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
-  z-index: 1000;
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .tb-dialog {
-  z-index: 1001;
+  z-index: 11;
   position: relative;
   left: calc((100vw - 600px) / 2);
   top: 20px;
@@ -89,7 +89,7 @@ body {
   border: 1px solid rgba(82, 82, 111, 0.44);
   box-shadow: rgba(0, 0, 0, 0.2) 0 4px 24px;
   border-radius: 8px;
-  z-index: 1002;
+  z-index: 10;
 }
 
 /* tb-dropdown-start */
@@ -161,7 +161,7 @@ body {
 }
 
 .modal {
-  z-index: 1002;
+  z-index: 10;
 }
 
 .tb-toast-2 {
@@ -195,28 +195,6 @@ body {
   background-color: lch(56.327 10.646 284.216 / 0.2);
 }
 
-.tb-toast-2-content {
-  cursor: default;
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
-.tb-toast-2-text {
-  margin: auto 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex-grow: 1;
-  gap: 6px;
-  line-height: normal;
-}
-
-.tb-toast-2-content-2-hint {
-  color: rgba(220, 216, 254, 0.576);
-}
-
 
 .blurredBackground {
   position: fixed;
@@ -226,7 +204,7 @@ body {
   height: 100vh;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .overlay-menu {

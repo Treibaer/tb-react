@@ -32,7 +32,7 @@ export default class TicketService {
     }
   ) {
     const ticket = this.createTicketObject(data);
-    return this.client.post(`/projects/${projectSlug}/tickets`, ticket);
+    return this.client.post<Ticket>(`/projects/${projectSlug}/tickets`, ticket);
   }
 
   /**

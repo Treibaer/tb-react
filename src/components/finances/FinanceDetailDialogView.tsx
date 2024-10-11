@@ -3,6 +3,7 @@ import { AccountEntry } from "../../models/finances/account-entry";
 import { AcccountTag } from "../../models/finances/account-tag";
 import { FinanceService } from "../../services/FinanceService";
 import Dialog from "../common/Dialog";
+import { useToast } from "../../pages/store/ToastContext";
 
 const FinanceDetailDialogView: React.FC<{
   onClose: (reload: boolean) => void;
@@ -34,6 +35,8 @@ const FinanceDetailDialogView: React.FC<{
     }
   }, [editingEntry]);
 
+  const { showToast } = useToast();
+
   async function onSubmit() {
     const title = titleRef.current?.value;
     const value = parseFloat(
@@ -58,6 +61,7 @@ const FinanceDetailDialogView: React.FC<{
         tagId
       );
       onClose(true);
+      showToast(`Entry ${editingEntry?.id ? "Updated" : "Created"}`, "Title: " + title);
     } catch (error: Error | any) {
       setError(error.message);
     }
@@ -85,9 +89,7 @@ const FinanceDetailDialogView: React.FC<{
             defaultValue={-1}
           >
             <option value={1}>+</option>
-            <option value={-1}>
-              -
-            </option>
+            <option value={-1}>-</option>
           </select>
           <input
             type="number"

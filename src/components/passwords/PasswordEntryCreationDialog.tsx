@@ -5,6 +5,7 @@ import { PasswordService } from "../../services/PasswordService";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import useIsMobile from "../../hooks/useIsMobile";
 import Button from "../Button";
+import { useToast } from "../../pages/store/ToastContext";
 
 export const PasswordEntryCreationDialog: React.FC<{
   environment: PasswordEnvironment;
@@ -73,13 +74,16 @@ export const PasswordEntryCreationDialog: React.FC<{
       setError("Title is required");
     }
   }
+  const { showToast } = useToast();
 
   function copyUser() {
     navigator.clipboard.writeText(loginRef.current!.value);
+    showToast(`Copied user to clipboard`, loginRef.current!.value);
   }
 
   function copyPass() {
     navigator.clipboard.writeText(editingEntry?.password ?? "");
+    showToast(`Copied password to clipboard`, "********");
   }
 
   function showPass() {

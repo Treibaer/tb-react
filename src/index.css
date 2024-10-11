@@ -49,5 +49,5 @@ input:focus {
 }
 
 .tb-row {
-  @apply flex gap-4 border-b border-b-mediumBlue p-2 justify-start items-center bg-darkBlue hover:bg-hoverBlue;
+  @apply flex gap-4 border-b border-b-mediumBlue p-2 justify-start items-center bg-darkBlue hover:!bg-hoverBlue;
 }

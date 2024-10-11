@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { SmallBoard } from "../../../models/board-structure";
 import { DropdownType } from "../../../models/dropdown-type";
 import { ProjectMeta } from "../../../models/project-meta";
+import { Ticket } from "../../../models/ticket";
 import { TicketStatus } from "../../../models/ticket-status";
 import { User } from "../../../models/user";
+import { useToast } from "../../../pages/store/ToastContext";
 import TicketService from "../../../services/TicketService";
 import { Toggle } from "../../Toggle";
 import Dialog from "../../common/Dialog";
@@ -51,7 +53,7 @@ export const TicketCreationDialog: React.FC<{
       return;
     }
     const description = descriptionRef.current?.value ?? "";
-    await ticketService.create(project.slug, {
+    const ticket = await ticketService.create(project.slug, {
       title,
       description,
       assigneeId: selectedAssignee?.id,
@@ -59,6 +61,7 @@ export const TicketCreationDialog: React.FC<{
       type: selectedType,
       boardId: selectedBoard?.id,
     });
+    handleCreateTicket(ticket);
 
     if (!stayOpen) {
       onClose(true);
@@ -112,6 +115,12 @@ export const TicketCreationDialog: React.FC<{
   function toggleStayOpen() {
     setStayOpen(!stayOpen);
   }
+
+  const { showToast } = useToast();
+
+  const handleCreateTicket = (ticket: Ticket) => {
+    showToast("Ticket Created", "Ticket ID: " + ticket.ticketId);
+  };
 
   return (
     <Dialog

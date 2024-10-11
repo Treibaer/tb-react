@@ -17,6 +17,7 @@ import DropdownElement from "../projects/ticket-details/dropdowns/DropdownElemen
 import PositionDropdown from "../projects/ticket-details/dropdowns/PositionDropdown";
 import StatusDropdown from "../projects/ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../projects/ticket-details/dropdowns/TypeDropdown";
+import { useToast } from "../../pages/store/ToastContext";
 
 const ticketService = TicketService.shared;
 
@@ -26,6 +27,8 @@ export const ContextMenu: React.FC<{
   onClose: (update: boolean) => void;
 }> = ({ metadata, config, onClose }) => {
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
+
+  const { showToast } = useToast();
 
   const ticket = config.ticket!;
   const project = metadata.project;
@@ -55,6 +58,7 @@ export const ContextMenu: React.FC<{
       await ticketService.update(project.slug, ticket.slug, {
         assigneeId,
       });
+      showToast(`${ticket.slug} updated`, `Assigned to ${metadata.users.find((u) => u.id === assigneeId)?.firstName}`);
     }
     onClose(assigneeId !== ticket.assignee?.id);
   }
@@ -64,6 +68,7 @@ export const ContextMenu: React.FC<{
     }
     if (status !== ticket.status) {
       await ticketService.update(project.slug, ticket.slug, { status });
+      showToast(`${ticket.slug} updated`, `Status changed to ${status}`);
     }
     onClose(status !== ticket.status);
   }
@@ -73,6 +78,7 @@ export const ContextMenu: React.FC<{
     }
     if (boardId !== ticket.board?.id) {
       await ticketService.update(project.slug, ticket.slug, { boardId });
+      showToast(`${ticket.slug} updated`, `Moved to ${metadata.boards.find((b) => b.id === boardId)?.title ?? "Backlog"}`);
     }
     onClose(boardId !== ticket.board?.id);
   }
@@ -83,6 +89,7 @@ export const ContextMenu: React.FC<{
     }
     if (type !== ticket.type) {
       await ticketService.update(project.slug, ticket.slug, { type });
+      showToast(`${ticket.slug} updated`, `Type changed to ${type}`);
     }
     onClose(type !== ticket.type);
   }
