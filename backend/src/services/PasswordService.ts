@@ -109,6 +109,7 @@ export class PasswordService {
       where: {
         environment_id: environmentId,
         creator_id: user.id,
+        // archived: false,
       },
       order: [["title", "ASC"]],
     });

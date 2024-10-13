@@ -8,8 +8,7 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleLogin(event: React.FormEvent) {
-    event.preventDefault();
+  async function handleLogin() {
     setIsSubmitting(true);
     setError("");
 

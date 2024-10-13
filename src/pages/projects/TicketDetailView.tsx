@@ -64,7 +64,7 @@ export default function TicketDetailView() {
     <>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row">
-        <div className="w-full sm:w-[calc(100%-240px)] sm:h-[calc(100vh-56px)] overflow-auto max-h-full px-2 flex flex-col">
+        <div className="w-full sm:w-[calc(100%-240px)] sm:h-[calc(100vh-56px)] px-2 flex flex-col">
           <div className="border-b-borderBlue border-b mb-4">
             {isOldVersion && (
               <div className="text-red-500 text-center">
@@ -80,7 +80,11 @@ export default function TicketDetailView() {
                   defaultValue={ticket.title}
                 />
               )}
-              {!isEditing && <div className="text-2xl px-2 border border-transparent">{ticket.title}</div>}
+              {!isEditing && (
+                <div className="text-2xl px-2 border border-transparent">
+                  {ticket.title}
+                </div>
+              )}
               <div>
                 {isEditing && (
                   <div className="flex gap-2">
@@ -104,13 +108,13 @@ export default function TicketDetailView() {
           </div>
           {!isEditing && (
             <p
-              className="px-2 leading-7 flex-1 rawDescription min-h-32"
+              className="px-2 leading-7 flex-1 rawDescription min-h-32  overflow-auto max-h-full "
               dangerouslySetInnerHTML={{ __html: ticket.description }}
             ></p>
           )}
 
           {isEditing && (
-            <div className="h-64 sm:h-full">
+            <div className="h-64 sm:h-full  overflow-auto max-h-full">
               <DescriptionView description={currentDescription} />
             </div>
           )}

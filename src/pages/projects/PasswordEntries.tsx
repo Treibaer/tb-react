@@ -1,5 +1,5 @@
 import { LockClosedIcon, UserIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
@@ -11,6 +11,7 @@ import { PasswordEnvironment } from "../../models/passwords/password-environment
 import { ROUTES } from "../../routes";
 import { PasswordService } from "../../services/PasswordService";
 import { useToast } from "../store/ToastContext";
+import useIsMobile from "../../hooks/useIsMobile";
 
 const passwordService = PasswordService.shared;
 
@@ -23,12 +24,24 @@ const PasswordEntries: React.FC = () => {
   const [entries, setEntries] = useState<PasswordEntry[]>(data.entries);
   const [editingEntry, setEditingEntry] = useState<PasswordEntry | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
     { title: "Passwords", link: ROUTES.PASSWORDS },
     { title: data.environment.title, link: "" },
   ];
+
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (!isMobile) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [isMobile]);
+  
 
   function openDialog() {
     setIsCreating(true);
@@ -77,6 +90,7 @@ const PasswordEntries: React.FC = () => {
         <TitleView title={data.environment.title} openDialog={openDialog} />
         <input
           type="text"
+          ref={inputRef}
           placeholder="Search"
           className="bg-mediumBlue rounded-xl px-3 w-64 py-1 h-10 me-4"
           onChange={handleSearch}

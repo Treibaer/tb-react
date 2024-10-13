@@ -54,7 +54,7 @@ export const TicketCommentArea: React.FC<{
   }, []);
 
   return (
-    <div>
+    <div className="border-t border-t-lightBlue mt-1">
       {removeCommentId && (
         <BlurredBackground onClose={() => setRemoveCommentId(null)}>
           <Confirmation
