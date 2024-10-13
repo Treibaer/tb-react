@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
+import Button from "../../components/Button";
 import HeaderView from "../../components/HeaderView";
 import PasswordCreationDialog from "../../components/passwords/PasswordCreationDialog";
 import TitleView from "../../components/TitleView";
@@ -7,7 +8,6 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { ROUTES } from "../../routes";
 import { PasswordService } from "../../services/PasswordService";
-import Button from "../../components/Button";
 
 const passwordService = PasswordService.shared;
 
@@ -48,7 +48,10 @@ const Passwords: React.FC = () => {
       <TitleView title="Environments" openDialog={openDialog} />
       <div className="flex flex-wrap">
         {environments.map((environment: any) => (
-          <div key={environment.id} className="relative w-[45%] md:w-[240px] h-[300px] gap-4  flex justify-center items-center p-8 m-2 border hover:bg-slate-800 rounded-md text-white">
+          <div
+            key={environment.id}
+            className="relative w-[45%] md:w-[240px] h-[300px] gap-4  flex justify-center items-center p-8 m-2 border hover:bg-slate-800 rounded-md text-white"
+          >
             <NavLink
               key={environment.id}
               to={ROUTES.PASSWORDS_ENTRIES(environment.id)}

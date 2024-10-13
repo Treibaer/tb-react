@@ -1,12 +1,15 @@
 import { useState } from "react";
 import Constants from "../../services/Constants";
 import { AccessToken } from "../../models/access-token";
+import { useLoginCheck } from "./useLoginCheck";
 
 export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { checkLogin } = useLoginCheck();
 
   async function handleLogin() {
     setIsSubmitting(true);
@@ -30,6 +33,7 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
       if (response.ok && data.value) {
         localStorage.setItem("token", data.value);
         setIsLoggedIn(true);
+        checkLogin();
       } else {
         setError("Invalid credentials");
         setIsSubmitting(false);

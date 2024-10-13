@@ -108,7 +108,7 @@ export default function TicketDetailView() {
           </div>
           {!isEditing && (
             <p
-              className="px-2 leading-7 flex-1 rawDescription min-h-32  overflow-auto max-h-full "
+              className="px-2 leading-7 flex-1 rawDescription min-h-32 overflow-auto max-h-full text-wrap break-words"
               dangerouslySetInnerHTML={{ __html: ticket.description }}
             ></p>
           )}

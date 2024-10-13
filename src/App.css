@@ -16,6 +16,9 @@ body {
   color: #eeeffc;
   font-size: 15px;
 }
+body {
+  overscroll-behavior: none;
+}
 
 .fullscreenBlurWithLoading {
   position: fixed;

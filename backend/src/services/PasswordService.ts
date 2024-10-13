@@ -70,6 +70,9 @@ export class PasswordService {
     if (entry.notes !== undefined) {
       existingEntry.notes = entry.notes;
     }
+    if (entry.archived !== undefined) {
+      existingEntry.archived = entry.archived;
+    }
     await existingEntry.save();
     await PasswordEntryHistory.create({
       ...entry,

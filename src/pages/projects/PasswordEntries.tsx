@@ -1,29 +1,39 @@
-import { LockClosedIcon, UserIcon } from "@heroicons/react/24/solid";
+import {
+  ArchiveBoxIcon,
+  LockClosedIcon,
+  UserIcon,
+} from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
 import PasswordEntryCreationDialog from "../../components/passwords/PasswordEntryCreationDialog";
 import TitleView from "../../components/TitleView";
+import { Toggle } from "../../components/Toggle";
+import useIsMobile from "../../hooks/useIsMobile";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { PasswordEntry } from "../../models/passwords/password-entry";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { ROUTES } from "../../routes";
 import { PasswordService } from "../../services/PasswordService";
 import { useToast } from "../store/ToastContext";
-import useIsMobile from "../../hooks/useIsMobile";
 
 const passwordService = PasswordService.shared;
 
 const PasswordEntries: React.FC = () => {
-  const [isCreating, setIsCreating] = useState(false);
+  const isMobile = useIsMobile();
+  const { showToast } = useToast();
+
   const data = useLoaderData() as {
     environment: PasswordEnvironment;
     entries: PasswordEntry[];
   };
+  const [isCreating, setIsCreating] = useState(false);
   const [entries, setEntries] = useState<PasswordEntry[]>(data.entries);
   const [editingEntry, setEditingEntry] = useState<PasswordEntry | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showAll, setShowAll] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const breadcrumbs: Breadcrumb[] = [
@@ -32,8 +42,6 @@ const PasswordEntries: React.FC = () => {
     { title: data.environment.title, link: "" },
   ];
 
-  const isMobile = useIsMobile();
-
   useEffect(() => {
     if (!isMobile) {
       setTimeout(() => {
@@ -41,14 +49,9 @@ const PasswordEntries: React.FC = () => {
       }, 100);
     }
   }, [isMobile]);
-  
 
   function openDialog() {
     setIsCreating(true);
-  }
-
-  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchTerm(e.target.value);
   }
 
   async function openEditDialog(entry: PasswordEntry) {
@@ -59,12 +62,14 @@ const PasswordEntries: React.FC = () => {
   async function onClose() {
     setIsCreating(false);
     // refresh environments always
-    const newData = await passwordService.getAllEntries(data.environment.id);
-    setEntries(newData.entries);
+    await reload();
     setEditingEntry(null);
   }
 
-  const { showToast } = useToast();
+  async function reload() {
+    const newData = await passwordService.getAllEntries(data.environment.id);
+    setEntries(newData.entries);
+  }
 
   function copyUser(value: string) {
     navigator.clipboard.writeText(value);
@@ -74,6 +79,12 @@ const PasswordEntries: React.FC = () => {
   function copyPass() {
     navigator.clipboard.writeText(editingEntry?.password ?? "");
     showToast(`Copied password to clipboard`, "********");
+  }
+
+  async function toggleArchive(entry: PasswordEntry) {
+    entry.archived = !entry.archived;
+    await passwordService.updateEntry(data.environment.id, entry.id, entry);
+    await reload();
   }
 
   return (
@@ -88,19 +99,27 @@ const PasswordEntries: React.FC = () => {
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
         <TitleView title={data.environment.title} openDialog={openDialog} />
-        <input
-          type="text"
-          ref={inputRef}
-          placeholder="Search"
-          className="bg-mediumBlue rounded-xl px-3 w-64 py-1 h-10 me-4"
-          onChange={handleSearch}
-        />
+        <div className="items-center flex gap-2">
+          <Toggle
+            title="Archived"
+            defaultChecked={false}
+            onChange={() => setShowAll(!showAll)}
+          />
+          <input
+            type="text"
+            ref={inputRef}
+            placeholder="Search"
+            className="bg-mediumBlue rounded-xl px-3 w-64 py-1 h-10 me-4"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
       <div className="flex flex-col">
         {entries
           .filter((entry) =>
             entry.title.toLowerCase().includes(searchTerm.toLowerCase())
           )
+          .filter((entry) => (showAll ? true : !entry.archived))
           .map((entry) => (
             <div
               className="tb-row !gap-1 !p-0 !px-2 cursor-pointer"
@@ -119,6 +138,12 @@ const PasswordEntries: React.FC = () => {
                 <div className="flex-1">{entry.title}</div>
                 <div className="flex-1 text-gray-400">{entry.login}</div>
               </div>
+              <ButtonIcon onClick={() => toggleArchive(entry)}>
+                <ArchiveBoxIcon
+                  color={entry.archived ? "olive" : undefined}
+                  className="w-5 h-5"
+                />
+              </ButtonIcon>
             </div>
           ))}
       </div>

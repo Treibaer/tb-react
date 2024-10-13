@@ -5,4 +5,5 @@ export type PasswordEntryDTO = {
   title: string;
   url: string;
   notes: string;
+  archived: boolean;
 };

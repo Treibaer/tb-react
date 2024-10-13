@@ -53,6 +53,8 @@ import PasswordEntries, {
 } from "./pages/projects/PasswordEntries";
 import { AppContextProvider } from "./pages/store/AppContext";
 import { ToastProvider } from "./pages/store/ToastContext";
+import { Provider } from "react-redux";
+import { store } from "./pages/store/store";
 
 const router = createBrowserRouter([
   {
@@ -165,10 +167,10 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <>
+    <Provider store={store}>
       {/* <Notifications /> */}
       <RouterProvider router={router} />
-    </>
+    </Provider>
   );
 }
 

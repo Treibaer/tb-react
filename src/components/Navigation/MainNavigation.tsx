@@ -9,15 +9,17 @@ import {
   TagIcon,
   TicketIcon,
 } from "@heroicons/react/24/solid";
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { ROUTES } from "../../routes";
 import Constants from "../../services/Constants";
 import NavigationLink from "./NavigationLink";
 import UserMenu from "./UserMenu";
-import AppContext from "../../pages/store/AppContext";
 
 export default function MainNavigation() {
+  const avatar = useSelector((state: any) => state.ui.avatar);
+
   const params: { projectSlug?: string } = useParams();
 
   // check if current url starts with /finances
@@ -34,8 +36,7 @@ export default function MainNavigation() {
   const backgroundColor =
     import.meta.env.MODE === "development" ? "bg-lightBlue" : "bg-darkBlue";
 
-
-    const appCtx = useContext(AppContext);
+  // const appCtx = useContext(AppContext);
 
   return (
     <header
@@ -47,7 +48,7 @@ export default function MainNavigation() {
         <img
           id="profile"
           className="w-7 h-7 rounded-full cursor-pointer"
-          src={appCtx.userIcon}
+          src={avatar}
           alt=""
           onClick={toggleSettings}
         />

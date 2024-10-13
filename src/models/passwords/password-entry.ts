@@ -5,4 +5,5 @@ export interface PasswordEntry {
   title: string;
   url: string;
   notes: string;
+  archived: boolean;
 }

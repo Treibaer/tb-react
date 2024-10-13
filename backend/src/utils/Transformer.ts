@@ -272,6 +272,7 @@ export default class Transformer {
       password: Encryption.shared.decryptPassword(entry.password),
       url: entry.url,
       notes: entry.notes,
+      archived: entry.archived,
     };
   }
 }

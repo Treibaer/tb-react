@@ -56,6 +56,7 @@ export const PasswordEntryCreationDialog: React.FC<{
           password: passwordRef.current?.value ?? "",
           url: urlRef.current?.value ?? "",
           notes: notesRef.current?.value ?? "",
+          archived: editingEntry?.archived ?? false,
         };
         if (editingEntry) {
           await PasswordService.shared.updateEntry(
@@ -91,10 +92,6 @@ export const PasswordEntryCreationDialog: React.FC<{
       passwordRef.current!.value = prev ? "" : editingEntry?.password ?? "";
       return !prev;
     });
-    if (isShowingPassword) {
-      passwordRef.current!.value = editingEntry?.password ?? "";
-    } else {
-    }
     passwordRef.current!.value = editingEntry?.password ?? "";
   }
 

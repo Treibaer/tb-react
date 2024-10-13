@@ -10,10 +10,20 @@ import { useContext, useEffect } from "react";
 
 export const RootLayout: React.FC = () => {
   const { state } = useNavigation();
-  const { checkingLogin, isLoggedIn, setIsLoggedIn, serverError, avatar } =
-    useLoginCheck();
+  const {
+    checkingLogin,
+    isLoggedIn,
+    setIsLoggedIn,
+    serverError,
+    avatar,
+    checkLogin,
+  } = useLoginCheck();
 
   const appCtx = useContext(AppContext);
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
 
   useEffect(() => {
     appCtx.setUserIcon(avatar);

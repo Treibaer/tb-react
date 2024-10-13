@@ -12,6 +12,7 @@ export class PasswordEntry extends Model {
   declare notes: string;
   declare creator_id: number;
   declare environment_id: number;
+  declare archived: boolean;
 }
 
 PasswordEntry.init(
