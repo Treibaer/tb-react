@@ -81,7 +81,7 @@ export default function MainNavigation() {
               icon={<CreditCardIcon />}
             />
             <NavigationLink
-              to={ROUTES.PASSWORDS}
+              to={ROUTES.PASSWORDS_ENTRIES(1)}
               title="Passwords"
               icon={<LockClosedIcon />}
             />

@@ -20,7 +20,7 @@ export default function Dashboard() {
             <NavLink to="/finances/details">
               <Button title="Finances" />
             </NavLink>
-            <NavLink to="/passwords">
+            <NavLink to="/passwords/1/entries">
               <Button title="Passwords" />
             </NavLink>
             <NavLink to="/projects/HK/tickets">
