@@ -1,7 +1,0 @@
-{
-    "ignore": [
-        "./data",
-        "./node_modules",
-        "./nodemon.json"
-    ]
-}

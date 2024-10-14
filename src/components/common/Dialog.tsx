@@ -28,7 +28,7 @@ const Dialog: React.FC<{
       }}
     >
       {error && (
-        <div className="bg-red-300 w-1/2 mx-auto p-1 m-1 rounded text-slate-800">
+        <div className="bg-red-300 w-1/2 mx-auto p-1 m-1 rounded text-slate-800 z-50 relative">
           {error}
         </div>
       )}

@@ -30,8 +30,8 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
 
       const data: AccessToken = await response.json();
 
-      if (response.ok && data.value) {
-        localStorage.setItem("token", data.value);
+      if (response.ok && data.accessToken) {
+        localStorage.setItem("token", data.accessToken);
         setIsLoggedIn(true);
         checkLogin();
       } else {
