@@ -6,8 +6,7 @@ import { Status } from './entities/status';
 export class StatusController {
   @Get()
   async getStatus() {
-    let status = await Status.findAll();
-    // status = status.filter((s) => s.host.startsWith("ws://") || s.host.startsWith("wss://"));
+    const status = await Status.findAll();
 
     const status2: (Status & { up: boolean })[] = status.map((s) => s.toJSON());
     for (const s of status2) {

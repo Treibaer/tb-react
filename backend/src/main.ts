@@ -5,6 +5,7 @@ import { AllExceptionsFilter } from './utils/all-exceptions.filter';
 import { LoggingInterceptor } from './utils/logger.interceptor';
 import { join } from 'path';
 import * as express from 'express';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -14,6 +15,7 @@ async function bootstrap() {
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalPipes(new ValidationPipe());
   const port = process.env.PORT || 3000;
   console.log(`Listening on port ${port}`);
 

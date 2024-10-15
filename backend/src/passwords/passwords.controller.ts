@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/users/user.service';
 import { PasswordEnvironment } from './entities/password-environment';
 import { PasswordEnvironmentDto } from './dto/password-environment.dto';
 import { PasswordEntry } from './entities/password-entry';
@@ -10,7 +10,7 @@ import { PasswordEntryHistory } from './entities/password-entry-history';
 
 @Controller('api/v3/passwords')
 export class PasswordsController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UserService) {}
 
   @Get('environments')
   async getEnvironments() {
@@ -55,7 +55,7 @@ export class PasswordsController {
     if (!existingEnvironment) {
       throw new Error('Environment not found');
     }
-    if (existingEnvironment.user.id !== user.id) {
+    if (existingEnvironment.creator.id !== user.id) {
       throw new Error("You can't update this environment");
     }
     if (environment.title !== undefined) {
@@ -127,7 +127,7 @@ export class PasswordsController {
     const environment = await PasswordEnvironment.findByPk(id, {
       include: [User],
     });
-    if (!environment || environment.user.id !== user.id) {
+    if (!environment || environment.creator.id !== user.id) {
       throw new Error('Environment not found');
     }
     const existingEntry = await PasswordEntry.findByPk(entryId);
@@ -173,7 +173,7 @@ export class PasswordsController {
   ): Promise<PasswordEnvironmentDto> {
     const entries = await PasswordEntry.findAll({
       where: {
-        creator_id: env.user.id,
+        creator_id: env.creator.id,
         environment_id: env.id,
         archived: false,
       },

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { PagesController } from 'src/projects/pages.controller';
 import { SharedModule } from 'src/shared/shared.module';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/users/user.service';
 import { BoardsController } from './boards.controller';
-import { BoardsService } from './boards.service';
+import { BoardService } from './board.service';
 import { ProjectsController } from './projects.controller';
-import { ProjectsService } from './projects.service';
+import { ProjectService } from './project.service';
 import { TicketsController } from './tickets.controller';
-import { TicketsService } from './tickets.service';
-import { Transformer } from './transformer';
+import { TicketService } from './ticket.service';
+import { TransformService } from './transform.service';
 import { PageService } from './page.service';
 
 @Module({
@@ -20,12 +20,12 @@ import { PageService } from './page.service';
     PagesController,
   ],
   providers: [
-    UsersService,
-    ProjectsService,
-    BoardsService,
-    TicketsService,
+    UserService,
+    ProjectService,
+    BoardService,
+    TicketService,
     PageService,
-    Transformer,
+    TransformService,
   ],
 })
 export class ProjectsModule {}

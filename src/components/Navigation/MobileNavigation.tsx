@@ -26,7 +26,7 @@ export default function MobileNavigation() {
         <CreditCardIcon className="h-6 w-6" />
       </NavLink>
       <NavLink
-        to={ROUTES.PASSWORDS}
+        to={ROUTES.PASSWORDS_ENTRIES(1)}
         className="flex-1 flex justify-center items-center"
       >
         <LockClosedIcon className="h-6 w-6" />

@@ -2,6 +2,7 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
@@ -17,7 +18,11 @@ export class PasswordEnvironment extends Model {
 
   // relation to user entity with foregin key user_id
   @BelongsTo(() => User, 'creator_id')
-  user: User;
+  creator: User;
+
+  @ForeignKey(() => User)
+  @Column
+  creator_id: number;
 
   @Column({ allowNull: false })
   title: string;

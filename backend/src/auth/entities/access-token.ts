@@ -1,4 +1,4 @@
-import { BelongsTo, Column, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { User } from "src/users/entities/user.entity";
 
 @Table({ tableName: "access_token", timestamps: false })
@@ -25,4 +25,8 @@ export class AccessToken extends Model {
   // relation to user entity with foregin key user_id
   @BelongsTo(() => User, "user_id")
   user: User;
+
+  @ForeignKey(() => User)
+  @Column
+  user_id: number;
 }

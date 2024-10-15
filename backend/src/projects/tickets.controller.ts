@@ -7,23 +7,21 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ProjectsService } from './projects.service';
-import { Ticket } from './entities/ticket';
-import { TicketsService } from './tickets.service';
 import { TicketDto } from './dto/ticket.dto';
-import { Transformer } from './transformer';
+import { Ticket } from './entities/ticket';
+import { TicketService } from './ticket.service';
+import { TransformService } from './transform.service';
 
 @Controller('api/v3/projects')
 export class TicketsController {
   constructor(
-    private readonly ticketsService: TicketsService,
-    private readonly projectsService: ProjectsService,
-    private readonly transformer: Transformer,
+    private readonly ticketService: TicketService,
+    private readonly transformer: TransformService,
   ) {}
 
   @Get(':slug/tickets')
   async getTickets(@Param('slug') slug: string) {
-    const tickets = await this.ticketsService.getAll(slug);
+    const tickets = await this.ticketService.getAll(slug);
 
     const ticketDTOs = await Promise.all(
       tickets.map(async (ticket: Ticket) =>
@@ -35,7 +33,7 @@ export class TicketsController {
 
   @Post(':slug/tickets')
   async createTicket(@Param('slug') slug: string, @Body() ticket: TicketDto) {
-    return this.ticketsService.create(slug, ticket);
+    return this.ticketService.create(slug, ticket);
   }
 
   @Get(':slug/tickets/:ticketSlug')
@@ -45,7 +43,7 @@ export class TicketsController {
   ) {
     return this.transformer.ticket(
       slug,
-      await this.ticketsService.get(slug, ticketSlug),
+      await this.ticketService.get(slug, ticketSlug),
     );
   }
 
@@ -60,7 +58,7 @@ export class TicketsController {
       position?: number;
     },
   ) {
-    return this.ticketsService.update(slug, ticketSlug, data);
+    return this.ticketService.update(slug, ticketSlug, data);
   }
 
   @Get(':slug/tickets/:ticketSlug/history')
@@ -68,10 +66,10 @@ export class TicketsController {
     @Param('slug') _slug: string,
     @Param('ticketSlug') ticketSlug: string,
   ) {
-    const historyList = await this.ticketsService.getHistory(ticketSlug);
+    const historyList = await this.ticketService.getHistory(ticketSlug);
     const historyDTOs = await Promise.all(
       historyList.map(async (history) =>
-        this.ticketsService.ticketHistory(history),
+        this.ticketService.ticketHistory(history),
       ),
     );
     return historyDTOs;
@@ -82,10 +80,10 @@ export class TicketsController {
     @Param('slug') _slug: string,
     @Param('ticketSlug') ticketSlug: string,
   ) {
-    const comments = await this.ticketsService.getComments(ticketSlug);
+    const comments = await this.ticketService.getComments(ticketSlug);
     const commentDTOs = await Promise.all(
       comments.map(async (comment) =>
-        this.ticketsService.ticketComment(comment),
+        this.ticketService.ticketComment(comment),
       ),
     );
     return commentDTOs;
@@ -97,8 +95,8 @@ export class TicketsController {
     @Param('ticketSlug') ticketSlug: string,
     @Body() { content }: { content: string },
   ) {
-    return this.ticketsService.ticketComment(
-      await this.ticketsService.createComment(ticketSlug, content),
+    return this.ticketService.ticketComment(
+      await this.ticketService.createComment(ticketSlug, content),
     );
   }
 
@@ -108,6 +106,6 @@ export class TicketsController {
     @Param('ticketSlug') ticketSlug: string,
     @Param('commentId') commentId: number,
   ) {
-    await this.ticketsService.removeComment(ticketSlug, commentId);
+    await this.ticketService.removeComment(ticketSlug, commentId);
   }
 }

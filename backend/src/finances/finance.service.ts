@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
 import { AccountEntry } from './entities/account-entry';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/users/user.service';
 import { AccountEntryDto } from './dto/account-entry.dto';
 import { Account } from './entities/account';
 
 @Injectable()
-export class FinancesService {
-  constructor(private readonly usersService: UsersService) {}
+export class FinanceService {
+  constructor(private readonly usersService: UserService) {}
 
   async getAllEntries(
     year: number,

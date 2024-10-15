@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { SharedModule } from 'src/shared/shared.module';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/users/user.service';
 import { FinancesController } from './finances.controller';
-import { FinancesService } from './finances.service';
+import { FinanceService } from './finance.service';
 
 @Module({
   imports: [SharedModule],
   controllers: [FinancesController],
-  providers: [FinancesService, UsersService],
+  providers: [FinanceService, UserService],
 })
 export class FinancesModule {}

@@ -1,29 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { Project } from './entities/project';
-import { ProjectDto } from './dto/project.dto';
-import { ProjectMetaDto } from './dto/project-meta.dto';
 import { User } from 'src/users/entities/user.entity';
-import { ticketStates } from './models/ticket-states';
-import { ticketTypes } from './models/ticket-types';
-import { Board } from './entities/board';
-import { BoardsService } from './boards.service';
-import { ProjectDashboardDataDto } from './dto/project-dashboard-data.dto';
-import { Ticket } from './entities/ticket';
-import { TicketStatus } from './models/ticket-status';
-import { TicketDto } from './dto/ticket.dto';
-import { TicketHistory } from './entities/ticket-history';
-import { TicketHistoryDto } from './dto/ticket-history.dto';
+import { UserService } from 'src/users/user.service';
+import { BoardService } from './board.service';
 import { TicketCommentDto } from './dto/ticket-comment.dto';
+import { TicketHistoryDto } from './dto/ticket-history.dto';
+import { TicketDto } from './dto/ticket.dto';
+import { Project } from './entities/project';
+import { Ticket } from './entities/ticket';
 import { TicketComment } from './entities/ticket-comment';
-import { Transformer } from './transformer';
+import { TicketHistory } from './entities/ticket-history';
+import { TransformService } from './transform.service';
 
 @Injectable()
-export class TicketsService {
+export class TicketService {
   constructor(
-    private readonly userService: UsersService,
-    private readonly boardService: BoardsService,
-    private readonly transformer: Transformer,
+    private readonly userService: UserService,
+    private readonly boardService: BoardService,
+    private readonly transformer: TransformService,
   ) {}
 
   async getAll(projectSlug: string): Promise<Ticket[]> {

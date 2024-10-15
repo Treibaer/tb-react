@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { FinancesService } from './finances.service';
+import { UserService } from 'src/users/user.service';
+import { FinanceService } from './finance.service';
 import { AccountTag } from './entities/account-tag';
 import { Account } from './entities/account';
 import { AccountEntry } from './entities/account-entry';
@@ -13,8 +13,8 @@ export class FinancesController {
   accountId = 3;
 
   constructor(
-    private readonly usersService: UsersService,
-    private readonly financeService: FinancesService,
+    private readonly usersService: UserService,
+    private readonly financeService: FinanceService,
   ) {}
 
   @Get('entries')

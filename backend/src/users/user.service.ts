@@ -6,14 +6,11 @@ import { UserDto } from './dto/user.dto';
 import { UrlService } from 'src/shared/urlservice';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @Inject(REQUEST) private readonly request: Request,
     private readonly urlService: UrlService,
-  ) {
-    console.log('UrlService:', !!urlService); // Check if UrlService is injected
-
-  }
+  ) {}
 
   get user() {
     return this.request.user;

@@ -1,30 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { Project } from './entities/project';
-import { ProjectDto } from './dto/project.dto';
-import { ProjectMetaDto } from './dto/project-meta.dto';
 import { User } from 'src/users/entities/user.entity';
+import { UserService } from 'src/users/user.service';
+import { BoardService } from './board.service';
+import { ProjectDashboardDataDto } from './dto/project-dashboard-data.dto';
+import { ProjectMetaDto } from './dto/project-meta.dto';
+import { ProjectDto } from './dto/project.dto';
+import { Board } from './entities/board';
+import { Project } from './entities/project';
+import { Ticket } from './entities/ticket';
 import { ticketStates } from './models/ticket-states';
 import { ticketTypes } from './models/ticket-types';
-import { Board } from './entities/board';
-import { BoardsService } from './boards.service';
-import { ProjectDashboardDataDto } from './dto/project-dashboard-data.dto';
-import { Ticket } from './entities/ticket';
-import { TicketStatus } from './models/ticket-status';
-import { TicketDto } from './dto/ticket.dto';
-import { TicketsService } from './tickets.service';
-import { Transformer } from './transformer';
+import { TransformService } from './transform.service';
 
 @Injectable()
-export class ProjectsService {
+export class ProjectService {
   constructor(
-    private userService: UsersService,
-    private boardService: BoardsService,
-    private ticketService: TicketsService,
-    private transformer: Transformer,
+    private userService: UserService,
+    private boardService: BoardService,
+    private transformer: TransformService,
   ) {}
 
-  async getAllProjects() {
+  async fetchProjects() {
     const projects = await Project.findAll({
       where: { archived: false },
     });
@@ -33,22 +29,31 @@ export class ProjectsService {
       (project) =>
         user.isAdmin || user.projectAccess.split('_').includes(`${project.id}`),
     );
-    return await Promise.all(allowedProjects.map(this.project));
+    return allowedProjects;
   }
 
-  async getProject(slug: string): Promise<ProjectDto> {
+  async getTransformedProjects() {
+    const projects = await this.fetchProjects();
+    return await Promise.all(projects.map(this.project));
+  }
+
+  async fetchProject(slug: string) {
     const project = await Project.findOne({ where: { short: slug } });
     const user = await this.userService.user;
     if (
       user.isAdmin ||
       user.projectAccess.split('_').indexOf(`${project.id}`) !== -1
     ) {
-      return this.project(project);
+      return project;
     }
     throw new Error('You are not allowed to view this project');
   }
 
-  async createProject(project: ProjectDto): Promise<ProjectDto> {
+  async getTransformedProject(slug: string) {
+    const project = await this.fetchProject(slug);
+    return this.project(project);
+  }
+  async createProject(project: ProjectDto) {
     const user = this.userService.user;
 
     await Project.create({
@@ -67,7 +72,7 @@ export class ProjectsService {
   }
 
   async getProjectMetadata(slug: string): Promise<ProjectMetaDto> {
-    const project = await this.getProject(slug);
+    const project = await this.fetchProject(slug);
 
     const users = await User.findAll();
     const userDTOs = users.map((user) => this.userService.transform(user));
@@ -75,7 +80,7 @@ export class ProjectsService {
       where: { project_id: project.id, isActive: true },
       order: [['position', 'ASC']],
     });
-    const smallBoardDTOs = await Promise.all(
+    const smallBoardDtos = await Promise.all(
       boards.map(this.boardService.smallBoard),
     );
     return {
@@ -83,32 +88,31 @@ export class ProjectsService {
       users: userDTOs,
       types: ticketTypes,
       states: ticketStates,
-      boards: smallBoardDTOs,
+      boards: smallBoardDtos,
     };
   }
 
-
   async getDashboardData(
-    projectSlug: string
+    projectSlug: string,
   ): Promise<ProjectDashboardDataDto> {
     const user = this.userService.user;
-    const project = await this.getProject(projectSlug);
+    const project = await this.fetchProject(projectSlug);
 
     const tickets = await Ticket.findAll({
       where: {
-        state: "inProgress",
+        state: 'inProgress',
         assigned_id: user.id,
         project_id: project.id,
       },
     });
 
-    const ticketDTOs = await Promise.all(
+    const ticketDtos = await Promise.all(
       tickets.map(async (ticket: Ticket) =>
-        this.transformer.ticket(projectSlug, ticket)
-      )
+        this.transformer.ticket(projectSlug, ticket),
+      ),
     );
     return {
-      tickets: ticketDTOs,
+      tickets: ticketDtos,
       project: project,
     };
   }
@@ -122,5 +126,4 @@ export class ProjectsService {
       description: project.description,
     };
   }
-
 }

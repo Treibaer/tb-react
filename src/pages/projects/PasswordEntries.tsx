@@ -109,12 +109,12 @@ const PasswordEntries: React.FC = () => {
             type="text"
             ref={inputRef}
             placeholder="Search"
-            className="bg-mediumBlue rounded-xl px-3 w-64 py-1 h-10 me-4"
+            className="bg-mediumBlue rounded-xl px-3 w-48 sm:w-64 py-1 h-10 me-4"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         {entries
           .filter((entry) =>
             entry.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -122,7 +122,7 @@ const PasswordEntries: React.FC = () => {
           .filter((entry) => (showAll ? true : !entry.archived))
           .map((entry) => (
             <div
-              className="tb-row !gap-1 !p-0 !px-2 cursor-pointer"
+              className="tb-row !gap-1 !p-0 !px-2 cursor-pointer max-w-full"
               key={entry.id}
             >
               <ButtonIcon onClick={() => copyUser(entry.login)}>
@@ -135,8 +135,12 @@ const PasswordEntries: React.FC = () => {
                 className="flex justify-between w-full p-2"
                 onClick={() => openEditDialog(entry)}
               >
-                <div className="flex-1">{entry.title}</div>
-                <div className="flex-1 text-gray-400">{entry.login}</div>
+                <div className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-32 sm:max-w-full">
+                  {entry.title}
+                </div>
+                <div className="flex-1 text-gray-400 overflow-hidden text-ellipsis  max-w-32 sm:max-w-full">
+                  {entry.login}
+                </div>
               </div>
               <ButtonIcon onClick={() => toggleArchive(entry)}>
                 <ArchiveBoxIcon

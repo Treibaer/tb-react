@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { UsersService } from "src/users/users.service";
+import { UserService } from "src/users/user.service";
 import { AccessToken } from "./entities/access-token";
 import { AuthDto } from "./dto/auth.dto";
 import { User } from "src/users/entities/user.entity";
@@ -10,7 +10,7 @@ import { User } from "src/users/entities/user.entity";
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userService: UsersService,
+    private readonly userService: UserService,
   ) {}
 
   async signIn({ email, password, client }: AuthDto) {

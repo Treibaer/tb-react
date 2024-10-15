@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/users/user.service';
 import { BoardStructureDto } from './dto/board-structure.dto';
 import { BoardDto } from './dto/board.dto';
 import { SmallBoardDto } from './dto/small-board.dto';
 import { Board } from './entities/board';
 import { Project } from './entities/project';
 import { Ticket } from './entities/ticket';
-import { Transformer } from './transformer';
+import { TransformService } from './transform.service';
 
 @Injectable()
-export class BoardsService {
+export class BoardService {
   constructor(
-    private readonly userService: UsersService,
-    private readonly transformer: Transformer,
+    private readonly userService: UserService,
+    private readonly transformer: TransformService,
   ) {}
 
   smallBoard(board: Board): SmallBoardDto {
