@@ -1,38 +1,35 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AccessToken } from './auth/entities/access-token';
-import { UsersService } from './users/users.service';
-import { UrlService } from './shared/urlservice';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import { StatusModule } from './status/status.module';
-import { Status } from './status/entities/status';
-import { PasswordsModule } from './passwords/passwords.module';
-import { PasswordEnvironment } from './passwords/entities/password-environment';
-import { PasswordEntry } from './passwords/entities/password-entry';
-import { PasswordEntryHistory } from './passwords/entities/password-entry-history';
-import { FinancesModule } from './finances/finances.module';
 import { Account } from './finances/entities/account';
 import { AccountEntry } from './finances/entities/account-entry';
-import { AccountTag } from './finances/entities/account-tag';
 import { AccountPlace } from './finances/entities/account-place';
-import { ProjectsModule } from './projects/projects.module';
-import { Project } from './projects/entities/project';
-import { Board } from './projects/entities/board';
+import { AccountTag } from './finances/entities/account-tag';
+import { FinancesModule } from './finances/finances.module';
+import { PasswordEntry } from './passwords/entities/password-entry';
+import { PasswordEntryHistory } from './passwords/entities/password-entry-history';
+import { PasswordEnvironment } from './passwords/entities/password-environment';
+import { PasswordsModule } from './passwords/passwords.module';
 import { BoardsService } from './projects/boards.service';
-import { SharedModule } from './shared/shared.module';
-import { Ticket } from './projects/entities/ticket';
-import { TicketHistory } from './projects/entities/ticket-history';
-import { TicketComment } from './projects/entities/ticket-comment';
-import { Transformer } from './projects/transformer';
-import { PageService } from './projects/page.service';
+import { Board } from './projects/entities/board';
 import { Page } from './projects/entities/page';
+import { Project } from './projects/entities/project';
+import { Ticket } from './projects/entities/ticket';
+import { TicketComment } from './projects/entities/ticket-comment';
+import { TicketHistory } from './projects/entities/ticket-history';
+import { PageService } from './projects/page.service';
+import { ProjectsModule } from './projects/projects.module';
+import { Transformer } from './projects/transformer';
+import { SharedModule } from './shared/shared.module';
+import { Status } from './status/entities/status';
+import { StatusModule } from './status/status.module';
+import { User } from './users/entities/user.entity';
+import { UsersModule } from './users/users.module';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -44,17 +41,6 @@ import { Page } from './projects/entities/page';
         '/projects/react/tb-react/backend/.env',
       ],
     }),
-
-    ServeStaticModule.forRoot(
-      {
-        rootPath: join(__dirname, '..', 'public', 'avatars'),
-        serveRoot: '/avatars',
-      },
-      {
-        rootPath: join(__dirname, '..', 'public', 'images'),
-        serveRoot: '/images',
-      },
-    ),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

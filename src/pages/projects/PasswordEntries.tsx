@@ -76,8 +76,8 @@ const PasswordEntries: React.FC = () => {
     showToast(`Copied user to clipboard`, value);
   }
 
-  function copyPass() {
-    navigator.clipboard.writeText(editingEntry?.password ?? "");
+  function copyPass(value: string) {
+    navigator.clipboard.writeText(value);
     showToast(`Copied password to clipboard`, "********");
   }
 
@@ -128,7 +128,7 @@ const PasswordEntries: React.FC = () => {
               <ButtonIcon onClick={() => copyUser(entry.login)}>
                 <UserIcon className="w-5 h-5" />
               </ButtonIcon>
-              <ButtonIcon onClick={copyPass}>
+              <ButtonIcon onClick={() => copyPass(entry.password)}>
                 <LockClosedIcon className="w-5 h-5" />
               </ButtonIcon>
               <div
