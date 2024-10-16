@@ -1,3 +1,7 @@
-import { TicketStatus } from "./ticket-status";
+import { TicketStatus } from './ticket-status';
 
-export const ticketStates: TicketStatus[] = ["open", "inProgress", "done"];
+export const ticketStates: TicketStatus[] = [
+  TicketStatus.OPEN,
+  TicketStatus.IN_PROGRESS,
+  TicketStatus.DONE,
+];

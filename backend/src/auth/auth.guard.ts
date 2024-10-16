@@ -10,12 +10,14 @@ import { ModuleRef, Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { User } from 'src/users/entities/user.entity';
 import { AccessToken } from './entities/access-token';
+import { UserService } from 'src/users/user.service';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private moduleRef: ModuleRef,
+    private userService: UserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -49,6 +51,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
+    // this.userService.user2 = data.user;
     request['user'] = data.user;
 
     return true;

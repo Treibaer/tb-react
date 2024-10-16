@@ -8,6 +8,7 @@ type Toast = {
 
 interface ToastContextType {
   showToast: (message: string, info?: string) => void;
+  showErrorToast: (message: string, info?: string) => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
@@ -36,12 +37,17 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     setTimeout(() => removeToast(id), 4000);
   };
 
+  const showErrorToast = (message: string, info?: string) => {
+    const { showToast } = useToast();
+    showToast(message, info);
+  };
+
   const removeToast = (id: string) => {
     setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
   };
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ToastContext.Provider value={{ showToast, showErrorToast }}>
       {children}
       <div className="fixed top-5 right-5 flex flex-col gap-3 z-50 tb-toast-2-container-2 tb-container w-72">
         {toasts.map((toast) => (

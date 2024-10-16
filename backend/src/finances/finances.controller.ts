@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { UserService } from 'src/users/user.service';
 import { FinanceService } from './finance.service';
 import { AccountTag } from './entities/account-tag';
@@ -120,7 +120,7 @@ export class FinancesController {
   @Patch('entries/:id')
   async updateAccountEntry(
     @Body() accountEntry: AccountEntryDto,
-    @Query('id') id: number,
+    @Param('id') id: number,
   ) {
     const updatedEntry = await this.financeService.updateAccountEntry(
       id,

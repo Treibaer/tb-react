@@ -46,12 +46,14 @@ export class BoardsController {
 
   @Post(':slug/boards/:boardId/open')
   async open(@Param('slug') _slug: string, @Param('boardId') boardId: number) {
-    return await this.boardsService.open(boardId);
+    await this.boardsService.open(boardId);
+    return { message: 'Board updated' };
   }
 
   @Post(':slug/boards/:boardId/close')
   async close(@Param('slug') _slug: string, @Param('boardId') boardId: number) {
-    return await this.boardsService.close(boardId);
+    await this.boardsService.close(boardId);
+    return { message: 'Board updated' };
   }
 
   @Post(':slug/settings')
@@ -60,7 +62,8 @@ export class BoardsController {
     @Param('boardId') boardId: number,
     @Body() settings: Record<string, any>,
   ) {
-    return await this.boardsService.updateSettings(slug, settings);
+    await this.boardsService.updateSettings(slug, settings);
+    return { message: 'Settings updated' };
   }
 
   @Post(':slug/boards/:boardId/move')

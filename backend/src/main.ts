@@ -6,6 +6,7 @@ import { LoggingInterceptor } from './utils/logger.interceptor';
 import { join } from 'path';
 import * as express from 'express';
 import { ValidationPipe } from '@nestjs/common';
+import { SocketIoAdapter } from './utils/ws-adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -26,7 +27,8 @@ async function bootstrap() {
   app.use('/images', express.static(join(__dirname, '..', 'public', 'images')));
 
   const configService = app.get(ConfigService);
-  // app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
+  
+  app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
 
   await app.listen(port);
 }

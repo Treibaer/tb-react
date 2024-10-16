@@ -53,8 +53,16 @@ export class ProjectService {
     const project = await this.fetchProject(slug);
     return this.project(project);
   }
+
   async createProject(project: ProjectDto) {
     const user = this.userService.user;
+
+    const existingProject = await Project.findOne({
+      where: { slug: project.slug },
+    });
+    if (existingProject) {
+      throw new Error('Project with this slug already exists');
+    }
 
     await Project.create({
       ...project,

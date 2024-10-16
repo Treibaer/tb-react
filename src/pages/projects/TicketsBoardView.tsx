@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
@@ -18,6 +18,7 @@ import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-conf
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
+import { useSocket } from "../../hooks/useSocket";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
@@ -46,6 +47,22 @@ const TicketsBoardView: React.FC = () => {
   );
   const [hideDone, setHideDone] = useState(data.boardStructure.hideDone);
 
+  const { listenOn, listenOff, emit } = useSocket();
+
+  useEffect(() => {
+    listenOn("matches", "update", (_) => {
+      updateBoardStructure();
+    });
+    return () => {
+      listenOff("matches", "update");
+    };
+  }, []);
+
+  async function refresh() {
+    await updateBoardStructure();
+    emit("matches", "update", {});
+  }
+
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
     e.preventDefault();
 
@@ -70,13 +87,14 @@ const TicketsBoardView: React.FC = () => {
       ticket: null,
     });
     if (shouldUpdate) {
-      await updateBoardStructure();
+      await refresh();
     }
   }
 
   async function updateBoardStructure() {
     const boardStructure = await boardService.getBoardStructure(project.slug);
     setBoardStructure(boardStructure);
+    setClosedBoardIds(boardStructure.closed);
   }
 
   async function toggleBoard(boardId: number) {
@@ -87,6 +105,7 @@ const TicketsBoardView: React.FC = () => {
       setClosedBoardIds([...closedBoardIds, "" + boardId]);
       await boardService.close(project.slug, boardId);
     }
+    await refresh();
   }
 
   async function toggleHideDone() {
@@ -126,7 +145,7 @@ const TicketsBoardView: React.FC = () => {
 
   async function onClose(shouldUpdate: boolean) {
     if (shouldUpdate) {
-      await updateBoardStructure();
+      await refresh();
       const updatedProject = await projectService.get(project.slug);
       setProject(updatedProject);
     }
@@ -208,7 +227,7 @@ const TicketsBoardView: React.FC = () => {
                 hideDone={hideDone}
                 searchTerm={searchTerm}
                 project={project}
-                reload={updateBoardStructure}
+                reload={refresh}
               />
             </DndProvider>
           ))}
