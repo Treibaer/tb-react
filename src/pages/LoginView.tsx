@@ -44,7 +44,7 @@ export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
         <input
           className="tb-input"
           type="text"
-          placeholder="Username"
+          placeholder="Email"
           ref={inputRef}
           onChange={(event) => setEmail(event.target.value)}
           onKeyDown={handleKeyDown}

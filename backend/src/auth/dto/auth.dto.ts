@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class AuthDto {
-  @IsString()
+  // @IsString()
   username: string;
 
   @IsString()
@@ -11,9 +11,9 @@ export class AuthDto {
   @MinLength(6)
   password: string;
 
-  @IsString()
-  @MinLength(6)
-  @IsNotEmpty({message: "Confirm password is required"})
+  // @IsString()
+  // @MinLength(6)
+  // @IsNotEmpty({message: "Confirm password is required"})
   confirmPassword?: string;
   
   @IsNotEmpty({message: "Client is required"})
