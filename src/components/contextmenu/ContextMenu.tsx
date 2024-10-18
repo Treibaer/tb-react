@@ -17,7 +17,7 @@ import DropdownElement from "../projects/ticket-details/dropdowns/DropdownElemen
 import PositionDropdown from "../projects/ticket-details/dropdowns/PositionDropdown";
 import StatusDropdown from "../projects/ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../projects/ticket-details/dropdowns/TypeDropdown";
-import { useToast } from "../../pages/store/ToastContext";
+import { useToast } from "../../store/ToastContext";
 
 const ticketService = TicketService.shared;
 

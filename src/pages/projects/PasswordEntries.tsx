@@ -16,7 +16,7 @@ import { PasswordEntry } from "../../models/passwords/password-entry";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { ROUTES } from "../../routes";
 import { PasswordService } from "../../services/PasswordService";
-import { useToast } from "../store/ToastContext";
+import { useToast } from "../../store/ToastContext";
 
 const passwordService = PasswordService.shared;
 

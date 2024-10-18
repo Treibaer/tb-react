@@ -51,10 +51,18 @@ import Passwords, {
 import PasswordEntries, {
   loader as passwordEntriesLoader,
 } from "./pages/projects/PasswordEntries";
-import { AppContextProvider } from "./pages/store/AppContext";
-import { ToastProvider } from "./pages/store/ToastContext";
+import { AppContextProvider } from "./store/AppContext";
+import { ToastProvider } from "./store/ToastContext";
 import { Provider } from "react-redux";
-import { store } from "./pages/store/store";
+import { store } from "./store/store";
+import Assets,
+{
+  loader as assetsLoader,
+}
+from "./pages/Assets";
+import AssetDetailView, {
+  loader as assetDetailsLoader,
+} from "./pages/AssetDetails";
 
 const router = createBrowserRouter([
   {
@@ -151,6 +159,16 @@ const router = createBrowserRouter([
       {
         path: "/settings",
         element: <Settings />,
+      },
+      {
+        path: "/assets",
+        element: <Assets />,
+        loader: assetsLoader,
+      },
+      {
+        path: "/assets/:assetId",
+        element: <AssetDetailView />,
+        loader: assetDetailsLoader,
       },
     ],
     // errorElement: <ErrorPage />,

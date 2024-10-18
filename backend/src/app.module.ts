@@ -29,9 +29,16 @@ import { StatusModule } from './status/status.module';
 import { User } from './users/entities/user.entity';
 import { UserService } from './users/user.service';
 import { UsersModule } from './users/users.module';
+import { AssetsModule } from './assets/assets.module';
+import { Asset } from './assets/entities/asset';
+import { AssetEntry } from './assets/entities/asset-entry';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
+    MulterModule.register({
+      limits: { fileSize: 5 * 1024 * 1024 }, // Global file size limit (5MB in this case)
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
@@ -74,6 +81,8 @@ import { UsersModule } from './users/users.module';
           TicketHistory,
           TicketComment,
           Page,
+          Asset,
+          AssetEntry,
         ],
         autoLoadModels: true,
         logging: false,
@@ -86,12 +95,15 @@ import { UsersModule } from './users/users.module';
     FinancesModule,
     ProjectsModule,
     SharedModule,
+    AssetsModule,
   ],
   controllers: [AppController],
   providers: [UserService, BoardService, TransformService, PageService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    Asset.sync({ alter: true });
+    AssetEntry.sync({ alter: true });
     return;
     User.sync({ alter: true });
     AccessToken.sync({ alter: true });

@@ -30,6 +30,18 @@ export default class Client {
     });
   }
 
+  async uploadFile<T>(url: string, data: any) {
+    const response = await fetch(this.api + url, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${this.getAuthToken()}`,
+      },
+      method: "POST",
+      body: data,
+    });
+    return this.handleResponse(response);
+  }
+
   /**
    * Makes a PATCH request to the specified URL with the given data.
    * @param url - The endpoint URL (relative to the API base).

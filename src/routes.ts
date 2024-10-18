@@ -12,6 +12,7 @@ export const ROUTES = {
   PROJECT_DETAILS: (projectSlug: string) => `/projects/${projectSlug}`,
   PROJECTS_PAGE_DETAILS: (projectSlug: string, pageId: number) => `/projects/${projectSlug}/pages/${pageId}`,
   BOARD_STRUCTURE: (projectSlug: string) => `/projects/${projectSlug}/tickets-board-structure`,
+  ASSET_DETAILS: (assetId: number) => `/assets/${assetId}`,
 
 
   DASHBOARD: '/dashboard',
@@ -22,6 +23,7 @@ export const ROUTES = {
   SETTINGS: '/settings',
   STATUS: '/status',
   FINANCE_DASHBOARD: '/finances',
+  ASSETS: '/assets',
   PASSWORDS: '/passwords',
   FINANCE_DETAILS: '/finances/details',
   FINANCE_SUMMARY: '/finances/summary',

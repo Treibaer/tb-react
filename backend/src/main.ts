@@ -6,6 +6,7 @@ import { LoggingInterceptor } from './utils/logger.interceptor';
 import { join } from 'path';
 import * as express from 'express';
 import { ValidationPipe } from '@nestjs/common';
+import * as bodyParser from 'body-parser';
 import { SocketIoAdapter } from './utils/ws-adapter';
 
 async function bootstrap() {
@@ -13,6 +14,11 @@ async function bootstrap() {
     logger: ['error', 'warn'],
   });
   app.enableCors();
+
+  // Increase the limit to 10MB for example (adjust as necessary)
+  app.use(bodyParser.json({ limit: '10mb' }));
+  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalInterceptors(new LoggingInterceptor());

@@ -4,7 +4,7 @@ import { Ticket } from "../../../models/ticket";
 import { TicketStatus } from "../../../models/ticket-status";
 import TicketService from "../../../services/TicketService";
 import BoardTicketRow from "./BoardTicketRow";
-import { useToast } from "../../../pages/store/ToastContext";
+import { useToast } from "../../../store/ToastContext";
 
 export const BoardColumn: React.FC<{
   status: TicketStatus;

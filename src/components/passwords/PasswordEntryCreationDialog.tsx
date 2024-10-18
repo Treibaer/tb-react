@@ -5,7 +5,7 @@ import { PasswordService } from "../../services/PasswordService";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import useIsMobile from "../../hooks/useIsMobile";
 import Button from "../Button";
-import { useToast } from "../../pages/store/ToastContext";
+import { useToast } from "../../store/ToastContext";
 
 export const PasswordEntryCreationDialog: React.FC<{
   environment: PasswordEnvironment;

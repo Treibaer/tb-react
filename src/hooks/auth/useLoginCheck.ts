@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppResponse } from "../../models/app-response";
-import { uiActions } from "../../pages/store/ui-slice";
+import { uiActions } from "../../store/ui-slice";
 import Constants from "../../services/Constants";
 
 export function useLoginCheck() {

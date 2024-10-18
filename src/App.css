@@ -11,6 +11,14 @@ html { font-family: "Inter", "system-ui"; }
   background-color: #f0f0f0;
 }
 
+.drag-drop-area {
+  transition: border-color 0.3s ease;
+}
+
+.drag-drop-area.active {
+  border-color: #00aaff;
+}
+
 body {
   background-color: #191a23;
   color: #eeeffc;

@@ -5,7 +5,7 @@ import { ProjectMeta } from "../../../models/project-meta";
 import { Ticket } from "../../../models/ticket";
 import { TicketStatus } from "../../../models/ticket-status";
 import { User } from "../../../models/user";
-import { useToast } from "../../../pages/store/ToastContext";
+import { useToast } from "../../../store/ToastContext";
 import TicketService from "../../../services/TicketService";
 import { Toggle } from "../../Toggle";
 import Dialog from "../../common/Dialog";

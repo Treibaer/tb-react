@@ -3,7 +3,7 @@ import { AccountEntry } from "../../models/finances/account-entry";
 import { AcccountTag } from "../../models/finances/account-tag";
 import { FinanceService } from "../../services/FinanceService";
 import Dialog from "../common/Dialog";
-import { useToast } from "../../pages/store/ToastContext";
+import { useToast } from "../../store/ToastContext";
 
 const FinanceDetailDialogView: React.FC<{
   onClose: (reload: boolean) => void;

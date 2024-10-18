@@ -77,6 +77,11 @@ export default function MainNavigation() {
               icon={<SignalIcon />}
             />
             <NavigationLink
+              to={ROUTES.ASSETS}
+              title="Assets"
+              icon={<DocumentTextIcon />}
+            />
+            <NavigationLink
               to={ROUTES.FINANCE_DASHBOARD}
               title="Finances"
               icon={<CreditCardIcon />}

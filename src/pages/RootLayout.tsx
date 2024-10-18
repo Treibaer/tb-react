@@ -5,7 +5,7 @@ import MobileNavigation from "../components/Navigation/MobileNavigation";
 import { useLoginCheck } from "../hooks/auth/useLoginCheck";
 import Constants from "../services/Constants";
 import LoginView from "./LoginView";
-import AppContext from "./store/AppContext";
+import AppContext from "../store/AppContext";
 import { useContext, useEffect } from "react";
 
 export const RootLayout: React.FC = () => {
