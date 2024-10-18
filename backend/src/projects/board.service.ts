@@ -3,7 +3,6 @@ import { User } from 'src/users/entities/user.entity';
 import { UserService } from 'src/users/user.service';
 import { BoardStructureDto } from './dto/board-structure.dto';
 import { BoardDto } from './dto/board.dto';
-import { SmallBoardDto } from './dto/small-board.dto';
 import { Board } from './entities/board';
 import { Project } from './entities/project';
 import { Ticket } from './entities/ticket';
@@ -16,15 +15,13 @@ export class BoardService {
     private readonly transformer: TransformService,
   ) {}
 
-  smallBoard(board: Board): SmallBoardDto {
-    return {
-      id: board.id,
-      title: board.title,
-    };
+  async fetchBoard(boardId: number): Promise<Board | null> {
+    return await Board.findByPk(boardId);
   }
 
-  async get(boardId: number): Promise<Board | null> {
-    return await Board.findByPk(boardId);
+  async getTransformedBoard(boardId: number): Promise<BoardDto> {
+    const board = await this.fetchBoard(boardId);
+    return this.board(board);
   }
 
   async getBoardStructure(projectSlug: string): Promise<BoardStructureDto> {
@@ -60,22 +57,24 @@ export class BoardService {
     };
   }
 
-  async getAll(projectSlug: string): Promise<Board[]> {
+  async fetchBoards(projectSlug: string): Promise<Board[]> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
     return await Board.findAll({
       where: { project_id: project.id },
-      order: [["position", "ASC"]],
+      order: [['position', 'ASC']],
     });
   }
 
-
-
+  async getTransformedBoards(projectSlug: string): Promise<BoardDto[]> {
+    const boards = await this.fetchBoards(projectSlug);
+    return await Promise.all(boards.map((board) => this.board(board)));
+  }
 
   async create(projectSlug: string, board: BoardDto): Promise<BoardDto> {
     const user = this.userService.user;
     const project = await Project.findOne({ where: { slug: projectSlug } });
 
-    const boards = await this.getAll(projectSlug);
+    const boards = await this.fetchBoards(projectSlug);
 
     const createdBoard = await Board.create({
       title: board.title,
@@ -87,21 +86,20 @@ export class BoardService {
     return this.board(createdBoard);
   }
 
-
   async update(
     projectSlug: string,
     boardId: number,
-    data: BoardDto
+    data: BoardDto,
   ): Promise<BoardDto> {
     const board = await Board.findByPk(boardId);
     if (!board) {
-      throw new Error("Board not found");
+      throw new Error('Board not found');
     }
     if (data.title !== undefined) {
       board.title = data.title;
     }
     if (data.position !== undefined) {
-      let boards = await this.getAll(projectSlug);
+      let boards = await this.fetchBoards(projectSlug);
       boards = boards.filter((t) => t.id !== board.id);
       // add the ticket at the new position
       boards.splice(data.position, 0, board);
@@ -119,38 +117,36 @@ export class BoardService {
     return this.board(board);
   }
 
-
-
   async open(id: number): Promise<void> {
     const user = this.userService.user;
     user.closedBoards = user.closedBoards
-      .split("_")
-      .filter((b) => b !== "" + id)
-      .join("_");
+      .split('_')
+      .filter((b) => b !== '' + id)
+      .join('_');
     await user.save();
   }
 
   async close(id: number): Promise<void> {
     const user = this.userService.user;
     user.closedBoards = user.closedBoards
-      .split("_")
-      .filter((b) => b !== "" + id)
-      .join("_");
+      .split('_')
+      .filter((b) => b !== '' + id)
+      .join('_');
     user.closedBoards += `_${id}`;
     await user.save();
   }
 
   async updateSettings(
     projectSlug: string,
-    settings: Record<string, any>
+    settings: Record<string, any>,
   ): Promise<void> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
     const hideDone = settings.hideDone;
     const user = this.userService.user;
     user.hideDoneProjects = user.hideDoneProjects
-      .split("_")
-      .filter((p) => p !== "" + project.id)
-      .join("_");
+      .split('_')
+      .filter((p) => p !== '' + project.id)
+      .join('_');
     if (hideDone) {
       user.hideDoneProjects += `_${project.id}`;
     }
@@ -160,7 +156,7 @@ export class BoardService {
   async moveTicket(
     projectSlug: string,
     boardId: number,
-    data: Record<string, any>
+    data: Record<string, any>,
   ): Promise<void> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
     let tickets = await Ticket.findAll({
@@ -168,7 +164,7 @@ export class BoardService {
         project_id: project.id,
         board_id: boardId === 0 ? null : boardId,
       },
-      order: [["position", "ASC"]],
+      order: [['position', 'ASC']],
     });
 
     const origin = data.origin;
@@ -178,11 +174,11 @@ export class BoardService {
     const targetTicketIndex = tickets.findIndex((t) => t.id === target);
 
     if (!originTicket) {
-      throw new Error("Ticket not found");
+      throw new Error('Ticket not found');
     }
 
     if (targetTicketIndex === -1) {
-      throw new Error("Target ticket not found");
+      throw new Error('Target ticket not found');
     }
 
     tickets = tickets.filter((t) => t.id !== origin);

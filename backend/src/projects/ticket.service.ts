@@ -19,12 +19,21 @@ export class TicketService {
     private readonly transformer: TransformService,
   ) {}
 
-  async getAll(projectSlug: string): Promise<Ticket[]> {
+  async fetchTickets(projectSlug: string): Promise<Ticket[]> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
     return await Ticket.findAll({
       where: { project_id: project.id },
       order: [['id', 'ASC']],
     });
+  }
+
+  async getTransformedTickets(projectSlug: string): Promise<TicketDto[]> {
+    const tickets = await this.fetchTickets(projectSlug);
+    return await Promise.all(
+      tickets.map(async (ticket) =>
+        this.transformer.ticket(projectSlug, ticket),
+      ),
+    );
   }
 
   async create(
@@ -67,7 +76,7 @@ export class TicketService {
     return await this.transformer.ticket(projectSlug, createdTicket);
   }
 
-  async get(projectSlug: string, ticketSlug: string): Promise<Ticket> {
+  async fetchTicket(projectSlug: string, ticketSlug: string): Promise<Ticket> {
     if (!ticketSlug.includes('-')) {
       throw new Error('Invalid ticket slug');
     }
@@ -82,6 +91,14 @@ export class TicketService {
       throw error;
     }
     return ticket;
+  }
+
+  async getTransformedTicket(
+    projectSlug: string,
+    ticketSlug: string,
+  ): Promise<TicketDto> {
+    const ticket = await this.fetchTicket(projectSlug, ticketSlug);
+    return await this.transformer.ticket(projectSlug, ticket);
   }
 
   async update(
@@ -127,7 +144,7 @@ export class TicketService {
     }
     if (data.boardId !== undefined) {
       if (data.boardId !== 0) {
-        const board = await this.boardService.get(data.boardId);
+        const board = await this.boardService.fetchBoard(data.boardId);
         if (!board) {
           throw new Error('Board not found');
         }
@@ -182,7 +199,7 @@ export class TicketService {
     return this.transformer.ticket(projectSlug, ticket);
   }
 
-  async getHistory(ticketSlug: string): Promise<TicketHistory[]> {
+  async fetchHistory(ticketSlug: string): Promise<TicketHistory[]> {
     const ticket = await this.getBySlug(ticketSlug);
     return await TicketHistory.findAll({
       where: { ticket_id: ticket.id },
@@ -190,7 +207,12 @@ export class TicketService {
     });
   }
 
-  async getComments(ticketSlug: string): Promise<TicketComment[]> {
+  async getTransformedHistory(ticketSlug: string): Promise<TicketHistoryDto[]> {
+    const historyList = await this.fetchHistory(ticketSlug);
+    return await Promise.all(historyList.map(this.ticketHistory));
+  }
+
+  async fetchComments(ticketSlug: string): Promise<TicketComment[]> {
     const ticket = await this.getBySlug(ticketSlug);
     return await TicketComment.findAll({
       where: { ticket_id: ticket.id },
@@ -198,17 +220,25 @@ export class TicketService {
     });
   }
 
+  async getTransformedComments(
+    ticketSlug: string,
+  ): Promise<TicketCommentDto[]> {
+    const comments = await this.fetchComments(ticketSlug);
+    return await Promise.all(comments.map(this.ticketComment));
+  }
+
   async createComment(
     ticketSlug: string,
     content: string,
-  ): Promise<TicketComment> {
+  ): Promise<TicketCommentDto> {
     const ticket = await this.getBySlug(ticketSlug);
     const user = this.userService.user;
-    return await TicketComment.create({
+    const comment = await TicketComment.create({
       content: content,
       creator_id: user.id,
       ticket_id: ticket.id,
     });
+    return this.ticketComment(comment);
   }
 
   async removeComment(ticketSlug: string, commentId: number): Promise<void> {

@@ -8,6 +8,7 @@ import { UserService } from 'src/users/user.service';
 import { Page } from './entities/page';
 import { Project } from './entities/project';
 import { PageDto } from './dto/page.dto';
+import { SmallBoardDto } from './dto/small-board.dto';
 
 @Injectable()
 export class TransformService {
@@ -112,5 +113,12 @@ export class TransformService {
       }
     }
     return content;
+  }
+
+  smallBoard(board: Board): SmallBoardDto {
+    return {
+      id: board.id,
+      title: board.title,
+    };
   }
 }

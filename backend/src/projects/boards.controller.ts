@@ -1,14 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { BoardService } from './board.service';
-import { UserService } from 'src/users/user.service';
 import { BoardDto } from './dto/board.dto';
 
 @Controller('api/v3/projects')
 export class BoardsController {
-  constructor(
-    private readonly boardsService: BoardService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly boardsService: BoardService) {}
 
   @Get(':slug/tickets-board-structure')
   async getBoardStructure(@Param('slug') slug: string) {
@@ -17,11 +13,7 @@ export class BoardsController {
 
   @Get(':slug/boards')
   async getAll(@Param('slug') slug: string) {
-    const boards = await this.boardsService.getAll(slug);
-    const boardDTOs = await Promise.all(
-      boards.map((board) => this.boardsService.board(board)),
-    );
-    return boardDTOs;
+    return await this.boardsService.getTransformedBoards(slug);
   }
 
   @Post(':slug/boards')
@@ -31,8 +23,7 @@ export class BoardsController {
 
   @Get(':slug/boards/:boardId')
   async get(@Param('slug') _slug: string, @Param('boardId') boardId: number) {
-    const board = await this.boardsService.get(boardId);
-    return this.boardsService.board(board);
+    return await this.boardsService.getTransformedBoard(boardId);
   }
 
   @Patch(':slug/boards/:boardId')
@@ -45,13 +36,13 @@ export class BoardsController {
   }
 
   @Post(':slug/boards/:boardId/open')
-  async open(@Param('slug') _slug: string, @Param('boardId') boardId: number) {
+  async open(@Param('boardId') boardId: number) {
     await this.boardsService.open(boardId);
     return { message: 'Board updated' };
   }
 
   @Post(':slug/boards/:boardId/close')
-  async close(@Param('slug') _slug: string, @Param('boardId') boardId: number) {
+  async close(@Param('boardId') boardId: number) {
     await this.boardsService.close(boardId);
     return { message: 'Board updated' };
   }
@@ -59,7 +50,6 @@ export class BoardsController {
   @Post(':slug/settings')
   async updateSettings(
     @Param('slug') slug: string,
-    @Param('boardId') boardId: number,
     @Body() settings: Record<string, any>,
   ) {
     await this.boardsService.updateSettings(slug, settings);

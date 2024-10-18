@@ -4,9 +4,7 @@ import { ProjectService } from './project.service';
 
 @Controller('api/v3/projects')
 export class ProjectsController {
-  constructor(
-    private readonly projectService: ProjectService,
-  ) {}
+  constructor(private readonly projectService: ProjectService) {}
 
   @Get()
   async getProjects() {

@@ -1,14 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { PageDto } from './dto/page.dto';
 import { PageService } from './page.service';
-import { TransformService } from './transform.service';
 
 @Controller('api/v3/projects')
 export class PagesController {
-  constructor(
-    private readonly transformer: TransformService,
-    private readonly pageService: PageService,
-  ) {}
+  constructor(private readonly pageService: PageService) {}
 
   @Get(':slug/pages')
   async getAll(@Param('slug') slug: string) {
@@ -17,30 +13,21 @@ export class PagesController {
 
   @Get(':slug/pages/:id')
   async get(@Param('slug') slug: string, @Param('id') id: number) {
-    const page = await this.pageService.get(slug, id);
-    return this.transformer.page(page);
+    return await this.pageService.getTransformedPage(slug, id);
   }
 
   @Patch(':slug/pages/:id')
-  async update(
-    @Param('slug') slug: string,
-    @Param('id') id: number,
-    @Body() pageDto: PageDto,
-  ) {
-    const page = await this.pageService.update(id, pageDto);
-    return this.transformer.page(page);
+  async update(@Param('id') id: number, @Body() pageDto: PageDto) {
+    return await this.pageService.update(id, pageDto);
   }
 
   @Get(':slug/opened-pages')
-  async getOpenedPages(@Param('slug') slug: string) {
+  async getOpenedPages() {
     return await this.pageService.getOpenedPages();
   }
 
   @Post(':slug/opened-pages')
-  async setOpenedPages(
-    @Param('slug') slug: string,
-    @Body() body: { pageId: number },
-  ) {
+  async setOpenedPages(@Body() body: { pageId: number }) {
     const pages = await this.pageService.getOpenedPages();
     const newPage = body.pageId;
     const updatedPages = pages.includes(newPage)

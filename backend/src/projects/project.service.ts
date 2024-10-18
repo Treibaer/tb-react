@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { UserService } from 'src/users/user.service';
-import { BoardService } from './board.service';
 import { ProjectDashboardDataDto } from './dto/project-dashboard-data.dto';
 import { ProjectMetaDto } from './dto/project-meta.dto';
 import { ProjectDto } from './dto/project.dto';
@@ -16,7 +15,6 @@ import { TransformService } from './transform.service';
 export class ProjectService {
   constructor(
     private userService: UserService,
-    private boardService: BoardService,
     private transformer: TransformService,
   ) {}
 
@@ -89,7 +87,7 @@ export class ProjectService {
       order: [['position', 'ASC']],
     });
     const smallBoardDtos = await Promise.all(
-      boards.map(this.boardService.smallBoard),
+      boards.map(this.transformer.smallBoard),
     );
     return {
       project: project,
@@ -125,7 +123,7 @@ export class ProjectService {
     };
   }
 
-  project(project: Project): ProjectDto {
+  private project(project: Project): ProjectDto {
     return {
       id: project.id,
       slug: project.slug,

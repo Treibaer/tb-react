@@ -29,7 +29,7 @@ export class PageService {
     return await this.transformer.pages(pages);
   }
 
-  async get(projectSlug: string, pageId: number): Promise<Page> {
+  async fetchPage(projectSlug: string, pageId: number): Promise<Page> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
     const page = await Page.findByPk(pageId);
     if (!page || page.project_id !== project.id) {
@@ -38,7 +38,12 @@ export class PageService {
     return page;
   }
 
-  async update(pageId: number, pageDto: PageDto): Promise<Page> {
+  async getTransformedPage(projectSlug: string, pageId: number): Promise<PageDto> {
+    const page = await this.fetchPage(projectSlug, pageId);
+    return this.transformer.page(page);
+  }
+
+  async update(pageId: number, pageDto: PageDto): Promise<PageDto> {
     const page = await Page.findByPk(pageId);
     if (!page) {
       throw new NotFoundException('Page not found');
@@ -46,7 +51,7 @@ export class PageService {
     page.title = pageDto.title;
     page.content = pageDto.content;
     await page.save();
-    return page;
+    return this.transformer.page(page);
   }
 
   async getOpenedPages(): Promise<number[]> {
