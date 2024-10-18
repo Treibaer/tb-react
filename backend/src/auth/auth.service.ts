@@ -1,10 +1,14 @@
-import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
-import { UserService } from "src/users/user.service";
-import { AccessToken } from "./entities/access-token";
-import { AuthDto } from "./dto/auth.dto";
-import { User } from "src/users/entities/user.entity";
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { User } from 'src/users/entities/user.entity';
+import { UserService } from 'src/users/user.service';
+import { AuthDto } from './dto/auth.dto';
+import { AccessToken } from './entities/access-token';
 
 @Injectable()
 export class AuthService {
@@ -17,13 +21,13 @@ export class AuthService {
     const user = await this.userService.findOne(email);
 
     if (!user) {
-      throw new UnauthorizedException("Invalid username or password");
+      throw new UnauthorizedException('Invalid username or password');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid username or password");
+      throw new UnauthorizedException('Invalid username or password');
     }
     return await this.createToken(user, client);
   }
@@ -31,7 +35,7 @@ export class AuthService {
   async register({ username, password, client }: AuthDto) {
     const user = await this.userService.findOne(username);
     if (user) {
-      throw new ConflictException("Username already exists");
+      throw new ConflictException('Username already exists');
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
@@ -42,14 +46,13 @@ export class AuthService {
   }
 
   private async createToken(user: User, client: string) {
-    // Create JWT token
     const payload = { email: user.email, sub: user.id };
     const accessToken = this.jwtService.sign(payload);
     await AccessToken.create({
       value: accessToken,
       user_id: user.id,
       client: client,
-      ip: "",
+      ip: '',
       lastUsed: Math.floor(Date.now() / 1000),
       createdAt: Math.floor(Date.now() / 1000),
     });

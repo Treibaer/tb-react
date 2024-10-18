@@ -12,6 +12,9 @@ export class AppController {
   @Get('api/v3/app')
   async getApp() {
     const user = this.userService.user;
-    return { allowed: true, icon: `${this.urlService.getBackendUrl()}${user.avatar}` };
+    return {
+      allowed: true,
+      icon: `${this.urlService.getBackendUrl()}${user.avatar}`,
+    };
   }
 }

@@ -6,19 +6,14 @@ import {
   SetMetadata,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ModuleRef, Reflector } from '@nestjs/core';
+import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { User } from 'src/users/entities/user.entity';
 import { AccessToken } from './entities/access-token';
-import { UserService } from 'src/users/user.service';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthGuard implements CanActivate {
-  constructor(
-    private reflector: Reflector,
-    private moduleRef: ModuleRef,
-    private userService: UserService,
-  ) {}
+  constructor(private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -28,15 +23,8 @@ export class AuthGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
-
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
-
-    // context.switchToHttp().getResponse().cookie('auth', "ABC", {
-    //   httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
-    //   secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
-    //   maxAge: 3600000, // 1 hour expiration
-    // });
 
     if (!token) {
       throw new UnauthorizedException();
@@ -50,10 +38,8 @@ export class AuthGuard implements CanActivate {
     if (!data) {
       throw new UnauthorizedException();
     }
-
     // this.userService.user2 = data.user;
     request['user'] = data.user;
-
     return true;
   }
 

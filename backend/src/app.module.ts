@@ -29,6 +29,7 @@ import { StatusModule } from './status/status.module';
 import { User } from './users/entities/user.entity';
 import { UserService } from './users/user.service';
 import { UsersModule } from './users/users.module';
+import { PasswordService } from './passwords/password.service';
 
 @Module({
   imports: [
