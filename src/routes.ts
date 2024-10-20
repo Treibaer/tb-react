@@ -28,4 +28,5 @@ export const ROUTES = {
   FINANCE_DETAILS: '/finances/details',
   FINANCE_SUMMARY: '/finances/summary',
   NOT_FOUND: '/404',
+  LOGOUT: '/logout',
 };

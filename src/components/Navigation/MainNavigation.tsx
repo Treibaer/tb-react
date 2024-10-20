@@ -72,11 +72,6 @@ export default function MainNavigation() {
               icon={<TagIcon />}
             />
             <NavigationLink
-              to={ROUTES.STATUS}
-              title="Status"
-              icon={<SignalIcon />}
-            />
-            <NavigationLink
               to={ROUTES.ASSETS}
               title="Assets"
               icon={<DocumentTextIcon />}

@@ -1,6 +1,13 @@
-import { AdjustmentsHorizontalIcon, LockClosedIcon } from "@heroicons/react/24/solid";
+import {
+  AdjustmentsHorizontalIcon,
+  LockClosedIcon,
+  SignalIcon,
+} from "@heroicons/react/24/solid";
 import { useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { ROUTES } from "../../routes";
+import Constants from "../../services/Constants";
+import NavigationLink from "./NavigationLink";
 
 export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
   const location = useLocation();
@@ -38,13 +45,23 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
       ref={dropdownRef}
       className="tb-container active tb-transparent-menu tb-context-menu show absolute right-2 pt-1 top-12 w-[140px]"
     >
-      <NavLink className="tb-dropdown-item" to="/settings">
+      <NavLink className="tb-dropdown-item" to={ROUTES.SETTINGS}>
         <div className="flex items-center">
           <AdjustmentsHorizontalIcon className="h-5 w-5 mr-2" />
           <div>Settings</div>
         </div>
       </NavLink>
-      <NavLink className="tb-dropdown-item" to="/logout">
+
+      {!Constants.isDemoMode && (
+        <NavLink className="tb-dropdown-item" to={ROUTES.STATUS}>
+          <div className="flex items-center">
+            <SignalIcon className="h-5 w-5 mr-2" />
+            <div>Status</div>
+          </div>
+        </NavLink>
+      )}
+
+      <NavLink className="tb-dropdown-item" to={ROUTES.LOGOUT}>
         <div className="flex items-center">
           <LockClosedIcon className="h-5 w-5 mr-2" />
           <div>Logout</div>

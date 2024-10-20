@@ -18,6 +18,7 @@ import { AssetDto } from './dtos/asset.dto';
 import { Response } from 'express';
 import { ImageService } from './image.service';
 import { Public } from 'src/auth/auth.guard';
+import * as fs from "fs";
 
 @Controller('api/v3/assets')
 export class AssetsController {
@@ -59,12 +60,17 @@ export class AssetsController {
   async fetchAsset(@Param('id') id: number) {
     return await this.assetservice.fetchAsset(id);
   }
-
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './cache',
+        destination: (req, file, callback) => {
+          const uploadPath = join(__dirname, '..', '..', 'cache');
+          if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+          }
+          callback(null, uploadPath);
+        },
         filename: (_req, file, callback) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -74,7 +80,7 @@ export class AssetsController {
         },
       }),
       limits: {
-        fileSize: 20 * 1024 * 1024,
+        fileSize: 20 * 1024 * 1024, // 20MB file size limit
       },
     }),
   )
@@ -85,19 +91,20 @@ export class AssetsController {
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
-
+  
     console.log('Uploaded file:', file.originalname);
-    console.log('Uploaded file:', file.filename);
+    console.log('Uploaded file saved as:', file.filename);
     console.log('Title:', body.title);
     console.log('Description:', body.description);
-
+  
+    // Create Asset and AssetEntry
     const asset = await this.assetservice.createAsset(body);
     await this.assetservice.createAssetEntry(
       asset.id,
       file.originalname,
       `${file.filename}`,
     );
-
+  
     return {
       message: 'File uploaded successfully!',
       filename: file.filename,
