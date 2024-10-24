@@ -11,6 +11,7 @@ import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
+import { AnimatePresence } from "framer-motion";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
@@ -101,38 +102,42 @@ export const Boards: React.FC = () => {
 
   return (
     <>
-      {isCreating && (
-        <Dialog
-          title="Create Board"
-          onClose={() => setIsCreating(false)}
-          onSubmit={handleCreateBoard}
-          error={error}
-        >
-          <input
-            type="text"
-            placeholder="Board title"
-            className="tb-input mb-10"
-            ref={inputRef}
-          />
-        </Dialog>
-      )}
-      {editBoard && (
-        <Dialog
-          title="Update Board"
-          submitTitle="Update"
-          onClose={() => setEditBoard(null)}
-          onSubmit={handleUpdateBoard}
-          error={error}
-        >
-          <input
-            type="text"
-            placeholder="Board title"
-            className="tb-input mb-10"
-            defaultValue={editBoard?.title}
-            ref={editInputRef}
-          />
-        </Dialog>
-      )}
+      <AnimatePresence>
+        {isCreating && (
+          <Dialog
+            title="Create Board"
+            onClose={() => setIsCreating(false)}
+            onSubmit={handleCreateBoard}
+            error={error}
+          >
+            <input
+              type="text"
+              placeholder="Board title"
+              className="tb-input mb-10"
+              ref={inputRef}
+            />
+          </Dialog>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {editBoard && (
+          <Dialog
+            title="Update Board"
+            submitTitle="Update"
+            onClose={() => setEditBoard(null)}
+            onSubmit={handleUpdateBoard}
+            error={error}
+          >
+            <input
+              type="text"
+              placeholder="Board title"
+              className="tb-input mb-10"
+              defaultValue={editBoard?.title}
+              ref={editInputRef}
+            />
+          </Dialog>
+        )}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Boards" openDialog={openDialog} />
       <div className="flex flex-col">

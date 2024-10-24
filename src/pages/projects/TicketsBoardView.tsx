@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
+import { LoaderFunction, NavLink, useLoaderData, useLocation } from "react-router-dom";
 import Button from "../../components/Button";
 import ContextMenu from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
@@ -9,6 +10,7 @@ import BoardSection from "../../components/projects/tickets/BoardSection";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
 import TitleView from "../../components/TitleView";
 import { Toggle } from "../../components/Toggle";
+import { useSocket } from "../../hooks/useSocket";
 import { Board, BoardStructure } from "../../models/board-structure";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
@@ -18,12 +20,14 @@ import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-conf
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
-import { useSocket } from "../../hooks/useSocket";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
 
 const TicketsBoardView: React.FC = () => {
+  const location = useLocation();
+  const initialRender = useRef(true); // Track whether this is the initial render
+
   const [isCreating, setIsCreating] = useState(false);
   const [config, setConfig] = useState<TicketsContextMenuConfig>({
     top: 0,
@@ -57,6 +61,18 @@ const TicketsBoardView: React.FC = () => {
       listenOff("matches", "update");
     };
   }, []);
+
+  // re-render on url change (loader data change)
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    setProject(data.metadata.project);
+    setBoardStructure(data.boardStructure);
+    setClosedBoardIds(data.boardStructure.closed);
+    setHideDone(data.boardStructure.hideDone);
+  }, [data]);
 
   async function refresh() {
     await updateBoardStructure();
@@ -174,13 +190,15 @@ const TicketsBoardView: React.FC = () => {
 
   return (
     <>
-      {isCreating && (
-        <TicketCreationDialog
-          metadata={data.metadata}
-          onClose={onClose}
-          updateBoardView={refresh}
-        />
-      )}
+      <AnimatePresence>
+        {isCreating && (
+          <TicketCreationDialog
+            metadata={data.metadata}
+            onClose={onClose}
+            updateBoardView={refresh}
+          />
+        )}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="overflow-auto max-h-[calc(100vh-57px)]">
         <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
@@ -247,7 +265,6 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,
 }) => {
   const slug = params.projectSlug ?? "";
-
   const boardStructure = await boardService.getBoardStructure(slug);
   const metadata = await projectService.getMetadata(slug);
   return { boardStructure, metadata };

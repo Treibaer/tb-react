@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import Dialog from "../../components/common/Dialog";
+import Dialog from "../common/Dialog";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { PasswordService } from "../../services/PasswordService";
 
-export const PasswordCreationDialog: React.FC<{
+export const PasswordEnvironmentCreationDialog: React.FC<{
   onClose: () => void;
   editingEntry: PasswordEnvironment | null;
 }> = ({ onClose, editingEntry }) => {
@@ -77,4 +77,4 @@ export const PasswordCreationDialog: React.FC<{
   );
 };
 
-export default PasswordCreationDialog;
+export default PasswordEnvironmentCreationDialog;

@@ -1,5 +1,6 @@
 import useIsMobile from "../../hooks/useIsMobile";
 import Button from "../Button";
+import { motion } from "framer-motion";
 
 const Dialog: React.FC<{
   error?: string;
@@ -19,8 +20,11 @@ const Dialog: React.FC<{
   const isMobile = useIsMobile();
 
   return (
-    <div
+    <motion.div
       className="blurredBackground"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       onClick={() => {
         if (!isMobile) {
           onClose();
@@ -45,7 +49,7 @@ const Dialog: React.FC<{
           <Button title={submitTitle ?? "Create"} onClick={onSubmit} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

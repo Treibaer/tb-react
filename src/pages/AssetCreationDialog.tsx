@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Dialog from "../components/common/Dialog";
 import Button from "../components/Button";
-import Constants from "../services/Constants";
 import Client from "../services/Client";
 
 export const AssetCreationDialog: React.FC<{

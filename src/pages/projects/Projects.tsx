@@ -8,6 +8,7 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
+import { AnimatePresence } from "framer-motion";
 
 const projectService = ProjectService.shared;
 
@@ -33,7 +34,9 @@ export default function Projects() {
 
   return (
     <div>
-      {isCreating && <ProjectCreationDialog onClose={onClose} />}
+      <AnimatePresence>
+        {isCreating && <ProjectCreationDialog onClose={onClose} />}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Projects" openDialog={openDialog} />
       <div className="flex flex-wrap">

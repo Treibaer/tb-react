@@ -8,6 +8,7 @@ import { ROUTES } from "../routes";
 import Client from "../services/Client";
 import Constants from "../services/Constants";
 import AssetCreationDialog from "./AssetCreationDialog";
+import { AnimatePresence } from "framer-motion";
 
 const Assets: React.FC = () => {
   const breadcrumbs: Breadcrumb[] = [
@@ -36,7 +37,9 @@ const Assets: React.FC = () => {
 
   return (
     <>
-      {isCreating && <AssetCreationDialog onClose={onClose} />}
+      <AnimatePresence>
+        {isCreating && <AssetCreationDialog onClose={onClose} />}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Assets" openDialog={openDialog} />
       <div className="flex flex-wrap gap-2 m-2">

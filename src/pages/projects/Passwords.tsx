@@ -2,12 +2,13 @@ import { useState } from "react";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
 import HeaderView from "../../components/HeaderView";
-import PasswordCreationDialog from "../../components/passwords/PasswordCreationDialog";
+import PasswordEnvironmentCreationDialog from "../../components/passwords/PasswordEnvironmentCreationDialog";
 import TitleView from "../../components/TitleView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { ROUTES } from "../../routes";
 import { PasswordService } from "../../services/PasswordService";
+import { AnimatePresence } from "framer-motion";
 
 const passwordService = PasswordService.shared;
 
@@ -32,6 +33,7 @@ const Passwords: React.FC = () => {
     setIsCreating(false);
     // refresh environments always
     setEnvironments(await passwordService.getAllEnvironments());
+    setEditingEntry(null);
   }
 
   function openEditDialog(environment: PasswordEnvironment) {
@@ -41,9 +43,14 @@ const Passwords: React.FC = () => {
 
   return (
     <div>
-      {isCreating && (
-        <PasswordCreationDialog editingEntry={editingEntry} onClose={onClose} />
-      )}
+      <AnimatePresence>
+        {isCreating && (
+          <PasswordEnvironmentCreationDialog
+            editingEntry={editingEntry}
+            onClose={onClose}
+          />
+        )}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Environments" openDialog={openDialog} />
       <div className="flex flex-wrap">

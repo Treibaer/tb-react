@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { ROUTES } from "../../routes";
 import Constants from "../../services/Constants";
-import NavigationLink from "./NavigationLink";
+import { motion } from "framer-motion";
 
 export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
   const location = useLocation();
@@ -41,7 +41,11 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
   });
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15 }}
+      exit={{ opacity: 0 }}
       ref={dropdownRef}
       className="tb-container active tb-transparent-menu tb-context-menu show absolute right-2 pt-1 top-12 w-[140px]"
     >
@@ -67,7 +71,7 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
           <div>Logout</div>
         </div>
       </NavLink>
-    </div>
+    </motion.div>
   );
 };
 

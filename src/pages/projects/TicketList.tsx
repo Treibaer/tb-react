@@ -13,6 +13,7 @@ import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-conf
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import TicketService from "../../services/TicketService";
+import { AnimatePresence } from "framer-motion";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
@@ -108,11 +109,15 @@ const TicketList: React.FC = () => {
           onClose={closeContextMenu}
         />
       )}
-      {isCreating && (
-        <TicketCreationDialog metadata={data.metadata} onClose={onClose}
-          updateBoardView={refresh}
-        />
-      )}
+      <AnimatePresence>
+        {isCreating && (
+          <TicketCreationDialog
+            metadata={data.metadata}
+            onClose={onClose}
+            updateBoardView={refresh}
+          />
+        )}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Tickets" openDialog={openDialog} />
       <div>

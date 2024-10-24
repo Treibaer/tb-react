@@ -17,6 +17,7 @@ import { PasswordEnvironment } from "../../models/passwords/password-environment
 import { ROUTES } from "../../routes";
 import { PasswordService } from "../../services/PasswordService";
 import { useToast } from "../../store/ToastContext";
+import { AnimatePresence } from "framer-motion";
 
 const passwordService = PasswordService.shared;
 
@@ -89,13 +90,15 @@ const PasswordEntries: React.FC = () => {
 
   return (
     <div>
-      {isCreating && (
-        <PasswordEntryCreationDialog
-          editingEntry={editingEntry}
-          environment={data.environment}
-          onClose={onClose}
-        />
-      )}
+      <AnimatePresence>
+        {isCreating && (
+          <PasswordEntryCreationDialog
+            editingEntry={editingEntry}
+            environment={data.environment}
+            onClose={onClose}
+          />
+        )}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
         <TitleView title={data.environment.title} openDialog={openDialog} />

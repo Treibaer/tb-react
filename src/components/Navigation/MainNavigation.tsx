@@ -16,6 +16,7 @@ import { ROUTES } from "../../routes";
 import Constants from "../../services/Constants";
 import NavigationLink from "./NavigationLink";
 import UserMenu from "./UserMenu";
+import { AnimatePresence } from "framer-motion";
 
 export default function MainNavigation() {
   const avatar = useSelector((state: any) => state.ui.avatar);
@@ -42,7 +43,9 @@ export default function MainNavigation() {
     <header
       className={`w-full h-screen ${backgroundColor} px-2 pt-2 border-x border-[#2c2d3c] relative`}
     >
-      {showSettings && <UserMenu onClose={toggleSettings} />}
+      <AnimatePresence>
+        {showSettings && <UserMenu onClose={toggleSettings} />}
+      </AnimatePresence>
       <div className="flex justify-between mb-1 items-center">
         <div className="select-none">TB-REACT</div>
         <img

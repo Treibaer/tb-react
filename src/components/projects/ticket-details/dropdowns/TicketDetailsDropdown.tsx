@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import useIsMobile from "../../../../hooks/useIsMobile";
+import { motion } from "framer-motion";
 
 export const TicketDetailsDropdown: React.FC<{
   children: React.ReactNode;
@@ -40,13 +41,16 @@ export const TicketDetailsDropdown: React.FC<{
   });
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15 }}
       ref={dropdownRef}
       className={`ticket-details-dropdown tb-transparent-menu py-1 max-w-[236px]`}
       style={style2}
     >
       {children}
-    </div>
+    </motion.div>
   );
 };
 

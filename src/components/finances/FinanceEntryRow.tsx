@@ -7,7 +7,7 @@ const FinanceEntryRow: React.FC<{
 }> = ({ entry, onClick }) => {
   return (
     <div
-      className="tb-row w-full flex gap-2 items-center  cursor-default select-none px-4"
+      className="tb-row w-full flex gap-2 items-center cursor-pointer select-none px-4"
       onClick={onClick}
     >
       <div className="w-8 h-8 bg-lightBlue rounded-full text-center p-1">

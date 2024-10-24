@@ -14,6 +14,7 @@ import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
 import TitleView from "../../components/TitleView";
+import { AnimatePresence } from "framer-motion";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
@@ -118,14 +119,16 @@ export const BoardDetails: React.FC = () => {
 
   return (
     <>
-      {isCreating && (
-        <TicketCreationDialog
-          metadata={data.metadata}
-          initialBoardId={board.id}
-          onClose={onClose}
-          updateBoardView={updateBoard}
-        />
-      )}
+      <AnimatePresence>
+        {isCreating && (
+          <TicketCreationDialog
+            metadata={data.metadata}
+            initialBoardId={board.id}
+            onClose={onClose}
+            updateBoardView={updateBoard}
+          />
+        )}
+      </AnimatePresence>
       <DndProvider backend={HTML5Backend}>
         {config.show && (
           <ContextMenu

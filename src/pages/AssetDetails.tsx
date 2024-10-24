@@ -1,4 +1,6 @@
-import { useState } from "react";
+import {
+  ArrowDownTrayIcon
+} from "@heroicons/react/24/solid";
 import {
   LoaderFunction,
   NavLink,
@@ -11,12 +13,6 @@ import { Breadcrumb } from "../models/breadcrumb";
 import { ROUTES } from "../routes";
 import Client from "../services/Client";
 import Constants from "../services/Constants";
-import AssetCreationDialog from "./AssetCreationDialog";
-import {
-  ArrowDownTrayIcon,
-  FaceSmileIcon,
-  SpeakerWaveIcon,
-} from "@heroicons/react/24/solid";
 
 const AssetDetailView: React.FC = () => {
   const { assetId } = useParams<{ assetId: string }>();

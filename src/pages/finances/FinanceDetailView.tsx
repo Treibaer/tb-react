@@ -10,6 +10,7 @@ import { AccountEntry } from "../../models/finances/account-entry";
 import { AcccountTag } from "../../models/finances/account-tag";
 import { ROUTES } from "../../routes";
 import { FinanceService } from "../../services/FinanceService";
+import { AnimatePresence } from "framer-motion";
 
 const FinanceDetailView = () => {
   const breadcrumbs: Breadcrumb[] = [
@@ -64,13 +65,16 @@ const FinanceDetailView = () => {
 
   return (
     <div>
-      {isCreating && (
-        <FinanceDetailDialogView
-          editingEntry={editingEntry}
-          tags={data.tags}
-          onClose={onClose}
-        />
-      )}
+      <AnimatePresence>
+        {isCreating && (
+          <FinanceDetailDialogView
+            editingEntry={editingEntry}
+            tags={data.tags}
+            onClose={onClose}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
       {editBalance && (
         <FinanceDetailEditBalanceDialogView
           value={balanceInCents}
@@ -80,6 +84,7 @@ const FinanceDetailView = () => {
           }}
         />
       )}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="overflow-auto max-h-[calc(100vh-57px)]">
         <div className="flex flex-col sm:flex-row items-center justify-between me-2">
