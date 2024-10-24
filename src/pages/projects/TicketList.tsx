@@ -40,12 +40,16 @@ const TicketList: React.FC = () => {
 
   async function onClose(shouldUpdate: boolean) {
     if (shouldUpdate) {
-      const tickets = await ticketService.getAll(project.slug);
-      const updatedProject = await projectService.get(project.slug);
-      setTickets(tickets);
-      setProject(updatedProject);
+      await refresh();
     }
     setIsCreating(false);
+  }
+
+  async function refresh() {
+    const tickets = await ticketService.getAll(project.slug);
+    const updatedProject = await projectService.get(project.slug);
+    setTickets(tickets);
+    setProject(updatedProject);
   }
 
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
@@ -105,7 +109,9 @@ const TicketList: React.FC = () => {
         />
       )}
       {isCreating && (
-        <TicketCreationDialog metadata={data.metadata} onClose={onClose} />
+        <TicketCreationDialog metadata={data.metadata} onClose={onClose}
+          updateBoardView={refresh}
+        />
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Tickets" openDialog={openDialog} />

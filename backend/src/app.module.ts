@@ -85,7 +85,7 @@ import { MulterModule } from '@nestjs/platform-express';
           AssetEntry,
         ],
         autoLoadModels: true,
-        logging: false,
+        logging: true,
       }),
     }),
     UsersModule,
@@ -102,9 +102,9 @@ import { MulterModule } from '@nestjs/platform-express';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    return;
     Asset.sync({ alter: true });
     AssetEntry.sync({ alter: true });
-    return;
     User.sync({ alter: true });
     AccessToken.sync({ alter: true });
     Status.sync({ alter: true });

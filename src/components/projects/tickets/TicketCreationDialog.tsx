@@ -22,7 +22,8 @@ export const TicketCreationDialog: React.FC<{
   metadata: ProjectMeta;
   initialBoardId?: number;
   onClose: (update: boolean) => void;
-}> = ({ metadata, onClose, initialBoardId }) => {
+  updateBoardView: () => void;
+}> = ({ metadata, onClose, initialBoardId, updateBoardView }) => {
   const [error, setError] = useState<string | undefined>();
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -53,15 +54,20 @@ export const TicketCreationDialog: React.FC<{
       return;
     }
     const description = descriptionRef.current?.value ?? "";
-    const ticket = await ticketService.create(project.slug, {
-      title,
-      description,
-      assigneeId: selectedAssignee?.id,
-      status: selectedStatus,
-      type: selectedType,
-      boardId: selectedBoard?.id,
-    });
-    handleCreateTicket(ticket);
+    try {
+      const ticket = await ticketService.create(project.slug, {
+        title,
+        description,
+        assigneeId: selectedAssignee?.id,
+        status: selectedStatus,
+        type: selectedType,
+        boardId: selectedBoard?.id,
+      });
+      handleCreateTicket(ticket);
+    } catch (err) {
+      setError(`Error creating ticket: ${err}`);
+      return;
+    }
 
     if (!stayOpen) {
       onClose(true);
@@ -71,10 +77,11 @@ export const TicketCreationDialog: React.FC<{
       setSelectedAssignee(null);
       setSelectedStatus("open");
       setSelectedType("");
-      setSelectedBoard(null);
+      // setSelectedBoard(null);
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
+      updateBoardView();
     }
   }
 

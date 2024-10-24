@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { TicketDto } from './dto/ticket.dto';
 import { Board } from './entities/board';
@@ -10,16 +10,41 @@ import { Project } from './entities/project';
 import { PageDto } from './dto/page.dto';
 import { SmallBoardDto } from './dto/small-board.dto';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class TransformService {
-  constructor(private readonly userService: UserService) {}
+  private userMap: Map<number, User> = new Map();
+  private boardMap: Map<number, Board> = new Map();
+  private projectMap: Map<number, Project> = new Map();
+
+  constructor(private readonly userService: UserService) {
+    console.log('initializting transfor');
+
+    this.fillCaches();
+  }
+
+  async fillCaches() {
+    const users = await User.findAll();
+    this.userMap = new Map(users.map((user) => [user.id, user]));
+
+    const boards = await Board.findAll();
+    this.boardMap = new Map(boards.map((board) => [board.id, board]));
+
+    const projects = await Project.findAll();
+    this.projectMap = new Map(projects.map((project) => [project.id, project]));
+  }
 
   async ticket(projectSlug: String, ticket: Ticket): Promise<TicketDto> {
-    // todo: improve this
-    const creator = await User.findByPk(ticket.creator_id);
-    const assignee = await User.findByPk(ticket.assigned_id ?? -1);
+    const creator =
+      this.userMap.get(ticket.creator_id) ??
+      (await User.findByPk(ticket.creator_id));
+    const assignee =
+      ticket.assigned_id === -1
+        ? null
+        : (this.userMap.get(ticket.assigned_id) ??
+          (await User.findByPk(ticket.assigned_id)));
     const board = ticket.board_id
-      ? await Board.findByPk(ticket.board_id)
+      ? (this.boardMap.get(ticket.board_id) ??
+        (await Board.findByPk(ticket.board_id)))
       : null;
 
     return {

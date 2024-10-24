@@ -123,6 +123,7 @@ export const BoardDetails: React.FC = () => {
           metadata={data.metadata}
           initialBoardId={board.id}
           onClose={onClose}
+          updateBoardView={updateBoard}
         />
       )}
       <DndProvider backend={HTML5Backend}>

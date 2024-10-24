@@ -175,7 +175,11 @@ const TicketsBoardView: React.FC = () => {
   return (
     <>
       {isCreating && (
-        <TicketCreationDialog metadata={data.metadata} onClose={onClose} />
+        <TicketCreationDialog
+          metadata={data.metadata}
+          onClose={onClose}
+          updateBoardView={refresh}
+        />
       )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="overflow-auto max-h-[calc(100vh-57px)]">

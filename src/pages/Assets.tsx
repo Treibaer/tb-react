@@ -59,7 +59,7 @@ const Assets: React.FC = () => {
                       asset.assetEntries[0].id
                     }
                     alt="asset"
-                    className="w-full h-32 object-cover rounded-lg bg-lightBlue"
+                    className="w-full h-32 object-contain rounded-lg bg-lightBlue"
                     style={{
                       imageRendering: "pixelated",
                     }}
