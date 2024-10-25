@@ -85,7 +85,7 @@ import { MulterModule } from '@nestjs/platform-express';
           AssetEntry,
         ],
         autoLoadModels: true,
-        logging: true,
+        logging: false,
       }),
     }),
     UsersModule,

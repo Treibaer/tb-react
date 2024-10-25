@@ -86,10 +86,9 @@ export default class TicketService {
    * @param ticketSlug - The slug identifier of the ticket.
    * @returns A promise that resolves to the deleted ticket.
    */
-  async delete(_: string, _2: string) {
-    // const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
-    throw new Error("Method not implemented.");
-    // return this.client.delete(url);
+  async remove(projectSlug: string, ticketSlug: string) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}`;
+    return this.client.delete(url);
   }
 
   private createTicketObject(data: {

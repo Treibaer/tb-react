@@ -3,6 +3,7 @@ import {
   ChevronRightIcon,
   EllipsisHorizontalCircleIcon,
   TagIcon,
+  TrashIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
@@ -11,13 +12,15 @@ import { ProjectMeta } from "../../models/project-meta";
 import { TicketStatus } from "../../models/ticket-status";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import TicketService from "../../services/TicketService";
+import { useToast } from "../../store/ToastContext";
 import AssigneeDropdown from "../projects/ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../projects/ticket-details/dropdowns/BoardDropdown";
 import DropdownElement from "../projects/ticket-details/dropdowns/DropdownElement";
 import PositionDropdown from "../projects/ticket-details/dropdowns/PositionDropdown";
 import StatusDropdown from "../projects/ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../projects/ticket-details/dropdowns/TypeDropdown";
-import { useToast } from "../../store/ToastContext";
+import BlurredBackground from "../common/BlurredBackground";
+import Confirmation from "../common/Confirmation";
 
 const ticketService = TicketService.shared;
 
@@ -58,7 +61,12 @@ export const ContextMenu: React.FC<{
       await ticketService.update(project.slug, ticket.slug, {
         assigneeId,
       });
-      showToast(`${ticket.slug} updated`, `Assigned to ${metadata.users.find((u) => u.id === assigneeId)?.firstName}`);
+      showToast(
+        `${ticket.slug} updated`,
+        `Assigned to ${
+          metadata.users.find((u) => u.id === assigneeId)?.firstName
+        }`
+      );
     }
     onClose(assigneeId !== ticket.assignee?.id);
   }
@@ -78,7 +86,12 @@ export const ContextMenu: React.FC<{
     }
     if (boardId !== ticket.board?.id) {
       await ticketService.update(project.slug, ticket.slug, { boardId });
-      showToast(`${ticket.slug} updated`, `Moved to ${metadata.boards.find((b) => b.id === boardId)?.title ?? "Backlog"}`);
+      showToast(
+        `${ticket.slug} updated`,
+        `Moved to ${
+          metadata.boards.find((b) => b.id === boardId)?.title ?? "Backlog"
+        }`
+      );
     }
     onClose(boardId !== ticket.board?.id);
   }
@@ -106,8 +119,27 @@ export const ContextMenu: React.FC<{
     onClose(position !== ticket.position);
   }
 
+  const [removingTicketSlug, setRemovingTicketSlug] = useState<string | null>(
+    null
+  );
+
+  async function removeTicket() {
+    if (removingTicketSlug) {
+      await ticketService.remove(project.slug, removingTicketSlug);
+      onClose(true);
+    }
+  }
+
   return (
     <div ref={dropdownRef}>
+    {removingTicketSlug && (
+      <BlurredBackground onClose={() => setRemovingTicketSlug(null)}>
+        <Confirmation
+          onCancel={() => setRemovingTicketSlug(null)}
+          onConfirm={removeTicket}
+        />
+      </BlurredBackground>
+    )}
       {dropdown === DropdownType.STATUS && (
         <StatusDropdown
           selectedStatus={ticket.status}
@@ -224,6 +256,17 @@ export const ContextMenu: React.FC<{
             </div>
           </DropdownElement>
         )}
+        <DropdownElement
+          isSelected={false}
+          onClick={() => setRemovingTicketSlug(ticket.slug)}
+        >
+          <div className="flex gap-1">
+            <div className="">
+              <TrashIcon className="h-5 w-5 text-gray-400" />
+            </div>
+            <div>Delete</div>
+          </div>
+        </DropdownElement>
       </div>
     </div>
   );

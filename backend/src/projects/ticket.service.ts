@@ -199,6 +199,19 @@ export class TicketService {
     return this.transformer.ticket(projectSlug, ticket);
   }
 
+  async remove(projectSlug: string, ticketSlug: string): Promise<void> {
+    const project = await this.findProjectBySlug(projectSlug);
+    const ticket = await Ticket.findOne({
+      where: { project_id: project.id, ticketId: ticketSlug.split('-')[1] },
+    });
+    if (!ticket) {
+      throw new Error('Ticket not found');
+    }
+    // destroy all history tickets
+    await TicketHistory.destroy({ where: { ticket_id: ticket.id } });
+    await Ticket.destroy({ where: { id: ticket.id } });
+  }
+
   async fetchHistory(ticketSlug: string): Promise<TicketHistory[]> {
     const ticket = await this.getBySlug(ticketSlug);
     return await TicketHistory.findAll({

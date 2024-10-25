@@ -46,6 +46,14 @@ export class TicketsController {
     return this.ticketService.update(slug, ticketSlug, data);
   }
 
+  @Delete(':slug/tickets/:ticketSlug')
+  async removeTicket(
+    @Param('slug') slug: string,
+    @Param('ticketSlug') ticketSlug: string,
+  ) {
+    await this.ticketService.remove(slug, ticketSlug);
+  }
+
   @Get(':slug/tickets/:ticketSlug/history')
   async getTicketHistory(@Param('ticketSlug') ticketSlug: string) {
     return this.ticketService.getTransformedHistory(ticketSlug);
