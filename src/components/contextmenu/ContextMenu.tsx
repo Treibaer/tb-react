@@ -21,6 +21,7 @@ import StatusDropdown from "../projects/ticket-details/dropdowns/StatusDropdown"
 import TypeDropdown from "../projects/ticket-details/dropdowns/TypeDropdown";
 import BlurredBackground from "../common/BlurredBackground";
 import Confirmation from "../common/Confirmation";
+import { AnimatePresence } from "framer-motion";
 
 const ticketService = TicketService.shared;
 
@@ -132,14 +133,14 @@ export const ContextMenu: React.FC<{
 
   return (
     <div ref={dropdownRef}>
-    {removingTicketSlug && (
-      <BlurredBackground onClose={() => setRemovingTicketSlug(null)}>
-        <Confirmation
-          onCancel={() => setRemovingTicketSlug(null)}
-          onConfirm={removeTicket}
-        />
-      </BlurredBackground>
-    )}
+      <AnimatePresence>
+        {removingTicketSlug && (
+          <Confirmation
+            onCancel={() => setRemovingTicketSlug(null)}
+            onConfirm={removeTicket}
+          />
+        )}
+      </AnimatePresence>
       {dropdown === DropdownType.STATUS && (
         <StatusDropdown
           selectedStatus={ticket.status}
@@ -258,6 +259,7 @@ export const ContextMenu: React.FC<{
         )}
         <DropdownElement
           isSelected={false}
+          onMouseOver={() => setDropdown(DropdownType.NONE)}
           onClick={() => setRemovingTicketSlug(ticket.slug)}
         >
           <div className="flex gap-1">

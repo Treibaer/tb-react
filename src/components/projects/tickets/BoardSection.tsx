@@ -8,6 +8,7 @@ import { ROUTES } from "../../../routes";
 import TicketService from "../../../services/TicketService";
 import { ButtonIcon } from "../../ButtonIcon";
 import TicketRowDnDWrapper from "./TicketRowDnDWrapper";
+import TicketDetailView from "../../../pages/projects/TicketDetailView";
 
 export const BoardSection: React.FC<{
   board: Board;

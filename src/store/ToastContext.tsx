@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 type Toast = {
   id: string;
@@ -50,14 +51,16 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     <ToastContext.Provider value={{ showToast, showErrorToast }}>
       {children}
       <div className="fixed top-5 right-5 flex flex-col gap-3 z-50 tb-toast-2-container-2 tb-container w-72">
-        {toasts.map((toast) => (
-          <Toast
-            key={toast.id}
-            message={toast.message}
-            info={toast.info}
-            id={toast.id}
-          />
-        ))}
+        <AnimatePresence>
+          {toasts.map((toast) => (
+            <Toast
+              key={toast.id}
+              message={toast.message}
+              info={toast.info}
+              id={toast.id}
+            />
+          ))}
+        </AnimatePresence>
       </div>
     </ToastContext.Provider>
   );
@@ -65,11 +68,17 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
 
 const Toast: React.FC<Toast> = ({ message, info }) => {
   return (
-    <div className="rounded-lg shadow-lg tb-toast-2">
+    <motion.div
+      initial={{ opacity: 1, x: 320 }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      exit={{ opacity: 0, x: 320, y: -100 }}
+      transition={{ ease: "easeOut", duration: 0 }}
+      className="rounded-lg shadow-lg tb-toast-2"
+    >
       <div>
         <strong className="text-base font-semibold">{message}</strong>
       </div>
       {info && <p className="text-sm text-greyishBlue">{info}</p>}
-    </div>
+    </motion.div>
   );
 };

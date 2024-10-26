@@ -25,8 +25,7 @@ const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
 
 const TicketsBoardView: React.FC = () => {
-  const location = useLocation();
-  const initialRender = useRef(true); // Track whether this is the initial render
+  const initialRender = useRef(true);
 
   const [isCreating, setIsCreating] = useState(false);
   const [config, setConfig] = useState<TicketsContextMenuConfig>({
@@ -160,12 +159,12 @@ const TicketsBoardView: React.FC = () => {
   }
 
   async function onClose(shouldUpdate: boolean) {
+    setIsCreating(false);
     if (shouldUpdate) {
       await refresh();
       const updatedProject = await projectService.get(project.slug);
       setProject(updatedProject);
     }
-    setIsCreating(false);
   }
 
   const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {

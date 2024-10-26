@@ -222,7 +222,9 @@ export class TicketService {
 
   async getTransformedHistory(ticketSlug: string): Promise<TicketHistoryDto[]> {
     const historyList = await this.fetchHistory(ticketSlug);
-    return await Promise.all(historyList.map((history) => this.ticketHistory(history)));
+    return await Promise.all(
+      historyList.map((history) => this.ticketHistory(history)),
+    );
   }
 
   async fetchComments(ticketSlug: string): Promise<TicketComment[]> {
@@ -237,7 +239,9 @@ export class TicketService {
     ticketSlug: string,
   ): Promise<TicketCommentDto[]> {
     const comments = await this.fetchComments(ticketSlug);
-    return await Promise.all(comments.map(this.ticketComment));
+    return await Promise.all(
+      comments.map(async (comment) => this.ticketComment(comment)),
+    );
   }
 
   async createComment(

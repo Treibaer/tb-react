@@ -1,8 +1,10 @@
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import { useRef, useState } from "react";
-import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { LoaderFunction, useBlocker, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
+import BlurredBackground from "../../components/common/BlurredBackground";
+import Confirmation from "../../components/common/Confirmation";
 import HeaderView from "../../components/HeaderView";
 import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
 import TicketCommentArea from "../../components/projects/ticket-details/TicketCommentArea";
@@ -13,6 +15,8 @@ import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import TicketService from "../../services/TicketService";
+import { useToast } from "../../store/ToastContext";
+import { AnimatePresence } from "framer-motion";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
@@ -31,6 +35,8 @@ export default function TicketDetailView() {
   const currentDescription = useRef(ticket.description);
   const [isEditing, setIsEditing] = useState(false);
 
+  const { showToast } = useToast();
+
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
     { title: "Projects", link: ROUTES.PROJECTS },
@@ -38,6 +44,28 @@ export default function TicketDetailView() {
     { title: "Tickets", link: ROUTES.TICKETS_BOARD_VIEW(project.slug) },
     { title: ticket.slug, link: "" },
   ];
+
+  let blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      ticket.description !== currentDescription.current &&
+      currentLocation.pathname !== nextLocation.pathname
+  );
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: any) => {
+      console.log("beforeunload");
+      console.log(ticket.description, currentDescription.current);
+      if (ticket.description !== currentDescription.current) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [ticket]);
 
   async function toggleEdit() {
     if (isOldVersion) {
@@ -52,6 +80,7 @@ export default function TicketDetailView() {
         { title, description }
       );
       setTicket(updatedTicket);
+      showToast(`${ticket.slug}`, "Ticket updated");
     }
     setIsEditing((prev) => !prev);
   }
@@ -62,6 +91,16 @@ export default function TicketDetailView() {
 
   return (
     <>
+      <AnimatePresence>
+        {blocker.state === "blocked" ? (
+          <Confirmation
+            title="Unsaved changes"
+            message="Are you sure you want to leave?"
+            onConfirm={blocker.proceed}
+            onCancel={blocker.reset}
+          />
+        ) : null}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row">
         <div className="w-full sm:w-[calc(100%-240px)] sm:h-[calc(100vh-56px)] px-2 flex flex-col">

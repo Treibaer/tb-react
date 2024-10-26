@@ -9,6 +9,7 @@ import Button from "../../Button";
 import Confirmation from "../../common/Confirmation";
 import TicketAssigneeField from "./TicketAssigneeField";
 import BlurredBackground from "../../common/BlurredBackground";
+import { AnimatePresence } from "framer-motion";
 
 export const TicketCommentArea: React.FC<{
   project: Project;
@@ -55,14 +56,14 @@ export const TicketCommentArea: React.FC<{
 
   return (
     <div className="border-t border-t-lightBlue mt-1">
-      {removeCommentId && (
-        <BlurredBackground onClose={() => setRemoveCommentId(null)}>
+      <AnimatePresence>
+        {removeCommentId && (
           <Confirmation
             onCancel={() => setRemoveCommentId(null)}
             onConfirm={removeComment}
           />
-        </BlurredBackground>
-      )}
+        )}
+      </AnimatePresence>
       {comments.map((comment) => (
         <div
           key={comment.id}
