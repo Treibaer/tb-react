@@ -23,4 +23,5 @@ export class TicketDto {
   assignee: UserDto | null;
   createdAt: number;
   updatedAt: number;
+  closedAt: number | null;
 }

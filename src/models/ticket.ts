@@ -16,4 +16,5 @@ export interface Ticket {
   assignee: User | null;
   createdAt: number;
   updatedAt: number;
+  closedAt: number | null;
 }

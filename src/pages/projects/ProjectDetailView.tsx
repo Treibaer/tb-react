@@ -6,14 +6,32 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { ProjectDashboardData } from "../../models/projects/project-dashboard-data";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
+import ProjectChart from "./ProjectChart";
+import ClosedTicketsChart from "./ProjectChart";
 
 export const ProjectDetailView: React.FC = () => {
-  const { project, tickets } = useLoaderData() as ProjectDashboardData;
+  const { project, tickets, closedTicketsLast30Days, openedTicketsLast30Days } =
+    useLoaderData() as ProjectDashboardData;
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
     { title: "Projects", link: ROUTES.PROJECTS },
     { title: project.title, link: "" },
   ];
+  const chartValues = tickets.map((ticket) => ticket.id);
+
+  let tickets2: { id: number; closedDate: Date }[] = [];
+  let openedTickets: { id: number; createdAt: Date }[] = [];
+
+  tickets2 = closedTicketsLast30Days.map((ticket) => ({
+    id: ticket.id,
+    closedDate: new Date((ticket.closedAt ?? 0) * 1000),
+  }));
+
+  openedTickets = openedTicketsLast30Days.map((ticket) => ({
+    id: ticket.id,
+    createdAt: new Date((ticket.createdAt ?? 0) * 1000),
+  }));
+
   return (
     <>
       <HeaderView breadcrumbs={breadcrumbs} />
@@ -34,7 +52,13 @@ export const ProjectDetailView: React.FC = () => {
       <div className="project-details-wrapper">
         <div className="text-4xl m-2">{project.title}</div>
         <div className="m-2">{project.description}</div>
-      </div>{" "}
+      </div>
+
+      <ClosedTicketsChart
+        closedTickets={tickets2}
+        openTickets={openedTickets}
+      />
+
       <div className="flex items-center justify-between px-4 h-11 bg-mediumBlue border-b border-b-darkBlue">
         My Tickets
       </div>

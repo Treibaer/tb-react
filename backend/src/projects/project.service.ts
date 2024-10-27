@@ -10,6 +10,7 @@ import { Ticket } from './entities/ticket';
 import { ticketStates } from './models/ticket-states';
 import { ticketTypes } from './models/ticket-types';
 import { TransformService } from './transform.service';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class ProjectService {
@@ -117,9 +118,46 @@ export class ProjectService {
         this.transformer.ticket(projectSlug, ticket),
       ),
     );
+
+    const dateBefore30Days = new Date(
+      new Date().getTime() / 1000 - 30 * 24 * 60 * 60 * 1000,
+    );
+    const closedTicketsLast30Days = await Ticket.findAll({
+      where: {
+        project_id: project.id,
+        state: 'done',
+        closedAt: {
+          [Op.gt]: dateBefore30Days,
+        },
+      },
+    });
+
+    const closedTicketsDtos = await Promise.all(
+      closedTicketsLast30Days.map(async (ticket: Ticket) =>
+        this.transformer.ticket(projectSlug, ticket),
+      ),
+    );
+
+    const openedTicketsLast30Days = await Ticket.findAll({
+      where: {
+        project_id: project.id,
+        createdAt: {
+          [Op.gt]: dateBefore30Days,
+        },
+      },
+    });
+
+    const openedTicketsDtos = await Promise.all(
+      openedTicketsLast30Days.map(async (ticket: Ticket) =>
+        this.transformer.ticket(projectSlug, ticket),
+      ),
+    );
+
     return {
       tickets: ticketDtos,
       project: project,
+      closedTicketsLast30Days: closedTicketsDtos,
+      openedTicketsLast30Days: openedTicketsDtos,
     };
   }
 

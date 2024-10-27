@@ -66,6 +66,7 @@ export class TransformService {
       assignee: assignee ? this.userService.transform(assignee) : null,
       createdAt: ticket.createdAt,
       updatedAt: ticket.changedAt,
+      closedAt: ticket.closedAt,
     };
   }
 
