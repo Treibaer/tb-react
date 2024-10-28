@@ -23,6 +23,7 @@ export class AssetService {
   async fetchAssets() {
     return await Asset.findAll({
       where: { creator_id: this.userService.user.id },
+      order: [['createdAt', 'DESC']],
       include: [
         {
           model: AssetEntry,

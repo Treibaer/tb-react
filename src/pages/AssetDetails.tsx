@@ -28,7 +28,6 @@ const AssetDetailView: React.FC = () => {
     return (
       <a
         href={`${Constants.backendUrl}/api/v3/assets/image/${entryId}?download=true`}
-        target="_blank"
         className="hover:text-lightBlue"
         rel="noreferrer"
       >

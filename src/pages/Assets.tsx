@@ -1,5 +1,8 @@
+import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { NavLink, useLoaderData } from "react-router-dom";
+import { ButtonIcon } from "../components/ButtonIcon";
 import HeaderView from "../components/HeaderView";
 import TitleView from "../components/TitleView";
 import { Asset } from "../models/asset";
@@ -8,7 +11,6 @@ import { ROUTES } from "../routes";
 import Client from "../services/Client";
 import Constants from "../services/Constants";
 import AssetCreationDialog from "./AssetCreationDialog";
-import { AnimatePresence } from "framer-motion";
 
 const Assets: React.FC = () => {
   const breadcrumbs: Breadcrumb[] = [
@@ -48,13 +50,14 @@ const Assets: React.FC = () => {
           .map((asset: any) => (
             <div
               key={asset.id}
-              className="bg-mediumBlue hover:bg-mediumBlue3 shadow-lg rounded-lg w-64 h-72 flex flex-col gap-2"
+              className="bg-mediumBlue relative hover:bg-mediumBlue3 shadow-lg rounded-lg w-60 h-52 flex flex-col gap-2"
             >
               <NavLink
                 to={ROUTES.ASSET_DETAILS(asset.id)}
                 className="flex flex-col"
               >
-                <div className="bg-mediumBlue3 rounded-t-lg p-2">
+                <div className="rounded-t-lg p-2">
+                  <h1 className="text-lg font-bold h-8 mb-1">{asset.title}</h1>
                   <img
                     src={
                       Constants.backendUrl +
@@ -69,33 +72,33 @@ const Assets: React.FC = () => {
                   />
                 </div>
                 <div className="p-1">
-                  <h1 className="text-xl font-bold h-8">{asset.title}</h1>
-                  <p className="text-gray-500 overflow-hidden text-ellipsis h-8">
+                  <p className="text-gray-500 overflow-hidden text-ellipsis h-6">
                     {asset.description}
                   </p>
-                  <div className="h-8">
-                    Created at{" "}
-                    {new Date(asset.createdAt * 1000).toLocaleDateString()}
-                  </div>
                   <div></div>
                 </div>
               </NavLink>
 
+              <div className="absolute select-none top-[138px] right-3 text-sm p-1 rounded-lg bg-[rgb(50,50,50)]">
+                {new Date(asset.createdAt * 1000).toLocaleDateString()}
+              </div>
+
               {asset.assetEntries.length > 0 && (
                 <>
                   <a
+                    className="absolute top-1 right-1 bg-mediumBlue rounded-lg"
                     href={
                       Constants.backendUrl +
                       "/api/v3/assets/image/" +
                       asset.assetEntries[0].id +
                       "?download=true"
                     }
-                    target="_blank"
                     rel="noreferrer"
+                    title="Download"
                   >
-                    <button className="bg-lightBlue text-white px-2 py-1 rounded-lg">
-                      Download
-                    </button>
+                    <ButtonIcon>
+                      <ArrowDownTrayIcon className="w-6 h-6" />
+                    </ButtonIcon>
                   </a>
                 </>
               )}

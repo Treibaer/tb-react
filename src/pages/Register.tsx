@@ -3,9 +3,14 @@ import Button from "../components/Button";
 export const Register: React.FC = () => {
   return (
     <div>
-      <div className="text-6xl text-center mt-8">Register</div>
+      <div className="text-6xl text-center mt-8">Register - Clickdummy</div>
       <div className="w-64 mx-auto mt-8">
-        <form className="flex flex-col gap-2">
+        <form
+          className="flex flex-col gap-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+        >
           <div>
             <label>Username</label>
             <input type="text" className="tb-input" />
