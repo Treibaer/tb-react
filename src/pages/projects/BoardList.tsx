@@ -12,11 +12,13 @@ import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
 import { AnimatePresence } from "framer-motion";
+import { useToast } from "../../store/ToastContext";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
 
 export const Boards: React.FC = () => {
+  const { showToast } = useToast();
   const data = useLoaderData() as {
     boards: Board[];
     project: Project;
@@ -26,7 +28,6 @@ export const Boards: React.FC = () => {
   const editInputRef = useRef<HTMLInputElement>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [editBoard, setEditBoard] = useState<Board | null>(null);
-  const [error, setError] = useState<string | undefined>(undefined);
   const [boards, setBoards] = useState(data.boards);
 
   const project = data.project;
@@ -64,10 +65,10 @@ export const Boards: React.FC = () => {
         setIsCreating(false);
         updateBoardList();
       } catch (error: Error | any) {
-        setError(error.message);
+        showToast("Error", error.message, "error");
       }
     } else {
-      setError("Title is required");
+      showToast("Title is required", "Please enter a title", "error");
     }
   }
 
@@ -79,10 +80,10 @@ export const Boards: React.FC = () => {
         setEditBoard(null);
         updateBoardList();
       } catch (error: Error | any) {
-        setError(error.message);
+        showToast("Error", error.message, "error");
       }
     } else {
-      setError("Title is required");
+      showToast("Title is required", "Please enter a title", "error");
     }
   }
 
@@ -108,7 +109,6 @@ export const Boards: React.FC = () => {
             title="Create Board"
             onClose={() => setIsCreating(false)}
             onSubmit={handleCreateBoard}
-            error={error}
           >
             <input
               type="text"
@@ -126,7 +126,6 @@ export const Boards: React.FC = () => {
             submitTitle="Update"
             onClose={() => setEditBoard(null)}
             onSubmit={handleUpdateBoard}
-            error={error}
           >
             <input
               type="text"

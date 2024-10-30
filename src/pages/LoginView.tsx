@@ -6,15 +6,8 @@ import Button from "../components/Button";
 export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
   setIsLoggedIn,
 }) => {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    error,
-    isSubmitting,
-    handleLogin,
-  } = useLogin(setIsLoggedIn);
+  const { email, setEmail, password, setPassword, isSubmitting, handleLogin } =
+    useLogin(setIsLoggedIn);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -34,13 +27,6 @@ export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
 
       <div className="flex flex-col gap-2 w-[calc(100vw-16px)] border border-lightBlue max-w-[500px] sm:max-w-[500px] md:max-w-[600px] p-2 rounded shadow-lg absolute top-1/2 sm:top-52 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
         <h1 className="mb-4">Login</h1>
-        <div className="h-10">
-          {error && (
-            <div className="bg-red-300 p-1 m-1 rounded text-slate-800">
-              {error}
-            </div>
-          )}
-        </div>
         <input
           className="tb-input"
           type="text"
@@ -58,32 +44,6 @@ export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
         />
         <Button title="Login" onClick={handleLogin} />
       </div>
-    </div>
-  );
-
-  return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          placeholder="Email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          className="text-green-800"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="text-green-800"
-        />
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Logging in..." : "Login"}
-        </button>
-      </form>
-      {error && <p>{error}</p>}
     </div>
   );
 };

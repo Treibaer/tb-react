@@ -1,13 +1,14 @@
 import { useRef, useState } from "react";
 import { FinanceService } from "../../services/FinanceService";
 import Dialog from "../common/Dialog";
+import { useToast } from "../../store/ToastContext";
 
 const FinanceDetailEditBalanceDialogView: React.FC<{
   value: number;
   onClose: (reload: boolean) => void;
 }> = ({ value, onClose }) => {
   const valueRef = useRef<HTMLInputElement>(null);
-  const [error, setError] = useState<string | undefined>(undefined);
+  const {showToast} = useToast();
 
   async function onSubmit() {
     const value = parseFloat(
@@ -15,16 +16,16 @@ const FinanceDetailEditBalanceDialogView: React.FC<{
     );
 
     if (!value) {
-      setError("Value is required");
+      showToast("Error", "Value is required", "error");
       return;
     }
-    setError(undefined);
 
     try {
       await FinanceService.shared.updateBalance(value * 100);
       onClose(true);
+      showToast("Success", "Balance updated");
     } catch (error: Error | any) {
-      setError(error.message);
+      showToast("Error", error.message, "error");
     }
   }
 
@@ -34,7 +35,6 @@ const FinanceDetailEditBalanceDialogView: React.FC<{
         title={`Finances > Update Balance`}
         onClose={() => onClose(false)}
         onSubmit={onSubmit}
-        error={error}
         submitTitle={"Update"}
       >
         <input

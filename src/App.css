@@ -177,7 +177,7 @@ body {
 
 .tb-toast-2 {
   display: block;
-  height: 68px;
+  min-height: 68px;
   border-radius: 6px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 24px;
   transition: all 0.6s ease-in-out 0s;

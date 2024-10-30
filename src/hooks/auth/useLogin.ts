@@ -2,18 +2,18 @@ import { useState } from "react";
 import Constants from "../../services/Constants";
 import { AccessToken } from "../../models/access-token";
 import { useLoginCheck } from "./useLoginCheck";
+import { useToast } from "../../store/ToastContext";
 
 export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
+  const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { checkLogin } = useLoginCheck();
 
   async function handleLogin() {
     setIsSubmitting(true);
-    setError("");
 
     try {
       const response = await fetch(`${Constants.backendUrl}/api/v3/login`, {
@@ -35,11 +35,11 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
         setIsLoggedIn(true);
         checkLogin();
       } else {
-        setError("Invalid credentials");
+        showToast("Error", "Invalid email or password", "error");
         setIsSubmitting(false);
       }
     } catch (err: any) {
-      setError("An error occurred. Please try again." + err.message);
+      showToast("Error", "An error occurred. Please try again." + err.message, "error");
       setIsSubmitting(false);
     }
   }
@@ -49,7 +49,6 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
     setEmail,
     password,
     setPassword,
-    error,
     isSubmitting,
     handleLogin,
   };

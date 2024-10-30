@@ -12,7 +12,6 @@ export const PasswordEntryCreationDialog: React.FC<{
   editingEntry: PasswordEntry | null;
   onClose: () => void;
 }> = ({ onClose, environment, editingEntry }) => {
-  const [error, setError] = useState<string | undefined>(undefined);
   const [isShowingPassword, setIsShowingPassword] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,8 +43,6 @@ export const PasswordEntryCreationDialog: React.FC<{
   }, [editingEntry, environment]);
 
   async function handleCreateEntry() {
-    setError(undefined);
-
     const title = inputRef.current?.value;
     if (title) {
       try {
@@ -68,11 +65,13 @@ export const PasswordEntryCreationDialog: React.FC<{
           await PasswordService.shared.createEntry(environment.id, entry);
         }
         onClose();
+
+        showToast(`Entry ${editingEntry ? "updated" : "created"}`, title);
       } catch (error: Error | any) {
-        setError(error.message);
+        showToast("Error", error.message, "error");
       }
     } else {
-      setError("Title is required");
+      showToast("Title is required", "Please enter a title", "error");
     }
   }
   const { showToast } = useToast();
@@ -98,7 +97,6 @@ export const PasswordEntryCreationDialog: React.FC<{
   return (
     <>
       <Dialog
-        error={error}
         title={editingEntry ? "Edit Entry" : "Create Entry"}
         onClose={onClose}
         onSubmit={handleCreateEntry}

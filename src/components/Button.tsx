@@ -1,7 +1,9 @@
-interface ButtonProps {
+import { ComponentPropsWithoutRef } from "react";
+
+type ButtonProps = {
   title: string;
   onClick?: () => void;
-}
+} & ComponentPropsWithoutRef<"button">;
 
 export default function Button({ title, onClick }: ButtonProps) {
   return (

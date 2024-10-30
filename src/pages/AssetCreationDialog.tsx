@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import Dialog from "../components/common/Dialog";
 import Button from "../components/Button";
 import Client from "../services/Client";
+import { useToast } from "../store/ToastContext";
 
 export const AssetCreationDialog: React.FC<{
   onClose: () => void;
 }> = ({ onClose }) => {
-  const [error, setError] = useState<string | undefined>(undefined);
+  const { showToast } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null); // For image preview
   const [dragActive, setDragActive] = useState(false);
@@ -34,9 +35,8 @@ export const AssetCreationDialog: React.FC<{
   }, []);
 
   async function handleCreateAsset() {
-    setError(undefined);
     if (!file) {
-      setError("Please select a file");
+      showToast("File is required", "Please select a file", "error");
       return;
     }
 
@@ -52,7 +52,7 @@ export const AssetCreationDialog: React.FC<{
       console.log(response);
       onClose();
     } catch (err) {
-      setError(`Upload error: ${err}`);
+      showToast("Upload error", `Upload error: ${err}`, "error");
     }
   }
 
@@ -76,7 +76,6 @@ export const AssetCreationDialog: React.FC<{
     const droppedFile = event.dataTransfer.files?.[0];
     if (droppedFile) {
       setFile(droppedFile);
-      setError(undefined);
       generateImagePreview(droppedFile); // Generate preview for image files
     }
   }
@@ -120,7 +119,6 @@ export const AssetCreationDialog: React.FC<{
   return (
     <>
       <Dialog
-        error={error}
         title="Create Asset"
         onClose={onClose}
         onSubmit={handleCreateAsset}

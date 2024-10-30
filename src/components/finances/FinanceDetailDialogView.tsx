@@ -15,7 +15,8 @@ const FinanceDetailDialogView: React.FC<{
   const signRef = useRef<HTMLSelectElement>(null);
   const purchasedATRef = useRef<HTMLInputElement>(null);
   const tagRef = useRef<HTMLSelectElement>(null);
-  const [error, setError] = useState<string | undefined>(undefined);
+
+  const {showToast} = useToast();
 
   useEffect(() => {
     if (editingEntry) {
@@ -35,8 +36,6 @@ const FinanceDetailDialogView: React.FC<{
     }
   }, [editingEntry]);
 
-  const { showToast } = useToast();
-
   async function onSubmit() {
     const title = titleRef.current?.value;
     const value = parseFloat(
@@ -47,10 +46,9 @@ const FinanceDetailDialogView: React.FC<{
     const sign = Number(signRef.current?.value);
 
     if (!title || !value || !purchasedAt) {
-      setError("Title & Value are required");
+      showToast("Error", "Title & Value are required", "error");
       return;
     }
-    setError(undefined);
 
     try {
       await FinanceService.shared.createOrUpdateEntry(
@@ -63,7 +61,7 @@ const FinanceDetailDialogView: React.FC<{
       onClose(true);
       showToast(`Entry ${editingEntry?.id ? "Updated" : "Created"}`, "Title: " + title);
     } catch (error: Error | any) {
-      setError(error.message);
+      showToast("Error", error.message, "error");
     }
   }
 
@@ -73,7 +71,6 @@ const FinanceDetailDialogView: React.FC<{
         title={`Finances > ${editingEntry ? "Update" : "Create"} Entry`}
         onClose={() => onClose(false)}
         onSubmit={onSubmit}
-        error={error}
         submitTitle={editingEntry ? "Update" : "Create"}
       >
         <input

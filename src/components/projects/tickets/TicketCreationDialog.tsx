@@ -24,7 +24,8 @@ export const TicketCreationDialog: React.FC<{
   onClose: (update: boolean) => void;
   updateBoardView: () => void;
 }> = ({ metadata, onClose, initialBoardId, updateBoardView }) => {
-  const [error, setError] = useState<string | undefined>();
+  const { showToast } = useToast();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
@@ -47,10 +48,9 @@ export const TicketCreationDialog: React.FC<{
   }, []);
 
   async function createTicket() {
-    setError(undefined);
     const title = inputRef.current?.value;
     if (!title) {
-      setError("Title is required");
+      showToast("Title is required", "Please enter a title", "error");
       return;
     }
     const description = descriptionRef.current?.value ?? "";
@@ -65,7 +65,7 @@ export const TicketCreationDialog: React.FC<{
       });
       handleCreateTicket(ticket);
     } catch (err) {
-      setError(`Error creating ticket: ${err}`);
+      showToast("Error", `Error creating ticket: ${err}`, "error");
       return;
     }
 
@@ -123,7 +123,6 @@ export const TicketCreationDialog: React.FC<{
     setStayOpen(!stayOpen);
   }
 
-  const { showToast } = useToast();
 
   const handleCreateTicket = (ticket: Ticket) => {
     showToast("Ticket Created", "Ticket ID: " + ticket.ticketId);
@@ -134,7 +133,6 @@ export const TicketCreationDialog: React.FC<{
       title={`${project.title} > Create ticket`}
       onClose={() => onClose(false)}
       onSubmit={createTicket}
-      error={error}
     >
       <input
         type="text"

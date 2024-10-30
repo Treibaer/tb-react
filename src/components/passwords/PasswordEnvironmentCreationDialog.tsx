@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import Dialog from "../common/Dialog";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { PasswordService } from "../../services/PasswordService";
+import { useToast } from "../../store/ToastContext";
 
 export const PasswordEnvironmentCreationDialog: React.FC<{
   onClose: () => void;
   editingEntry: PasswordEnvironment | null;
 }> = ({ onClose, editingEntry }) => {
-  const [error, setError] = useState<string | undefined>(undefined);
-
   const inputRef = useRef<HTMLInputElement>(null);
   const defaultLoginRef = useRef<HTMLInputElement>(null);
+
+  const {showToast} = useToast();
 
   useEffect(() => {
     setTimeout(() => {
@@ -26,7 +27,6 @@ export const PasswordEnvironmentCreationDialog: React.FC<{
   }, [editingEntry]);
 
   async function handleCreateEnvironment() {
-    setError(undefined);
 
     const title = inputRef.current?.value;
     if (title) {
@@ -44,17 +44,16 @@ export const PasswordEnvironmentCreationDialog: React.FC<{
         }
         onClose();
       } catch (error: Error | any) {
-        setError(error.message);
+        showToast("Error", error.message, "error");
       }
     } else {
-      setError("Title is required");
+      showToast("Title is required", "Please enter a title", "error");
     }
   }
 
   return (
     <>
       <Dialog
-        error={error}
         title={editingEntry ? "Edit Environment" : "Create Environment"}
         onClose={onClose}
         onSubmit={handleCreateEnvironment}
