@@ -54,7 +54,12 @@ export class TicketService {
     const allTickets = await Ticket.findAll({
       where: { project_id: project.id },
     });
-    const ticketId = allTickets.length + 1;
+
+    const maxTicketId: number = await Ticket.max('ticket_id', {
+      where: { project_id: project.id }
+    });
+
+    const ticketId = maxTicketId ? maxTicketId + 1 : 1;
     const boardTickets = allTickets.filter((t) => t.board_id === boardId);
 
     const position = boardTickets.length;
