@@ -4,7 +4,29 @@
   min-height: 100vh;
 }
 
-html { font-family: "Inter", "system-ui"; }
+/* Firefox */
+div {
+  scrollbar-width: thin;
+  scrollbar-color: #ccccd7 transparent;
+}
+
+/* WebKit-Browser (Chrome, Edge, Safari) */
+div::-webkit-scrollbar {
+  height: 6px;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: #ccccd7;
+  border-radius: 4px;
+}
+
+div::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html {
+  font-family: "Inter", "system-ui";
+}
 
 .column.highlight {
   border: 2px dashed #000;
@@ -92,7 +114,6 @@ body {
   padding: 5px;
   border-radius: 10px;
 }
-
 
 .tb-transparent-menu {
   backdrop-filter: blur(10px) saturate(190%) contrast(70%) brightness(80%);
@@ -205,7 +226,6 @@ body {
 .tb-toast-2-link:hover {
   background-color: lch(56.327 10.646 284.216 / 0.2);
 }
-
 
 .blurredBackground {
   position: fixed;

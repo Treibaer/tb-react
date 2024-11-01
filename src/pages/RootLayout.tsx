@@ -43,7 +43,7 @@ export const RootLayout: React.FC = () => {
             <MainNavigation />
           </div>
           <div className="flex flex-col h-full w-full md:w-[calc(100%-250px)]">
-            <div className="w-full max-h-screen overflow-scroll h-[calc(100vh-58px)] md:h-full">
+            <div className="w-full max-h-screen overflow-auto h-[calc(100vh-58px)] md:h-full">
               <Outlet />
             </div>
             {!Constants.isDemoMode && (

@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import Dialog from "../../components/common/Dialog";
@@ -11,7 +12,6 @@ import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
-import { AnimatePresence } from "framer-motion";
 import { useToast } from "../../store/ToastContext";
 
 const projectService = ProjectService.shared;

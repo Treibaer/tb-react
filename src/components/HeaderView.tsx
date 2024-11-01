@@ -6,7 +6,7 @@ export const HeaderView: React.FC<{ breadcrumbs: Breadcrumb[] }> = ({
   breadcrumbs,
 }) => {
   return (
-    <div className="flex gap-2 text-white border-b border-b-slate-600 p-4 h-14 overflow-x-scroll select-none">
+    <div className="flex gap-2 text-white border-b border-b-slate-600 p-4 h-14 overflow-x-auto select-none">
 
       {breadcrumbs.map((item, index) => (
         <React.Fragment key={item.link}>

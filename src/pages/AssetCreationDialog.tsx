@@ -60,7 +60,6 @@ export const AssetCreationDialog: React.FC<{
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
-      setError(undefined);
       generateImagePreview(selectedFile); // Generate preview for image files
       // Reset the input value to allow selecting the same file again
       if (fileInputRef.current) {

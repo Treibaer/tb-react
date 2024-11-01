@@ -12,7 +12,13 @@ const AppContext = createContext<AppContextType>({
   setUserIcon: () => {},
 });
 
-function appReducer(state: AppContextType, action: any) {
+function appReducer(
+  state: AppContextType,
+  action: {
+    type: "LOGIN" | "LOGOUT" | "SET_USER_ICON";
+    payload: any;
+  }
+) {
   switch (action.type) {
     case "LOGIN":
       return { ...state, isLoggedIn: true };
