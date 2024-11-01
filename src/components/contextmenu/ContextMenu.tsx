@@ -1,12 +1,13 @@
-import {
-  ChartPieIcon,
-  ChevronRightIcon,
-  TagIcon,
-  TrashIcon
-} from "@heroicons/react/24/solid";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { FaSpinner, FaUserCircle } from "react-icons/fa";
+import {
+  FaChartPie,
+  FaChevronRight,
+  FaSpinner,
+  FaTag,
+  FaTrash,
+  FaUserCircle,
+} from "react-icons/fa";
 import useParty from "../../hooks/useParty";
 import { DropdownType } from "../../models/dropdown-type";
 import { ProjectMeta } from "../../models/project-meta";
@@ -61,12 +62,7 @@ export const ContextMenu: React.FC<{
         assigneeId,
       });
       const assignee = metadata.users.find((u) => u.id === assigneeId);
-      showToast(
-        "assignee",
-        ticket.slug,
-        assignee?.firstName,
-        assignee?.avatar
-      );
+      showToast("assignee", ticket.slug, assignee?.firstName, assignee?.avatar);
     }
     onClose(assigneeId !== ticket.assignee?.id);
   }
@@ -132,6 +128,7 @@ export const ContextMenu: React.FC<{
     if (removingTicketSlug) {
       await ticketService.remove(project.slug, removingTicketSlug);
       onClose(true);
+      showToast("success", "", "Ticket deleted");
     }
   }
 
@@ -194,13 +191,9 @@ export const ContextMenu: React.FC<{
           onMouseOver={() => setDropdown(DropdownType.STATUS)}
         >
           <div className="flex gap-2">
-            <div className="">
-              <FaSpinner className="h-5 w-5 text-gray-400" />
-            </div>
+            <FaSpinner className="size-4 text-gray-400 mt-1" />
             <div className="w-[60px]">Status</div>
-            <div className="">
-              <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-            </div>
+            <FaChevronRight className="h-5 w-5 text-gray-400" />
           </div>
         </DropdownElement>
         <DropdownElement
@@ -208,41 +201,29 @@ export const ContextMenu: React.FC<{
           onMouseOver={() => setDropdown(DropdownType.ASSIGNEE)}
         >
           <div className="flex gap-2">
-            <div className="">
-              <FaUserCircle className="h-5 w-5 text-gray-400" />
-            </div>
+            <FaUserCircle className="size-4 text-gray-400 mt-1" />
             <div className="w-[60px]">Assignee</div>
-            <div className="">
-              <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-            </div>
+            <FaChevronRight className="h-5 w-5 text-gray-400" />
           </div>
         </DropdownElement>
         <DropdownElement
           isSelected={false}
           onMouseOver={() => setDropdown(DropdownType.BOARD)}
         >
-          <div className="flex gap-1">
-            <div className="">
-              <ChartPieIcon className="h-5 w-5 text-gray-400" />
-            </div>
-            <div className="w-[70px]">Board</div>
-            <div className="">
-              <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-            </div>
+          <div className="flex gap-2">
+            <FaChartPie className="size-4 text-gray-400 mt-1" />
+            <div className="w-[60px]">Board</div>
+            <FaChevronRight className="h-5 w-5 text-gray-400" />
           </div>
         </DropdownElement>
         <DropdownElement
           isSelected={false}
           onMouseOver={() => setDropdown(DropdownType.TYPE)}
         >
-          <div className="flex gap-1">
-            <div className="">
-              <TagIcon className="h-5 w-5 text-gray-400" />
-            </div>
-            <div className="w-[70px]">Type</div>
-            <div className="">
-              <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-            </div>
+          <div className="flex gap-2">
+            <FaTag className="size-4 text-gray-400 mt-1" />
+            <div className="w-[60px]">Type</div>
+            <FaChevronRight className="size-5 text-gray-400" />
           </div>
         </DropdownElement>
         {config.board && (
@@ -250,14 +231,10 @@ export const ContextMenu: React.FC<{
             isSelected={false}
             onMouseOver={() => setDropdown(DropdownType.POSITION)}
           >
-            <div className="flex gap-1">
-              <div className="">
-                <TagIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <div className="w-[70px]">Position</div>
-              <div className="">
-                <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-              </div>
+            <div className="flex gap-2">
+              <FaTag className="size-4 text-gray-400 mt-1" />
+              <div className="w-[60px]">Position</div>
+              <FaChevronRight className="h-5 w-5 text-gray-400" />
             </div>
           </DropdownElement>
         )}
@@ -266,10 +243,8 @@ export const ContextMenu: React.FC<{
           onMouseOver={() => setDropdown(DropdownType.NONE)}
           onClick={() => setRemovingTicketSlug(ticket.slug)}
         >
-          <div className="flex gap-1">
-            <div className="">
-              <TrashIcon className="h-5 w-5 text-gray-400" />
-            </div>
+          <div className="flex gap-2">
+            <FaTrash className="size-4 text-gray-400 mt-1" />
             <div>Delete</div>
           </div>
         </DropdownElement>

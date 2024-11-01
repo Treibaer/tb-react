@@ -37,11 +37,7 @@ const TicketRowDnDWrapper: React.FC<{
   moveTicket,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [_, drop] = useDrop<
-    DragItem,
-    void,
-    { handlerId: Identifier | null }
-  >({
+  const [_, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
     accept: "card",
     collect(monitor) {
       return {
@@ -54,8 +50,6 @@ const TicketRowDnDWrapper: React.FC<{
       }
       const dragIndex = item.index;
       const hoverIndex = index;
-
-      // console.log(dragIndex, hoverIndex);
       setHoverIndex(hoverIndex);
       setDragIndex(dragIndex);
     },
@@ -68,8 +62,6 @@ const TicketRowDnDWrapper: React.FC<{
       setHoverIndex(-1);
       setDragIndex(-1);
       moveTicket(dragIndex, hoverIndex);
-      // console.log(id);
-      // console.log("dropped", dragIndex, hoverIndex);
     },
   });
 
@@ -107,13 +99,7 @@ const TicketRowDnDWrapper: React.FC<{
         onContextMenu={onContextMenu}
         onTouchStart={onTouchStart}
         backgroundColor={"transparent"}
-        opacity={
-          index === dragIndex
-            ? 0.5
-            : index === hoverIndex
-            ? 0.2
-            : 1
-        }
+        opacity={index === dragIndex ? 0.5 : index === hoverIndex ? 0.2 : 1}
       />
     </div>
   );

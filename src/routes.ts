@@ -22,6 +22,7 @@ export const ROUTES = {
   PROFILE: '/profile',
   SETTINGS: '/settings',
   STATUS: '/status',
+  CHANGELOG: '/changelog',
   FINANCE_DASHBOARD: '/finances',
   ASSETS: '/assets',
   PASSWORDS: '/passwords',

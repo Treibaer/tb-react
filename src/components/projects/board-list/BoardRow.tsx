@@ -1,14 +1,11 @@
-import {
-  ArchiveBoxArrowDownIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  PencilIcon,
-} from "@heroicons/react/24/solid";
+import { FaArchive, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaPencil } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import { Board } from "../../../models/board-structure";
 import { ROUTES } from "../../../routes";
 import { BoardService } from "../../../services/BoardService";
 import { ButtonIcon } from "../../ButtonIcon";
+import { showToast } from "../../../utils/tbToast";
 
 export const BoardRow: React.FC<{
   projectSlug: string;
@@ -24,6 +21,7 @@ export const BoardRow: React.FC<{
       position: Math.max(0, board.position - 1),
     });
     update();
+    showToast("success", "", "Board moved up");
   }
   async function handlePositionDown(event: React.MouseEvent) {
     event.preventDefault();
@@ -32,6 +30,7 @@ export const BoardRow: React.FC<{
       position: board.position + 1,
     });
     update();
+    showToast("success", "", "Board moved down");
   }
   async function handleEdit(event: React.MouseEvent) {
     event.preventDefault();
@@ -41,9 +40,11 @@ export const BoardRow: React.FC<{
   async function handleToggleActive(event: React.MouseEvent) {
     event.preventDefault();
     await BoardService.shared.update(projectSlug, board.id, {
+      title: board.title,
       isActive: !board.isActive,
     });
     update();
+    showToast("success", "", `Board ${board.isActive ? "archived" : "restored"}`);
   }
 
   return (
@@ -68,16 +69,16 @@ export const BoardRow: React.FC<{
       <div className="flex-1 text-center">{board.tickets.length}</div>
       <div>
         <ButtonIcon onClick={handlePositionUp}>
-          <ChevronUpIcon className="w-5 h-5" />
+          <FaChevronUp className="w-5 h-5" />
         </ButtonIcon>
         <ButtonIcon onClick={handlePositionDown}>
-          <ChevronDownIcon className="w-5 h-5" />
+          <FaChevronDown className="w-5 h-5" />
         </ButtonIcon>
         <ButtonIcon onClick={handleEdit}>
-          <PencilIcon className="w-5 h-5" />
+          <FaPencil className="w-5 h-5" />
         </ButtonIcon>
         <ButtonIcon onClick={handleToggleActive}>
-          <ArchiveBoxArrowDownIcon
+          <FaArchive
             color={board.isActive ? undefined : "olive"}
             className="w-5 h-5"
           />

@@ -159,6 +159,7 @@ export class BoardService {
     data: Record<string, any>,
   ): Promise<void> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
+    const user = this.userService.user;
     let tickets = await Ticket.findAll({
       where: {
         project_id: project.id,
@@ -170,8 +171,23 @@ export class BoardService {
     const origin = data.origin;
     const target: number = data.target;
 
+    const originTicketRaw = await Ticket.findByPk(origin);
+    const targetTicketRaw = await Ticket.findByPk(target);
+    if (!originTicketRaw || !targetTicketRaw) {
+      throw new Error('Ticket not found');
+    }
+
+    const isSwitchingBoard =
+      boardId !== 0 && +targetTicketRaw.board_id !== +originTicketRaw.board_id;
+
+    if (isSwitchingBoard) {
+      originTicketRaw.board_id = targetTicketRaw.board_id;
+      await originTicketRaw.save();
+      tickets.push(originTicketRaw);
+    }
+
     const originTicket = tickets.find((t) => t.id === origin);
-    const targetTicketIndex = tickets.findIndex((t) => t.id === target);
+    let targetTicketIndex = tickets.findIndex((t) => t.id === target);
 
     if (!originTicket) {
       throw new Error('Ticket not found');
@@ -182,6 +198,25 @@ export class BoardService {
     }
 
     tickets = tickets.filter((t) => t.id !== origin);
+    if (isSwitchingBoard) {
+      // if the origin ticket is moved to the end of the list, don't replace, just push to the end
+      // also check if hide done is enabled and the target ticket is the last non-done ticket
+      let targetTicketLastTicket = false;
+      if (user.hideDoneProjects.split('_').map(Number).includes(project.id)) {
+        const nonDoneTickets = tickets.filter((t) => t.status !== 'done');
+        if (nonDoneTickets.length === 0) {
+          targetTicketLastTicket = false;
+        } else {
+          targetTicketLastTicket =
+            nonDoneTickets[nonDoneTickets.length - 1].id === target;
+        }
+      } else {
+        targetTicketLastTicket = tickets[tickets.length - 1].id === target;
+      }
+      if (isSwitchingBoard && targetTicketLastTicket) {
+        targetTicketIndex += 1;
+      }
+    }
     tickets.splice(targetTicketIndex, 0, originTicket);
 
     for (let i = 0; i < tickets.length; i++) {

@@ -1,11 +1,6 @@
-import {
-  ChartBarIcon,
-  ChartPieIcon,
-  CreditCardIcon
-} from "@heroicons/react/24/solid";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { FaBorderAll, FaCoins, FaFile, FaImages, FaLock } from "react-icons/fa";
+import { FaBorderAll, FaChartBar, FaChartPie, FaCoins, FaFile, FaImages, FaLock } from "react-icons/fa";
 import { FaChartSimple, FaHouse, FaTicket } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -123,17 +118,17 @@ export default function MainNavigation() {
             <NavigationLink
               to={ROUTES.FINANCE_DASHBOARD}
               title="Dashboard"
-              icon={<CreditCardIcon />}
+              icon={<FaCoins />}
             />
             <NavigationLink
               to={ROUTES.FINANCE_DETAILS}
               title="Details"
-              icon={<ChartPieIcon />}
+              icon={<FaChartPie />}
             />
             <NavigationLink
               to={ROUTES.FINANCE_SUMMARY}
               title="Summary"
-              icon={<ChartBarIcon />}
+              icon={<FaChartBar />}
             />
           </>
         )}

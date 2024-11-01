@@ -5,7 +5,7 @@ export const TicketStatusView: React.FC<{
   status: TicketStatus;
 }> = ({ status }) => {
   return (
-    <div className="flex gap-1 items-center capitalize">
+    <div className="flex gap-2 items-center capitalize">
       {status === "open" && openIcon}
       {status === "inProgress" && inProgressIcon}
       {status === "done" && doneIcon}

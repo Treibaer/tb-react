@@ -56,6 +56,10 @@ export class ProjectService {
   async createProject(project: ProjectDto) {
     const user = this.userService.user;
 
+    if (project.slug.length !== 2) {
+      throw new Error('Slug must be 2 characters long');
+    }
+
     const existingProject = await Project.findOne({
       where: { slug: project.slug },
     });

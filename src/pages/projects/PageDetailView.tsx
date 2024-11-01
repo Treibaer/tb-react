@@ -1,31 +1,39 @@
-import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { FaPencil } from "react-icons/fa6";
+import {
+  LoaderFunction,
+  useLoaderData,
+  useSearchParams,
+} from "react-router-dom";
+import Button from "../../components/Button";
+import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
+import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Page } from "../../models/page";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import PageService from "../../services/PageService";
 import ProjectService from "../../services/ProjectService";
-import { useEffect, useRef, useState } from "react";
-import Button from "../../components/Button";
-import { ButtonIcon } from "../../components/ButtonIcon";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
 import PageStructureView from "./PageStructureView";
 
 const pageService = PageService.shared;
 const projectService = ProjectService.shared;
 
 const PageDetailView: React.FC = () => {
-  const data = useLoaderData() as {
+  const {
+    page: initialPage,
+    project,
+    pages,
+    openedPages,
+  } = useLoaderData() as {
     project: Project;
     page: Page;
     pages: Page[];
     openedPages: number[];
   };
-  const { project } = data;
 
-  const [page, setPage] = useState<Page>(data.page);
+  const [page, setPage] = useState<Page>(initialPage);
 
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
@@ -39,23 +47,32 @@ const PageDetailView: React.FC = () => {
   const currentTitle = useRef<HTMLInputElement>(null);
   const currentContent = useRef(page.enrichedContent);
   const [isEditing, setIsEditing] = useState(false);
+  const initialRender = useRef(true);
 
-  const parents = getParents(page, data.pages);
+  // re-render on url change (loader data change)
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    setPage(initialPage);
+  }, [initialPage]);
 
+  const parents = getParents(page, pages);
   for (const parent of parents) {
     breadcrumbs.push({
       title: parent.icon + " " + parent.title,
       link: ROUTES.PROJECTS_PAGE_DETAILS(project.slug, parent.id),
     });
     // open parent pages
-    if (!data.openedPages.includes(parent.id)) {
-      data.openedPages.push(parent.id);
+    if (!openedPages.includes(parent.id)) {
+      openedPages.push(parent.id);
       pageService.togglePage(project.slug, parent.id);
     }
   }
   // open itself: TODO: move to a state and combine with children
-  if (!data.openedPages.includes(page.id)) {
-    data.openedPages.push(page.id);
+  if (!openedPages.includes(page.id)) {
+    openedPages.push(page.id);
     pageService.togglePage(project.slug, page.id);
   }
   breadcrumbs.push({ title: page.icon + " " + page.title, link: "" });
@@ -78,8 +95,8 @@ const PageDetailView: React.FC = () => {
   // on url change
   useEffect(() => {
     currentContent.current = page.enrichedContent;
-    setPage(data.page);
-  }, [page, data]);
+    setPage(page);
+  }, [page]);
 
   async function toggleEdit() {
     if (isOldVersion) {
@@ -92,7 +109,6 @@ const PageDetailView: React.FC = () => {
         title,
         content,
       });
-
       setPage(updatedPage);
     }
     setIsEditing((prev) => !prev);
@@ -102,8 +118,8 @@ const PageDetailView: React.FC = () => {
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex">
         <PageStructureView
-          open={data.openedPages}
-          pages={data.pages}
+          open={openedPages}
+          pages={pages}
           projectSlug={project.slug}
           openedPageId={page.id}
         />
@@ -133,7 +149,7 @@ const PageDetailView: React.FC = () => {
               )}
               {!isEditing && !isOldVersion && (
                 <ButtonIcon onClick={toggleEdit}>
-                  <PencilSquareIcon className="size-5" />
+                  <FaPencil className="size-5" />
                 </ButtonIcon>
               )}
             </div>
@@ -162,11 +178,12 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
 }) => {
   const projectSlug = params.projectSlug ?? "";
   const pageId = Number(params.pageId ?? "");
-  const page = await pageService.get(projectSlug, pageId);
-  const pages = await pageService.getAllStructured(projectSlug);
 
-  const project = await projectService.get(projectSlug);
-  const openedPages = await pageService.getOpenedPages(projectSlug);
-  // const metadata = await projectService.getMetadata(slug);
+  const [project, page, pages, openedPages] = await Promise.all([
+    projectService.get(projectSlug),
+    pageService.get(projectSlug, pageId),
+    pageService.getAllStructured(projectSlug),
+    pageService.getOpenedPages(projectSlug),
+  ]);
   return { project, page, pages, openedPages };
 };

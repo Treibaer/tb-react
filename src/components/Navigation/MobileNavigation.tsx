@@ -1,9 +1,5 @@
-import {
-  ChartBarIcon,
-  CogIcon,
-  CreditCardIcon,
-  LockClosedIcon,
-} from "@heroicons/react/24/solid";
+import { FaCoins, FaLock } from "react-icons/fa";
+import { FaSliders, FaTicket } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import { ROUTES } from "../../routes";
 
@@ -17,25 +13,25 @@ export default function MobileNavigation() {
         to={ROUTES.TICKETS_BOARD_VIEW("HK")}
         className="flex-1 flex justify-center items-center"
       >
-        <ChartBarIcon className="h-6 w-6" />
+        <FaTicket className="size-5" />
       </NavLink>
       <NavLink
         to={ROUTES.FINANCE_DETAILS}
         className="flex-1 flex justify-center items-center"
       >
-        <CreditCardIcon className="h-6 w-6" />
+        <FaCoins className="size-5" />
       </NavLink>
       <NavLink
         to={ROUTES.PASSWORDS_ENTRIES(1)}
         className="flex-1 flex justify-center items-center"
       >
-        <LockClosedIcon className="h-6 w-6" />
+        <FaLock className="size-5" />
       </NavLink>
       <NavLink
         to={ROUTES.SETTINGS}
         className="flex-1 flex justify-center items-center"
       >
-        <CogIcon className="h-6 w-6" />
+        <FaSliders className="size-5" />
       </NavLink>
     </div>
   );

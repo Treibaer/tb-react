@@ -1,4 +1,3 @@
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { LoaderFunction, useBlocker, useLoaderData } from "react-router-dom";
@@ -16,20 +15,29 @@ import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import TicketService from "../../services/TicketService";
 import { showToast } from "../../utils/tbToast";
+import { FaPencil } from "react-icons/fa6";
+import { TicketHistory } from "../../models/ticket-history";
+import { TicketComment } from "../../models/ticket-comment";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
 
 export default function TicketDetailView() {
-  const data = useLoaderData() as {
+  const {
+    metadata,
+    ticket: initialTicket,
+    isOldVersion,
+    history,
+    comments,
+  } = useLoaderData() as {
     metadata: ProjectMeta;
     ticket: Ticket;
     isOldVersion: boolean;
+    history: TicketHistory[];
+    comments: TicketComment[];
   };
-  const { metadata } = data;
   const project = metadata.project;
-  const isOldVersion = data.isOldVersion;
-  const [ticket, setTicket] = useState<Ticket>(data.ticket);
+  const [ticket, setTicket] = useState<Ticket>(initialTicket);
   const currentTitle = useRef<HTMLInputElement>(null);
   const currentDescription = useRef(ticket.description);
   const [isEditing, setIsEditing] = useState(false);
@@ -136,7 +144,7 @@ export default function TicketDetailView() {
                 )}
                 {!isEditing && !isOldVersion && (
                   <ButtonIcon onClick={toggleEdit}>
-                    <PencilSquareIcon className="size-5" />
+                    <FaPencil className="size-5" />
                   </ButtonIcon>
                 )}
               </div>
@@ -154,11 +162,12 @@ export default function TicketDetailView() {
               <DescriptionView description={currentDescription} />
             </div>
           )}
-          <TicketCommentArea project={project} ticket={ticket} />
+          <TicketCommentArea project={project} ticket={ticket} comments={comments} />
         </div>
         <TicketDetailsSidebar
           metadata={metadata}
           ticket={ticket}
+          history={history}
           update={update}
         />
       </div>
@@ -173,26 +182,24 @@ export const loader: LoaderFunction<{
   const projectSlug = params.projectSlug ?? "";
   const ticketSlug = params.ticketSlug ?? "";
 
-  const metadata = await projectService.getMetadata(projectSlug);
-  const ticket = await ticketService.get(projectSlug, ticketSlug);
+  const [ticket, metadata, history, comments] = await Promise.all([
+    ticketService.get(projectSlug, ticketSlug),
+    projectService.getMetadata(projectSlug),
+    ticketService.getHistory(projectSlug, ticketSlug),
+    ticketService.getComments(projectSlug, ticketSlug),
+  ]);
 
   const queryParameters = new URL(request.url).searchParams;
   const version = queryParameters.get("version");
 
   let isOldVersion = false;
 
-  if (version) {
-    const history = await ticketService.getHistory(projectSlug, ticketSlug);
-
-    const historyItem = history.find(
-      (h) => h.versionNumber === Number(version)
-    );
-    if (historyItem) {
-      ticket.description = historyItem.description;
-      if (Number(version) < history.length) {
-        isOldVersion = true;
-      }
+  const historyItem = history.find((h) => h.versionNumber === Number(version));
+  if (historyItem) {
+    ticket.description = historyItem.description;
+    if (Number(version) < history.length) {
+      isOldVersion = true;
     }
   }
-  return { metadata, ticket, isOldVersion };
+  return { metadata, ticket, isOldVersion, history, comments };
 };

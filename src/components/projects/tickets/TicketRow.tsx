@@ -1,6 +1,4 @@
-import {
-  Bars4Icon
-} from "@heroicons/react/24/solid";
+import { FaBars } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
@@ -45,13 +43,9 @@ export default function TicketRow({
             {ticket.status === "done" && doneIcon}
           </div>
           <div className="text-gray-400 w-16 flex-none">{ticket.slug}</div>
-          <div className="flex gap-1 items-center text-sm sm:text-base">
+          <div className="flex gap-2 items-center text-sm sm:text-base">
             <div>{ticket.title}</div>
-            <div>
-              {ticket.description && (
-                <Bars4Icon className="h-4 w-4 text-gray-400" />
-              )}
-            </div>
+            {ticket.description && <FaBars className="h-4 w-4 text-gray-400" />}
           </div>
         </div>
         {ticket.type && (

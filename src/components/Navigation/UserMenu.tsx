@@ -1,13 +1,10 @@
-import {
-  AdjustmentsHorizontalIcon,
-  LockClosedIcon,
-  SignalIcon,
-} from "@heroicons/react/24/solid";
+import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { FaLocationArrow, FaLock, FaSignal } from "react-icons/fa";
+import { FaSliders } from "react-icons/fa6";
 import { NavLink, useLocation } from "react-router-dom";
 import { ROUTES } from "../../routes";
 import Constants from "../../services/Constants";
-import { motion } from "framer-motion";
 
 export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
   const location = useLocation();
@@ -51,7 +48,7 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
     >
       <NavLink className="tb-dropdown-item" to={ROUTES.SETTINGS}>
         <div className="flex items-center">
-          <AdjustmentsHorizontalIcon className="h-5 w-5 mr-2" />
+          <FaSliders className="h-4 w-4 mr-2" />
           <div>Settings</div>
         </div>
       </NavLink>
@@ -59,15 +56,22 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
       {!Constants.isDemoMode && (
         <NavLink className="tb-dropdown-item" to={ROUTES.STATUS}>
           <div className="flex items-center">
-            <SignalIcon className="h-5 w-5 mr-2" />
+            <FaSignal className="h-4 w-4 mr-2" />
             <div>Status</div>
           </div>
         </NavLink>
       )}
 
+      <NavLink className="tb-dropdown-item" to={ROUTES.CHANGELOG}>
+        <div className="flex items-center">
+          <FaLocationArrow className="h-4 w-4 mr-2" />
+          <div>Changelog</div>
+        </div>
+      </NavLink>
+
       <NavLink className="tb-dropdown-item" to={ROUTES.LOGOUT}>
         <div className="flex items-center">
-          <LockClosedIcon className="h-5 w-5 mr-2" />
+          <FaLock className="h-4 w-4 mr-2" />
           <div>Logout</div>
         </div>
       </NavLink>

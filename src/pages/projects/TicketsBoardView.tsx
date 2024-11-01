@@ -2,7 +2,7 @@ import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { LoaderFunction, NavLink, useLoaderData, useLocation } from "react-router-dom";
+import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
 import ContextMenu from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
@@ -187,10 +187,11 @@ const TicketsBoardView: React.FC = () => {
       board,
     });
   };
+  const [hoverIndex, setHoverIndex] = useState(-1);
 
   return (
     <>
-    <PartyComponent />
+      <PartyComponent />
       <AnimatePresence>
         {isCreating && (
           <TicketCreationDialog
@@ -239,9 +240,10 @@ const TicketsBoardView: React.FC = () => {
               onClose={closeContextMenu}
             />
           )}
-          {activeBoards.map((board: Board) => (
-            <DndProvider backend={HTML5Backend} key={board.id}>
+          <DndProvider backend={HTML5Backend}>
+            {activeBoards.map((board: Board) => (
               <BoardSection
+                key={board.id}
                 board={board}
                 isBoardVisible={isBoardVisible(board.id)}
                 onContextMenu={onContextMenu}
@@ -251,9 +253,11 @@ const TicketsBoardView: React.FC = () => {
                 searchTerm={searchTerm}
                 project={project}
                 reload={refresh}
+                hoverIndex={hoverIndex}
+                setHoverIndex={setHoverIndex}
               />
-            </DndProvider>
-          ))}
+            ))}
+          </DndProvider>
         </div>
       </div>
     </>
@@ -266,7 +270,9 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,
 }) => {
   const slug = params.projectSlug ?? "";
-  const boardStructure = await boardService.getBoardStructure(slug);
-  const metadata = await projectService.getMetadata(slug);
+  const [boardStructure, metadata] = await Promise.all([
+    boardService.getBoardStructure(slug),
+    projectService.getMetadata(slug),
+  ]);
   return { boardStructure, metadata };
 };

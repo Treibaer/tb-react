@@ -55,14 +55,13 @@ import { AppContextProvider } from "./store/AppContext";
 import { ToastProvider } from "./store/ToastContext";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import Assets,
-{
-  loader as assetsLoader,
-}
-from "./pages/Assets";
+import Assets, { loader as assetsLoader } from "./pages/Assets";
 import AssetDetailView, {
   loader as assetDetailsLoader,
 } from "./pages/AssetDetails";
+import Changelog, {loader as 
+  changelogLoader
+} from "./pages/Changelog";
 
 const router = createBrowserRouter([
   {
@@ -169,6 +168,11 @@ const router = createBrowserRouter([
         path: "/assets/:assetId",
         element: <AssetDetailView />,
         loader: assetDetailsLoader,
+      },
+      {
+        path: "/changelog",
+        element: <Changelog />,
+        loader: changelogLoader,
       },
     ],
     // errorElement: <ErrorPage />,

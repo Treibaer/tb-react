@@ -1,9 +1,6 @@
-import {
-  ArchiveBoxIcon,
-  LockClosedIcon,
-  UserIcon,
-} from "@heroicons/react/24/solid";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { FaArchive, FaLock, FaUser } from "react-icons/fa";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
@@ -16,7 +13,6 @@ import { PasswordEntry } from "../../models/passwords/password-entry";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { ROUTES } from "../../routes";
 import { PasswordService } from "../../services/PasswordService";
-import { AnimatePresence } from "framer-motion";
 import { showToast } from "../../utils/tbToast";
 
 const passwordService = PasswordService.shared;
@@ -128,10 +124,10 @@ const PasswordEntries: React.FC = () => {
               key={entry.id}
             >
               <ButtonIcon onClick={() => copyUser(entry.login)}>
-                <UserIcon className="w-5 h-5" />
+                <FaUser className="w-5 h-5" />
               </ButtonIcon>
               <ButtonIcon onClick={() => copyPass(entry.password)}>
-                <LockClosedIcon className="w-5 h-5" />
+                <FaLock className="w-5 h-5" />
               </ButtonIcon>
               <div
                 className="flex justify-between w-full p-2"
@@ -145,7 +141,7 @@ const PasswordEntries: React.FC = () => {
                 </div>
               </div>
               <ButtonIcon onClick={() => toggleArchive(entry)}>
-                <ArchiveBoxIcon
+                <FaArchive
                   color={entry.archived ? "olive" : undefined}
                   className="w-5 h-5"
                 />

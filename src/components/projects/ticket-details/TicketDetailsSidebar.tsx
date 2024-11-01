@@ -15,18 +15,19 @@ import TypeDropdown from "./dropdowns/TypeDropdown";
 import { NavLink } from "react-router-dom";
 import { TicketHistory } from "../../../models/ticket-history";
 import useParty from "../../../hooks/useParty";
+import { showToast } from "../../../utils/tbToast";
 
 const ticketService = TicketService.shared;
 
 export const TicketDetailsSidebar: React.FC<{
   metadata: ProjectMeta;
   ticket: Ticket;
+  history: TicketHistory[];
   update: (ticket: Ticket) => void;
-}> = ({ ticket, update, metadata }) => {
+}> = ({ ticket, update, metadata, history }) => {
   const { startParty } = useParty();
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
   const project = metadata.project;
-  const [history, setHistory] = useState<TicketHistory[]>([]);
 
   async function updateStatus(status: TicketStatus | null) {
     setDropdown(DropdownType.NONE);
@@ -42,11 +43,16 @@ export const TicketDetailsSidebar: React.FC<{
       startParty();
     }
     update(updatedTicket);
+    showToast("state", ticket.slug, status);
   }
 
   async function updateAssignee(assigneeId: number | null) {
     setDropdown(DropdownType.NONE);
-    if (assigneeId === null) {
+    if (
+      assigneeId === null ||
+      ticket.assignee?.id === assigneeId ||
+      (assigneeId === 0 && ticket.assignee?.id === undefined)
+    ) {
       return;
     }
     const updatedTicket = await ticketService.update(
@@ -55,11 +61,12 @@ export const TicketDetailsSidebar: React.FC<{
       { assigneeId }
     );
     update(updatedTicket);
+    showToast("assignee", ticket.slug, updatedTicket.assignee?.firstName);
   }
 
   async function updateType(type: string | null) {
     setDropdown(DropdownType.NONE);
-    if (type === null) {
+    if (type === null || ticket.type === type) {
       return;
     }
     const updatedTicket = await ticketService.update(
@@ -68,11 +75,16 @@ export const TicketDetailsSidebar: React.FC<{
       { type }
     );
     update(updatedTicket);
+    showToast("type", ticket.slug, type);
   }
 
   async function updateBoard(boardId: number | null) {
     setDropdown(DropdownType.NONE);
-    if (boardId === null) {
+    if (
+      boardId === null ||
+      ticket.board?.id === boardId ||
+      (boardId === 0 && ticket.board?.id === undefined)
+    ) {
       return;
     }
     const updatedTicket = await ticketService.update(
@@ -81,15 +93,8 @@ export const TicketDetailsSidebar: React.FC<{
       { boardId }
     );
     update(updatedTicket);
+    showToast("board", ticket.slug, updatedTicket.board?.title);
   }
-
-  useEffect(() => {
-    async function loadHistory() {
-      const history = await ticketService.getHistory(project.slug, ticket.slug);
-      setHistory(history);
-    }
-    loadHistory();
-  }, [project, ticket]);
 
   return (
     <div className="sm:h-[calc(100vh-56px)] overflow-auto max-h-full bg-mediumBlue border-t border-t-lightBlue border-r border-r-lightBlue w-full sm:w-[254px] cursor-default">
@@ -141,7 +146,7 @@ export const TicketDetailsSidebar: React.FC<{
               selectedBoardId={ticket.board?.id ?? 0}
               boards={metadata.boards}
               onClose={updateBoard}
-              style={{ left: 0, top: 34 }}
+              style={{ left: 80, top: 34 }}
             />
           )}
           <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Board</div>

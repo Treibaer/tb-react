@@ -34,6 +34,7 @@ export const ProjectCreationDialog: React.FC<{
         };
         await ProjectService.shared.create(newProject);
         onClose();
+        showToast("success", "", "Project created successfully");
       } catch (error: Error | any) {
         showToast("error", "", error.message);
       }

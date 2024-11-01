@@ -1,5 +1,6 @@
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { FaXmark } from "react-icons/fa6";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
 import { TicketComment } from "../../../models/ticket-comment";
@@ -8,14 +9,13 @@ import { FormatType, formatUnixTimestamp } from "../../../utils/dataUtils";
 import Button from "../../Button";
 import Confirmation from "../../common/Confirmation";
 import TicketAssigneeField from "./TicketAssigneeField";
-import BlurredBackground from "../../common/BlurredBackground";
-import { AnimatePresence } from "framer-motion";
 
 export const TicketCommentArea: React.FC<{
   project: Project;
   ticket: Ticket;
-}> = ({ project, ticket }) => {
-  const [comments, setComments] = useState<TicketComment[]>([]);
+  comments: TicketComment[];
+}> = ({ project, ticket, comments: initialComments }) => {
+  const [comments, setComments] = useState<TicketComment[]>(initialComments);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const [removeCommentId, setRemoveCommentId] = useState<number | null>(null);
 
@@ -49,11 +49,6 @@ export const TicketCommentArea: React.FC<{
     await loadComments();
   }
 
-  useEffect(() => {
-    loadComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div className="border-t border-t-lightBlue mt-1">
       <AnimatePresence>
@@ -81,7 +76,7 @@ export const TicketCommentArea: React.FC<{
             </div>
             <div>{comment.content}</div>
           </div>
-          <XMarkIcon
+          <FaXmark
             className="h-5 w-5 text-gray-400 cursor-pointer"
             onClick={() => setRemoveCommentId(comment.id)}
           />

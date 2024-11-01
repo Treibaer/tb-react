@@ -1,4 +1,3 @@
-import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Board } from "../../../models/board-structure";
@@ -8,9 +7,7 @@ import { ROUTES } from "../../../routes";
 import TicketService from "../../../services/TicketService";
 import { ButtonIcon } from "../../ButtonIcon";
 import TicketRowDnDWrapper from "./TicketRowDnDWrapper";
-import TicketDetailView from "../../../pages/projects/TicketDetailView";
-import toast from "react-hot-toast";
-import { showToast } from "../../../utils/tbToast";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
 export const BoardSection: React.FC<{
   board: Board;
@@ -22,6 +19,8 @@ export const BoardSection: React.FC<{
   onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
   onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
   reload: () => Promise<void>;
+  hoverIndex: number;
+  setHoverIndex: (index: number) => void;
 }> = ({
   board,
   project,
@@ -32,6 +31,8 @@ export const BoardSection: React.FC<{
   onContextMenu,
   onTouchStart,
   reload,
+  hoverIndex,
+  setHoverIndex,
 }) => {
   const tickets = board.tickets.filter(
     (t) =>
@@ -43,12 +44,12 @@ export const BoardSection: React.FC<{
   const doneTickets = board.tickets.filter((e) => e.status === "done").length;
 
   const [dragIndex, setDragIndex] = useState(-1);
-  const [hoverIndex, setHoverIndex] = useState(-1);
 
   async function moveTicket(dragIndex: number, hoverIndex: number) {
     if (dragIndex === hoverIndex) {
       return;
     }
+    console.log("Moving ticket", dragIndex, hoverIndex);
     await TicketService.shared.moveTicket(
       project.slug,
       board.id,
@@ -77,9 +78,9 @@ export const BoardSection: React.FC<{
 
           <ButtonIcon onClick={toggleBoard.bind(null, board.id)}>
             {isBoardVisible ? (
-              <ChevronDownIcon className="w-5 h-5" />
+              <FaChevronDown className="w-5 h-5" />
             ) : (
-              <ChevronRightIcon className="w-5 h-5" />
+              <FaChevronRight className="w-5 h-5" />
             )}
           </ButtonIcon>
         </div>

@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Page } from "../../models/page";
 
@@ -19,9 +19,9 @@ const PageStructure: React.FC<{
             className="hover:bg-mediumBlue3 p-1 cursor-pointer rounded"
           >
             {openedPages.includes(page.id) ? (
-              <ChevronDownIcon className="h-4 w-4" />
+              <FaChevronDown className="size-4" />
             ) : (
-              <ChevronRightIcon className="h-4 w-4" />
+              <FaChevronRight className="size-4" />
             )}
           </div>
         )}

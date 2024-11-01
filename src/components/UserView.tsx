@@ -1,6 +1,5 @@
-import { UserCircleIcon } from "@heroicons/react/24/solid";
+import { FaUserCircle } from "react-icons/fa";
 import { User } from "../models/user";
-import { FaUser, FaUserCircle } from "react-icons/fa";
 
 export const UserView: React.FC<{ user: User | null }> = ({ user }) => {
   return (

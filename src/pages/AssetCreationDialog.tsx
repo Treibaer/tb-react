@@ -50,6 +50,7 @@ export const AssetCreationDialog: React.FC<{
       const response = await Client.shared.uploadFile("/assets", formData);
       console.log(response);
       onClose();
+      showToast("success", "", "File uploaded successfully");
     } catch (err) {
       console.error(err);
       showToast("error", "", "Failed to upload file");

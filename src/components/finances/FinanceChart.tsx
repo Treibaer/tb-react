@@ -36,6 +36,7 @@ const FinanceChart: React.FC<{ data: number[] }> = ({ data }) => {
     labels: months,
     datasets: [
       {
+        label: "Balance",
         animation: false,
         data,
         fill: false,
