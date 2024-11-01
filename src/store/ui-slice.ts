@@ -2,10 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const uiSlice = createSlice({
   name: "ui",
-  initialState: { avatar: "" },
+  initialState: { avatar: "", party: false },
   reducers: {
     toggle(_state) {
       // state.cartIsVisible = !state.cartIsVisible;
+    },
+    startParty(state) {
+      state.party = true;
+    },
+    stopParty(state) {
+      state.party = false;
     },
     setUserIcon(state, action) {
       state.avatar = action.payload;

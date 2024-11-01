@@ -9,6 +9,8 @@ import TicketService from "../../../services/TicketService";
 import { ButtonIcon } from "../../ButtonIcon";
 import TicketRowDnDWrapper from "./TicketRowDnDWrapper";
 import TicketDetailView from "../../../pages/projects/TicketDetailView";
+import toast from "react-hot-toast";
+import { showToast } from "../../../utils/tbToast";
 
 export const BoardSection: React.FC<{
   board: Board;

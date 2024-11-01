@@ -1,27 +1,26 @@
 import {
   ChartPieIcon,
   ChevronRightIcon,
-  EllipsisHorizontalCircleIcon,
   TagIcon,
-  TrashIcon,
-  UserCircleIcon,
+  TrashIcon
 } from "@heroicons/react/24/solid";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { FaSpinner, FaUserCircle } from "react-icons/fa";
+import useParty from "../../hooks/useParty";
 import { DropdownType } from "../../models/dropdown-type";
 import { ProjectMeta } from "../../models/project-meta";
 import { TicketStatus } from "../../models/ticket-status";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import TicketService from "../../services/TicketService";
-import { useToast } from "../../store/ToastContext";
+import { showToast } from "../../utils/tbToast";
+import Confirmation from "../common/Confirmation";
 import AssigneeDropdown from "../projects/ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../projects/ticket-details/dropdowns/BoardDropdown";
 import DropdownElement from "../projects/ticket-details/dropdowns/DropdownElement";
 import PositionDropdown from "../projects/ticket-details/dropdowns/PositionDropdown";
 import StatusDropdown from "../projects/ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../projects/ticket-details/dropdowns/TypeDropdown";
-import BlurredBackground from "../common/BlurredBackground";
-import Confirmation from "../common/Confirmation";
-import { AnimatePresence } from "framer-motion";
 
 const ticketService = TicketService.shared;
 
@@ -30,9 +29,8 @@ export const ContextMenu: React.FC<{
   config: TicketsContextMenuConfig;
   onClose: (update: boolean) => void;
 }> = ({ metadata, config, onClose }) => {
+  const { startParty } = useParty();
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
-
-  const { showToast } = useToast();
 
   const ticket = config.ticket!;
   const project = metadata.project;
@@ -62,22 +60,29 @@ export const ContextMenu: React.FC<{
       await ticketService.update(project.slug, ticket.slug, {
         assigneeId,
       });
+      const assignee = metadata.users.find((u) => u.id === assigneeId);
       showToast(
-        `${ticket.slug} updated`,
-        `Assigned to ${
-          metadata.users.find((u) => u.id === assigneeId)?.firstName
-        }`
+        "assignee",
+        ticket.slug,
+        assignee?.firstName,
+        assignee?.avatar
       );
     }
     onClose(assigneeId !== ticket.assignee?.id);
   }
+
   async function onStatusChange(status: TicketStatus | null) {
     if (status === null) {
       return;
     }
     if (status !== ticket.status) {
       await ticketService.update(project.slug, ticket.slug, { status });
-      showToast(`${ticket.slug} updated`, `Status changed to ${status}`);
+      // showToast(`${ticket.slug} updated`, `Status changed to ${status}`);
+      showToast("state", ticket.slug, status);
+
+      if (status === "done") {
+        startParty();
+      }
     }
     onClose(status !== ticket.status);
   }
@@ -88,10 +93,9 @@ export const ContextMenu: React.FC<{
     if (boardId !== ticket.board?.id) {
       await ticketService.update(project.slug, ticket.slug, { boardId });
       showToast(
-        `${ticket.slug} updated`,
-        `Moved to ${
-          metadata.boards.find((b) => b.id === boardId)?.title ?? "Backlog"
-        }`
+        "board",
+        ticket.slug,
+        metadata.boards.find((b) => b.id === boardId)?.title
       );
     }
     onClose(boardId !== ticket.board?.id);
@@ -103,7 +107,7 @@ export const ContextMenu: React.FC<{
     }
     if (type !== ticket.type) {
       await ticketService.update(project.slug, ticket.slug, { type });
-      showToast(`${ticket.slug} updated`, `Type changed to ${type}`);
+      showToast("type", ticket.slug, type);
     }
     onClose(type !== ticket.type);
   }
@@ -189,11 +193,11 @@ export const ContextMenu: React.FC<{
           isSelected={false}
           onMouseOver={() => setDropdown(DropdownType.STATUS)}
         >
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             <div className="">
-              <EllipsisHorizontalCircleIcon className="h-5 w-5 text-gray-400" />
+              <FaSpinner className="h-5 w-5 text-gray-400" />
             </div>
-            <div className="w-[70px]">Status</div>
+            <div className="w-[60px]">Status</div>
             <div className="">
               <ChevronRightIcon className="h-5 w-5 text-gray-400" />
             </div>
@@ -203,11 +207,11 @@ export const ContextMenu: React.FC<{
           isSelected={false}
           onMouseOver={() => setDropdown(DropdownType.ASSIGNEE)}
         >
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             <div className="">
-              <UserCircleIcon className="h-5 w-5 text-gray-400" />
+              <FaUserCircle className="h-5 w-5 text-gray-400" />
             </div>
-            <div className="w-[70px]">Assignee</div>
+            <div className="w-[60px]">Assignee</div>
             <div className="">
               <ChevronRightIcon className="h-5 w-5 text-gray-400" />
             </div>

@@ -3,14 +3,11 @@ import Dialog from "../../components/common/Dialog";
 import { Project } from "../../models/project";
 import ProjectService from "../../services/ProjectService";
 import { ROUTES } from "../../routes";
-import { useToast } from "../../store/ToastContext";
+import { showToast } from "../../utils/tbToast";
 
 export const ProjectCreationDialog: React.FC<{
   onClose: () => void;
 }> = ({ onClose }) => {
-
-  const {showToast} = useToast();
-
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const slugRef = useRef<HTMLInputElement>(null);
@@ -38,10 +35,10 @@ export const ProjectCreationDialog: React.FC<{
         await ProjectService.shared.create(newProject);
         onClose();
       } catch (error: Error | any) {
-        showToast("Error", error.message, "error");
+        showToast("error", "", error.message);
       }
     } else {
-      showToast("Title is required", "Please enter a title", "error");
+      showToast("error", "", "Title is required");
     }
   }
 

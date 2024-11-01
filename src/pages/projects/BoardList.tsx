@@ -12,13 +12,12 @@ import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
-import { useToast } from "../../store/ToastContext";
+import { showToast } from "../../utils/tbToast";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
 
 export const Boards: React.FC = () => {
-  const { showToast } = useToast();
   const data = useLoaderData() as {
     boards: Board[];
     project: Project;
@@ -64,11 +63,12 @@ export const Boards: React.FC = () => {
         await BoardService.shared.create(project.slug, newBoard);
         setIsCreating(false);
         updateBoardList();
+        showToast("success", "", "Board Created");
       } catch (error: Error | any) {
-        showToast("Error", error.message, "error");
+        showToast("error", "", error.message);
       }
     } else {
-      showToast("Title is required", "Please enter a title", "error");
+      showToast("error", "Title is required", "Please enter a title");
     }
   }
 
@@ -79,11 +79,12 @@ export const Boards: React.FC = () => {
         await boardService.update(project.slug, editBoard.id, { title });
         setEditBoard(null);
         updateBoardList();
+        showToast("success", editBoard.title, "Saved");
       } catch (error: Error | any) {
-        showToast("Error", error.message, "error");
+        showToast("error", "", error.message);
       }
     } else {
-      showToast("Title is required", "Please enter a title", "error");
+      showToast("error", "Title is required", "Please enter a title to update");
     }
   }
 

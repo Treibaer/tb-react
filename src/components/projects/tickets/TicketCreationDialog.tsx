@@ -5,7 +5,6 @@ import { ProjectMeta } from "../../../models/project-meta";
 import { Ticket } from "../../../models/ticket";
 import { TicketStatus } from "../../../models/ticket-status";
 import { User } from "../../../models/user";
-import { useToast } from "../../../store/ToastContext";
 import TicketService from "../../../services/TicketService";
 import { Toggle } from "../../Toggle";
 import Dialog from "../../common/Dialog";
@@ -15,6 +14,7 @@ import AssigneeDropdown from "../ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../ticket-details/dropdowns/BoardDropdown";
 import StatusDropdown from "../ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../ticket-details/dropdowns/TypeDropdown";
+import { showToast } from "../../../utils/tbToast";
 
 const ticketService = TicketService.shared;
 
@@ -24,8 +24,6 @@ export const TicketCreationDialog: React.FC<{
   onClose: (update: boolean) => void;
   updateBoardView: () => void;
 }> = ({ metadata, onClose, initialBoardId, updateBoardView }) => {
-  const { showToast } = useToast();
-
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
@@ -50,7 +48,7 @@ export const TicketCreationDialog: React.FC<{
   async function createTicket() {
     const title = inputRef.current?.value;
     if (!title) {
-      showToast("Title is required", "Please enter a title", "error");
+      showToast("error", "", "Title is required");
       return;
     }
     const description = descriptionRef.current?.value ?? "";
@@ -63,9 +61,9 @@ export const TicketCreationDialog: React.FC<{
         type: selectedType,
         boardId: selectedBoard?.id,
       });
-      handleCreateTicket(ticket);
-    } catch (err) {
-      showToast("Error", `Error creating ticket: ${err}`, "error");
+      showToast("success", "", `Ticket ${ticket.slug} Created`);
+    } catch (err: any) {
+      showToast("error", "", err.message);
       return;
     }
 
@@ -122,11 +120,6 @@ export const TicketCreationDialog: React.FC<{
   function toggleStayOpen() {
     setStayOpen(!stayOpen);
   }
-
-
-  const handleCreateTicket = (ticket: Ticket) => {
-    showToast("Ticket Created", "Ticket ID: " + ticket.ticketId);
-  };
 
   return (
     <Dialog

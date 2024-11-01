@@ -2,10 +2,9 @@ import { useState } from "react";
 import Constants from "../../services/Constants";
 import { AccessToken } from "../../models/access-token";
 import { useLoginCheck } from "./useLoginCheck";
-import { useToast } from "../../store/ToastContext";
+import { showToast } from "../../utils/tbToast";
 
 export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
-  const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,11 +34,11 @@ export function useLogin(setIsLoggedIn: (isLoggedIn: boolean) => void) {
         setIsLoggedIn(true);
         checkLogin();
       } else {
-        showToast("Error", "Invalid email or password", "error");
+        showToast("error", "", "Invalid email or password");
         setIsSubmitting(false);
       }
     } catch (err: any) {
-      showToast("Error", "An error occurred. Please try again." + err.message, "error");
+      showToast("error", "", err.message);
       setIsSubmitting(false);
     }
   }

@@ -20,6 +20,7 @@ import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-conf
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
+import PartyComponent from "./PartyComponent";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
@@ -189,6 +190,7 @@ const TicketsBoardView: React.FC = () => {
 
   return (
     <>
+    <PartyComponent />
       <AnimatePresence>
         {isCreating && (
           <TicketCreationDialog

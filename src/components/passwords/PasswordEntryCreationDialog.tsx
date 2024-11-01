@@ -5,7 +5,7 @@ import { PasswordService } from "../../services/PasswordService";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import useIsMobile from "../../hooks/useIsMobile";
 import Button from "../Button";
-import { useToast } from "../../store/ToastContext";
+import { showToast } from "../../utils/tbToast";
 
 export const PasswordEntryCreationDialog: React.FC<{
   environment: PasswordEnvironment;
@@ -65,25 +65,27 @@ export const PasswordEntryCreationDialog: React.FC<{
           await PasswordService.shared.createEntry(environment.id, entry);
         }
         onClose();
-
-        showToast(`Entry ${editingEntry ? "updated" : "created"}`, title);
+        showToast(
+          "success",
+          "",
+          `Entry ${editingEntry ? "updated" : "created"}`
+        );
       } catch (error: Error | any) {
-        showToast("Error", error.message, "error");
+        showToast("error", "", error.message);
       }
     } else {
-      showToast("Title is required", "Please enter a title", "error");
+      showToast("error", "", "Please enter a title");
     }
   }
-  const { showToast } = useToast();
 
   function copyUser() {
     navigator.clipboard.writeText(loginRef.current!.value);
-    showToast(`Copied user to clipboard`, loginRef.current!.value);
+    showToast("success", "", "Copied user to clipboard");
   }
 
   function copyPass() {
     navigator.clipboard.writeText(editingEntry?.password ?? "");
-    showToast(`Copied password to clipboard`, "********");
+    showToast("success", "", "Copied password to clipboard");
   }
 
   function showPass() {

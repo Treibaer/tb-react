@@ -1,5 +1,6 @@
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { User } from "../models/user";
+import { FaUser, FaUserCircle } from "react-icons/fa";
 
 export const UserView: React.FC<{ user: User | null }> = ({ user }) => {
   return (
@@ -11,7 +12,7 @@ export const UserView: React.FC<{ user: User | null }> = ({ user }) => {
           alt={`${user.firstName || "Assignee"}'s avatar`}
         />
       ) : (
-        <UserCircleIcon className="h-7 w-7 text-gray-400" />
+        <FaUserCircle className="h-7 w-7 text-gray-400" />
       )}
     </div>
   );

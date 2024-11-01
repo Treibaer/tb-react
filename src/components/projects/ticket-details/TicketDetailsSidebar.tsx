@@ -14,6 +14,7 @@ import StatusDropdown from "./dropdowns/StatusDropdown";
 import TypeDropdown from "./dropdowns/TypeDropdown";
 import { NavLink } from "react-router-dom";
 import { TicketHistory } from "../../../models/ticket-history";
+import useParty from "../../../hooks/useParty";
 
 const ticketService = TicketService.shared;
 
@@ -22,6 +23,7 @@ export const TicketDetailsSidebar: React.FC<{
   ticket: Ticket;
   update: (ticket: Ticket) => void;
 }> = ({ ticket, update, metadata }) => {
+  const { startParty } = useParty();
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
   const project = metadata.project;
   const [history, setHistory] = useState<TicketHistory[]>([]);
@@ -36,6 +38,9 @@ export const TicketDetailsSidebar: React.FC<{
       ticket.slug,
       { status }
     );
+    if (status === "done") {
+      startParty();
+    }
     update(updatedTicket);
   }
 

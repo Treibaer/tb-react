@@ -1,6 +1,4 @@
-import {
-  ArrowDownTrayIcon
-} from "@heroicons/react/24/solid";
+import { FaDownload } from "react-icons/fa6";
 import {
   LoaderFunction,
   NavLink,
@@ -31,7 +29,7 @@ const AssetDetailView: React.FC = () => {
         className="hover:text-lightBlue"
         rel="noreferrer"
       >
-        <ArrowDownTrayIcon className="h-6 w-6" />
+        <FaDownload className="h-6 w-6" />
       </a>
     );
   }

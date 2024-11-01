@@ -17,7 +17,9 @@ export const NavigationLink: React.FC<{
       }
       end
     >
-      {icon && <div className="w-4 h-4">{icon}</div>}
+      {icon && <div style={{
+        fontSize: "1.1rem",
+      }}>{icon}</div>}
       {title}
     </NavLink>
   );

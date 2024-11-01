@@ -16,14 +16,13 @@ import { PasswordEntry } from "../../models/passwords/password-entry";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { ROUTES } from "../../routes";
 import { PasswordService } from "../../services/PasswordService";
-import { useToast } from "../../store/ToastContext";
 import { AnimatePresence } from "framer-motion";
+import { showToast } from "../../utils/tbToast";
 
 const passwordService = PasswordService.shared;
 
 const PasswordEntries: React.FC = () => {
   const isMobile = useIsMobile();
-  const { showToast } = useToast();
 
   const data = useLoaderData() as {
     environment: PasswordEnvironment;
@@ -74,12 +73,12 @@ const PasswordEntries: React.FC = () => {
 
   function copyUser(value: string) {
     navigator.clipboard.writeText(value);
-    showToast(`Copied user to clipboard`, value);
+    showToast("success", "", "Copied username to clipboard");
   }
 
   function copyPass(value: string) {
     navigator.clipboard.writeText(value);
-    showToast(`Copied password to clipboard`, "********");
+    showToast("success", "", "Copied password to clipboard");
   }
 
   async function toggleArchive(entry: PasswordEntry) {

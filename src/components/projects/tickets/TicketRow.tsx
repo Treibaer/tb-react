@@ -1,13 +1,11 @@
 import {
-  Bars4Icon,
-  CheckCircleIcon,
-  EllipsisHorizontalCircleIcon,
-  InformationCircleIcon,
+  Bars4Icon
 } from "@heroicons/react/24/solid";
 import { NavLink } from "react-router-dom";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
+import { doneIcon, inProgressIcon, openIcon } from "../../../utils/ticketUtils";
 import UserView from "../../UserView";
 
 interface TicketRowProps {
@@ -42,15 +40,9 @@ export default function TicketRow({
       <div className="tb-row" style={{ backgroundColor, opacity }}>
         <div className="flex-grow flex gap-1 sm:gap-4 items-center">
           <div>
-            {ticket.status === "open" && (
-              <InformationCircleIcon className="h-6 w-6 text-gray-400" />
-            )}
-            {ticket.status === "inProgress" && (
-              <EllipsisHorizontalCircleIcon className="h-6 w-6 text-yellow-600" />
-            )}
-            {ticket.status === "done" && (
-              <CheckCircleIcon className="h-6 w-6 text-green-800" />
-            )}
+            {ticket.status === "open" && openIcon}
+            {ticket.status === "inProgress" && inProgressIcon}
+            {ticket.status === "done" && doneIcon}
           </div>
           <div className="text-gray-400 w-16 flex-none">{ticket.slug}</div>
           <div className="flex gap-1 items-center text-sm sm:text-base">

@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -5,6 +6,8 @@ import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
 import { BoardColumn } from "../../components/projects/board-details/BoardColumn";
+import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
+import TitleView from "../../components/TitleView";
 import { Board } from "../../models/board-structure";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { ProjectMeta } from "../../models/project-meta";
@@ -12,9 +15,6 @@ import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
-import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
-import TitleView from "../../components/TitleView";
-import { AnimatePresence } from "framer-motion";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
@@ -142,7 +142,6 @@ export const BoardDetails: React.FC = () => {
         <div className="flex mx-2 mt-2 gap-2">
           <BoardColumn
             status="open"
-            title="Open"
             project={project}
             tickets={openTickets}
             update={updateBoard}
@@ -151,7 +150,6 @@ export const BoardDetails: React.FC = () => {
           />
           <BoardColumn
             status="inProgress"
-            title="In Progress"
             project={project}
             tickets={inProgressTickets}
             update={updateBoard}
@@ -160,7 +158,6 @@ export const BoardDetails: React.FC = () => {
           />
           <BoardColumn
             status="done"
-            title="Done"
             project={project}
             tickets={doneTickets}
             update={updateBoard}

@@ -20,6 +20,7 @@ export const BoardRow: React.FC<{
     event.preventDefault();
     if (board.position === 0) return;
     await BoardService.shared.update(projectSlug, board.id, {
+      title: board.title,
       position: Math.max(0, board.position - 1),
     });
     update();
@@ -27,6 +28,7 @@ export const BoardRow: React.FC<{
   async function handlePositionDown(event: React.MouseEvent) {
     event.preventDefault();
     await BoardService.shared.update(projectSlug, board.id, {
+      title: board.title,
       position: board.position + 1,
     });
     update();

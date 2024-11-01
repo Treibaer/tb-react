@@ -1,22 +1,18 @@
 import {
   ChartBarIcon,
   ChartPieIcon,
-  CreditCardIcon,
-  DocumentTextIcon,
-  HomeIcon,
-  LockClosedIcon,
-  SignalIcon,
-  TagIcon,
-  TicketIcon,
+  CreditCardIcon
 } from "@heroicons/react/24/solid";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { FaBorderAll, FaCoins, FaFile, FaImages, FaLock } from "react-icons/fa";
+import { FaChartSimple, FaHouse, FaTicket } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { ROUTES } from "../../routes";
 import Constants from "../../services/Constants";
 import NavigationLink from "./NavigationLink";
 import UserMenu from "./UserMenu";
-import { AnimatePresence } from "framer-motion";
 
 export default function MainNavigation() {
   const avatar = useSelector((state: any) => state.ui.avatar);
@@ -60,34 +56,34 @@ export default function MainNavigation() {
         <NavigationLink
           to={ROUTES.HOME}
           title="Dashboard"
-          icon={<HomeIcon />}
+          icon={<FaHouse />}
         />
         <NavigationLink
           to={ROUTES.PROJECTS}
           title="Projects"
-          icon={<ChartBarIcon />}
+          icon={<FaChartSimple />}
         />
         {!Constants.isDemoMode && (
           <>
             <NavigationLink
               to={ROUTES.TICKETS_BOARD_VIEW("HK")}
               title="Board View"
-              icon={<TagIcon />}
+              icon={<FaTicket />}
             />
             <NavigationLink
               to={ROUTES.ASSETS}
               title="Assets"
-              icon={<DocumentTextIcon />}
+              icon={<FaImages />}
             />
             <NavigationLink
               to={ROUTES.FINANCE_DASHBOARD}
               title="Finances"
-              icon={<CreditCardIcon />}
+              icon={<FaCoins />}
             />
             <NavigationLink
               to={ROUTES.PASSWORDS_ENTRIES(1)}
               title="Passwords"
-              icon={<LockClosedIcon />}
+              icon={<FaLock />}
             />
           </>
         )}
@@ -97,27 +93,27 @@ export default function MainNavigation() {
             <NavigationLink
               to={ROUTES.PROJECT_DETAILS(params.projectSlug)}
               title="Project Overview"
-              icon={<HomeIcon />}
+              icon={<FaHouse />}
             />
             <NavigationLink
               to={ROUTES.TICKETS_BOARD_VIEW(params.projectSlug)}
               title="Board View"
-              icon={<TagIcon />}
+              icon={<FaTicket />}
             />
             <NavigationLink
               to={ROUTES.PROJECTS_PAGES(params.projectSlug)}
               title="Pages"
-              icon={<DocumentTextIcon />}
+              icon={<FaFile />}
             />
             <NavigationLink
               to={ROUTES.BOARDS(params.projectSlug)}
               title="Boards"
-              icon={<ChartPieIcon />}
+              icon={<FaBorderAll />}
             />
             <NavigationLink
               to={ROUTES.TICKETS_LIST(params.projectSlug)}
               title="All Tickets"
-              icon={<TicketIcon />}
+              icon={<FaTicket />}
             />
           </>
         )}

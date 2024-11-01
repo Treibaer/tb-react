@@ -1,6 +1,6 @@
-import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { FaDownload } from "react-icons/fa6";
 import { NavLink, useLoaderData } from "react-router-dom";
 import { ButtonIcon } from "../components/ButtonIcon";
 import HeaderView from "../components/HeaderView";
@@ -97,7 +97,7 @@ const Assets: React.FC = () => {
                     title="Download"
                   >
                     <ButtonIcon>
-                      <ArrowDownTrayIcon className="w-6 h-6" />
+                      <FaDownload className="w-6 h-6" />
                     </ButtonIcon>
                   </a>
                 </>

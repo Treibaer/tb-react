@@ -1,14 +1,13 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { FinanceService } from "../../services/FinanceService";
+import { showToast } from "../../utils/tbToast";
 import Dialog from "../common/Dialog";
-import { useToast } from "../../store/ToastContext";
 
 const FinanceDetailEditBalanceDialogView: React.FC<{
   value: number;
   onClose: (reload: boolean) => void;
 }> = ({ value, onClose }) => {
   const valueRef = useRef<HTMLInputElement>(null);
-  const {showToast} = useToast();
 
   async function onSubmit() {
     const value = parseFloat(
@@ -16,16 +15,16 @@ const FinanceDetailEditBalanceDialogView: React.FC<{
     );
 
     if (!value) {
-      showToast("Error", "Value is required", "error");
+      showToast("error", "", "Value is required");
       return;
     }
 
     try {
       await FinanceService.shared.updateBalance(value * 100);
       onClose(true);
-      showToast("Success", "Balance updated");
+      showToast("success", "", "Balance updated");
     } catch (error: Error | any) {
-      showToast("Error", error.message, "error");
+      showToast("error", "", error.message);
     }
   }
 

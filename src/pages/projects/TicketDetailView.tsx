@@ -1,9 +1,9 @@
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { LoaderFunction, useBlocker, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
-import BlurredBackground from "../../components/common/BlurredBackground";
 import Confirmation from "../../components/common/Confirmation";
 import HeaderView from "../../components/HeaderView";
 import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
@@ -15,8 +15,7 @@ import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import TicketService from "../../services/TicketService";
-import { useToast } from "../../store/ToastContext";
-import { AnimatePresence } from "framer-motion";
+import { showToast } from "../../utils/tbToast";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
@@ -34,8 +33,6 @@ export default function TicketDetailView() {
   const currentTitle = useRef<HTMLInputElement>(null);
   const currentDescription = useRef(ticket.description);
   const [isEditing, setIsEditing] = useState(false);
-
-  const { showToast } = useToast();
 
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
@@ -80,7 +77,7 @@ export default function TicketDetailView() {
         { title, description }
       );
       setTicket(updatedTicket);
-      showToast(`${ticket.slug}`, "Ticket updated");
+      showToast("success", ticket.slug, "Saved");
     }
     setIsEditing((prev) => !prev);
   }

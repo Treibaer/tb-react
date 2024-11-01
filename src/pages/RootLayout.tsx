@@ -7,6 +7,8 @@ import Constants from "../services/Constants";
 import LoginView from "./LoginView";
 import AppContext from "../store/AppContext";
 import { useContext, useEffect } from "react";
+import PartyComponent from "./projects/PartyComponent";
+import { Toaster } from "react-hot-toast";
 
 export const RootLayout: React.FC = () => {
   const { state } = useNavigation();
@@ -32,6 +34,8 @@ export const RootLayout: React.FC = () => {
   return (
     <>
       {state === "loading" && <DelayedLoadingSpinner />}
+      <PartyComponent />
+      <Toaster />
       {serverError && (
         <div className="text-red-500">
           Server error. Please try again later.

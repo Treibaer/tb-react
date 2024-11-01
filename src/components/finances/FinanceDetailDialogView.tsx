@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { AccountEntry } from "../../models/finances/account-entry";
 import { AcccountTag } from "../../models/finances/account-tag";
 import { FinanceService } from "../../services/FinanceService";
 import Dialog from "../common/Dialog";
-import { useToast } from "../../store/ToastContext";
+import { showToast } from "../../utils/tbToast";
 
 const FinanceDetailDialogView: React.FC<{
   onClose: (reload: boolean) => void;
@@ -15,8 +15,6 @@ const FinanceDetailDialogView: React.FC<{
   const signRef = useRef<HTMLSelectElement>(null);
   const purchasedATRef = useRef<HTMLInputElement>(null);
   const tagRef = useRef<HTMLSelectElement>(null);
-
-  const {showToast} = useToast();
 
   useEffect(() => {
     if (editingEntry) {
@@ -46,7 +44,7 @@ const FinanceDetailDialogView: React.FC<{
     const sign = Number(signRef.current?.value);
 
     if (!title || !value || !purchasedAt) {
-      showToast("Error", "Title & Value are required", "error");
+      showToast("error", "", "Title & Value are required");
       return;
     }
 
@@ -59,9 +57,13 @@ const FinanceDetailDialogView: React.FC<{
         tagId
       );
       onClose(true);
-      showToast(`Entry ${editingEntry?.id ? "Updated" : "Created"}`, "Title: " + title);
+      showToast(
+        "success",
+        "",
+        "Entry " + (editingEntry ? "Updated" : "Created")
+      );
     } catch (error: Error | any) {
-      showToast("Error", error.message, "error");
+      showToast("error", "", error.message);
     }
   }
 
