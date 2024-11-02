@@ -7,3 +7,6 @@ export const store = configureStore({
     ui: uiSlice,
   },
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

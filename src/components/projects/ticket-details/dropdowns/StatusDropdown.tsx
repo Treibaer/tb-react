@@ -8,20 +8,22 @@ export const StatusDropdown: React.FC<{
   states: TicketStatus[];
   onClick: (status: TicketStatus | null) => void;
   style?: React.CSSProperties;
-}> = ({ selectedStatus, states, onClick, style }) => {
+  showNumbers?: boolean;
+}> = ({ selectedStatus, states, onClick, style, showNumbers }) => {
   return (
     <TicketDetailsDropdown
       onClose={onClick}
       toggleId="statusDropdown"
       style={style}
     >
-      {states.map((state) => (
+      {states.map((state, index) => (
         <DropdownElement
           key={state}
           isSelected={selectedStatus === state}
           onClick={onClick.bind(this, state)}
         >
           <TicketStatusView status={state} />
+          {showNumbers && <div className="absolute right-2 text-gray-400">[{index + 1}]</div>}
         </DropdownElement>
       ))}
     </TicketDetailsDropdown>

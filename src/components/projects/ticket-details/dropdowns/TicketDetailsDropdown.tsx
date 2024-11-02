@@ -44,6 +44,7 @@ export const TicketDetailsDropdown: React.FC<{
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.15 }}
       ref={dropdownRef}
       className={`ticket-details-dropdown tb-transparent-menu py-1 max-w-[236px]`}

@@ -7,7 +7,7 @@ export const inProgressIcon = (
   <FaSpinner style={{ color: "#FFC107", fontSize: "18px" }} />
 );
 export const doneIcon = (
-  <FaCheckCircle style={{ color: "#177824", fontSize: "18px" }} />
+  <FaCheckCircle style={{ color: "#248f32", fontSize: "18px" }} />
 );
 
 export const errorIcon = (

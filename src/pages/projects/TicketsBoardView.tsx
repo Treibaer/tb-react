@@ -53,6 +53,24 @@ const TicketsBoardView: React.FC = () => {
 
   const { listenOn, listenOff, emit } = useSocket();
 
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement> | KeyboardEvent
+  ) => {
+    if (event.key === "c") {
+      openDialog();
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener for keydown
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   useEffect(() => {
     listenOn("matches", "update", (_) => {
       updateBoardStructure();

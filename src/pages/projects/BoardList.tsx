@@ -6,6 +6,7 @@ import HeaderView from "../../components/HeaderView";
 import { BoardHeaderView } from "../../components/projects/board-list/BoardHeaderView";
 import { BoardRow } from "../../components/projects/board-list/BoardRow";
 import TitleView from "../../components/TitleView";
+import { Toggle } from "../../components/Toggle";
 import { Board } from "../../models/board-structure";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
@@ -28,6 +29,7 @@ export const Boards: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [editBoard, setEditBoard] = useState<Board | null>(null);
   const [boards, setBoards] = useState(data.boards);
+  const [showAll, setShowAll] = useState(false);
 
   const project = data.project;
 
@@ -139,18 +141,27 @@ export const Boards: React.FC = () => {
         )}
       </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <TitleView title="Boards" openDialog={openDialog} />
+      <div className="flex justify-between items-center me-2">
+        <TitleView title="Boards" openDialog={openDialog} />
+        <Toggle
+          title="Archived"
+          defaultChecked={false}
+          onChange={() => setShowAll(!showAll)}
+        />
+      </div>
       <div className="flex flex-col">
         <BoardHeaderView />
-        {boards.map((board) => (
-          <BoardRow
-            key={board.id}
-            projectSlug={project.slug}
-            board={board}
-            update={updateBoardList}
-            onEdit={toggleEdit}
-          />
-        ))}
+        {boards
+          .filter((board) => showAll || board.isActive)
+          .map((board) => (
+            <BoardRow
+              key={board.id}
+              projectSlug={project.slug}
+              board={board}
+              update={updateBoardList}
+              onEdit={toggleEdit}
+            />
+          ))}
       </div>
     </>
   );

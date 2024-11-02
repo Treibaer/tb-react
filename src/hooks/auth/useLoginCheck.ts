@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { AppResponse } from "../../models/app-response";
 import { uiActions } from "../../store/ui-slice";
 import Constants from "../../services/Constants";
+import { useAppDispatch } from "../storeHoooks";
 
 export function useLoginCheck() {
   const [checkingLogin, setCheckingLogin] = useState(true);
@@ -10,7 +10,8 @@ export function useLoginCheck() {
   const [serverError, setServerError] = useState(false);
   const [avatar, setAvatar] = useState("");
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+
   const checkLogin = async () => {
     const token = localStorage.getItem("token");
 
@@ -35,6 +36,7 @@ export function useLoginCheck() {
         const data: AppResponse = await result.json();
         setIsLoggedIn(data.allowed);
         setAvatar(data.icon);
+        // dispatch(uiActions.setUserIcon(data.icon));
         dispatch(uiActions.setUserIcon(data.icon));
       }
     } catch (error) {

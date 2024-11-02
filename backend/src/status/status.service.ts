@@ -23,7 +23,9 @@ export class StatusService {
             s.up = await this.checkWebSocketReachability(s.host, s.port);
           } else {
             const response = await fetch(`${s.host}:${s.port}`);
-            s.up = true;
+            // console.log(s.host, s.port, response.status);
+            // set false, if status is 410
+            s.up = response.status < 410;
           }
         } catch (error: any) {
           s.up = false;

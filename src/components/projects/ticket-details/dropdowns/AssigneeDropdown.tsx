@@ -8,7 +8,8 @@ export const AssigneeDropdown: React.FC<{
   users: User[];
   onClick: (userId: number | null) => void;
   style?: React.CSSProperties;
-}> = ({ users, onClick, selectedAssignee, style }) => {
+  showNumbers?: boolean;
+}> = ({ users, onClick, selectedAssignee, style, showNumbers }) => {
   return (
     <TicketDetailsDropdown
       onClose={onClick}
@@ -20,14 +21,20 @@ export const AssigneeDropdown: React.FC<{
         onClick={onClick.bind(this, 0)}
       >
         <TicketAssigneeField user={null} />
+        {showNumbers && (
+          <div className="absolute right-2 text-gray-400">[1]</div>
+        )}
       </DropdownElement>
-      {users.map((user) => (
+      {users.map((user, index) => (
         <DropdownElement
           key={user.id}
           isSelected={user.id === selectedAssignee?.id}
           onClick={onClick.bind(this, user.id)}
         >
           <TicketAssigneeField user={user} />
+          {showNumbers && (
+            <div className="absolute right-2 text-gray-400">[{index + 2}]</div>
+          )}
         </DropdownElement>
       ))}
     </TicketDetailsDropdown>

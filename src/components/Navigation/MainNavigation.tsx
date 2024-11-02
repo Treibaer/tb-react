@@ -2,15 +2,15 @@ import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { FaBorderAll, FaChartBar, FaChartPie, FaCoins, FaFile, FaImages, FaLock } from "react-icons/fa";
 import { FaChartSimple, FaHouse, FaTicket } from "react-icons/fa6";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useAppSelector } from "../../hooks/storeHoooks";
 import { ROUTES } from "../../routes";
 import Constants from "../../services/Constants";
 import NavigationLink from "./NavigationLink";
 import UserMenu from "./UserMenu";
 
 export default function MainNavigation() {
-  const avatar = useSelector((state: any) => state.ui.avatar);
+  const avatar = useAppSelector((state) => state.ui.avatar);
 
   const params: { projectSlug?: string } = useParams();
 

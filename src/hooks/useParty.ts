@@ -1,15 +1,25 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useRef } from "react";
+import { useDispatch } from "react-redux";
 import { uiActions } from "../store/ui-slice";
+import { useAppSelector } from "./storeHoooks";
 
 const useParty = () => {
   const dispatch = useDispatch();
-  const isParty = useSelector((state: any) => state.ui.party);
+  const isParty = useAppSelector((state) => state.ui.party);
+  const timer = useRef<NodeJS.Timeout | null>(null);
 
-  function startParty() {
+  async function startParty() {
+    if (timer.current) {
+      clearTimeout(timer.current);
+      dispatch(uiActions.stopParty());
+      // wait 100ms to allow the party to stop
+      await new Promise((resolve) => setTimeout(resolve, 1));
+    }
     dispatch(uiActions.startParty());
-    setTimeout(() => {
+    const newTimer = setTimeout(() => {
       dispatch(uiActions.stopParty());
     }, 3000);
+    timer.current = newTimer;
   }
   return {
     party: "🎉",
