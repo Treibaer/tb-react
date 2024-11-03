@@ -35,7 +35,7 @@ export default function TicketRow({
       onContextMenu={handleContextMenu}
       onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
     >
-      <div className="tb-row" style={{ backgroundColor, opacity }}>
+      <div className="tb-row" style={{ opacity }}>
         <div className="flex-grow flex gap-1 sm:gap-4 items-center">
           <div>
             {ticket.status === "open" && openIcon}

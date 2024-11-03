@@ -35,8 +35,8 @@ const Pages: React.FC = () => {
           pages={data.pages}
           projectSlug={project.slug}
         />
-        <div className="w-[calc(100%-16rem)]">
-          <div className="flex border-b border-b-lightBlue p-2 justify-start items-center bg-mediumBlue">
+        <div className="w-[calc(100%-16rem)] flex flex-col">
+          <div className="flex border-b border-b-border p-2 justify-start items-center bg-header my-1 rounded-lg">
             <div className="flex-1">Title</div>
             <div className="flex-1">Created</div>
             <div className="flex-1">Updated</div>

@@ -109,7 +109,7 @@ export default function TicketDetailView() {
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row">
         <div className="w-full sm:w-[calc(100%-240px)] sm:h-[calc(100vh-56px)] px-2 flex flex-col">
-          <div className="border-b-borderBlue border-b mb-4">
+          <div className="border-b-border border-b mb-4">
             {isOldVersion && (
               <div className="text-red-500 text-center">
                 You are viewing an old version of this ticket
@@ -120,7 +120,7 @@ export default function TicketDetailView() {
                 <input
                   ref={currentTitle}
                   type="text"
-                  className="w-full bg-mediumBlue text-2xl border border-gray-400 rounded-md px-2"
+                  className="w-full bg-hover text-2xl border border-border rounded-md px-2"
                   defaultValue={ticket.title}
                 />
               )}
@@ -158,7 +158,7 @@ export default function TicketDetailView() {
           )}
 
           {isEditing && (
-            <div className="h-64 sm:h-full  overflow-auto max-h-full">
+            <div className="h-64 sm:h-full overflow-auto max-h-full">
               <DescriptionView description={currentDescription} />
             </div>
           )}

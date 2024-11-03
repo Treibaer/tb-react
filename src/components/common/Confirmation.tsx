@@ -13,7 +13,7 @@ const Confirmation: React.FC<{
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-[rgb(32,33,46)] mt-2 border border-[rgb(53,56,74)] rounded p-4 flex flex-col gap-2 items-center justify-center
+        className="bg-background mt-2 border border-border rounded p-4 flex flex-col gap-2 items-center justify-center
     "
       >
         <div className="text-2xl">{title ?? "Are you sure?"}</div>

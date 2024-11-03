@@ -233,7 +233,7 @@ const TicketsBoardView: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search"
-                className="bg-customBlue text-gray-400 rounded-md p-2"
+                className="bg-row border border-border text-text rounded-md p-2"
                 style={{ boxShadow: "none", outline: "none" }}
                 onChange={handleSearch}
               />
@@ -250,7 +250,7 @@ const TicketsBoardView: React.FC = () => {
           </div>
         </div>
 
-        <div className="board-structure">
+        <div className="board-structure px-2 bg-section">
           {config.show && (
             <ContextMenu
               metadata={data.metadata}

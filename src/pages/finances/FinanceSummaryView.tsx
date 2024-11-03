@@ -69,7 +69,7 @@ const FinanceSummaryView = () => {
       <div className="flex items-center gap-8">
         <div className="text-3xl text-center m-2">Summary</div>
         <select
-          className="bg-mediumBlue border border-lightBlue text-white rounded-md p-2"
+          className="bg-row border border-border text-white rounded-md p-2"
           onChange={(event) => {
             navigate(`/finances/summary?year=${event.target.value}`);
           }}

@@ -16,7 +16,7 @@ const PageStructure: React.FC<{
         {page.children.length > 0 && (
           <div
             onClick={() => toggle(page.id)}
-            className="hover:bg-mediumBlue3 p-1 cursor-pointer rounded"
+            className="hover:bg-hover p-1 cursor-pointer rounded"
           >
             {openedPages.includes(page.id) ? (
               <FaChevronDown className="size-4" />
@@ -29,8 +29,8 @@ const PageStructure: React.FC<{
         {page.children.length === 0 && <div className="w-4"></div>}
         <Link
           to={`/projects/${projectSlug}/pages/${page.id}`}
-          className={`h-7 hover:bg-mediumBlue3 w-full items-center flex ${
-            isOpened ? "bg-mediumBlue3" : ""
+          className={`h-7 hover:bg-hover w-full items-center flex ${
+            isOpened ? "bg-hover" : ""
           }`}
         >
           {page.icon} {page.title}

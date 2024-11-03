@@ -5,7 +5,7 @@ import { ROUTES } from "../../routes";
 
 export default function MobileNavigation() {
   const backgroundColor =
-    import.meta.env.MODE === "development" ? "bg-lightBlue" : undefined;
+    import.meta.env.MODE === "development" ? "bg-border" : undefined;
 
   return (
     <div className={`flex justify-between w-full ${backgroundColor}`}>

@@ -50,7 +50,7 @@ const Assets: React.FC = () => {
           .map((asset: any) => (
             <div
               key={asset.id}
-              className="bg-mediumBlue relative hover:bg-mediumBlue3 shadow-lg rounded-lg w-60 h-52 flex flex-col gap-2"
+              className="bg-row relative hover:bg-border shadow-lg rounded-lg w-60 h-52 flex flex-col gap-2"
             >
               <NavLink
                 to={ROUTES.ASSET_DETAILS(asset.id)}
@@ -65,7 +65,7 @@ const Assets: React.FC = () => {
                       asset.assetEntries[0].id
                     }
                     alt="asset"
-                    className="w-full h-32 object-contain rounded-lg bg-lightBlue"
+                    className="w-full h-32 object-contain rounded-lg bg-hover"
                     style={{
                       imageRendering: "pixelated",
                     }}
@@ -86,7 +86,7 @@ const Assets: React.FC = () => {
               {asset.assetEntries.length > 0 && (
                 <>
                   <a
-                    className="absolute top-1 right-1 bg-mediumBlue rounded-lg"
+                    className="absolute top-1 right-1 rounded-lg"
                     href={
                       Constants.backendUrl +
                       "/api/v3/assets/image/" +

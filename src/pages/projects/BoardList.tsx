@@ -149,7 +149,7 @@ export const Boards: React.FC = () => {
           onChange={() => setShowAll(!showAll)}
         />
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-1 p-2 bg-section">
         <BoardHeaderView />
         {boards
           .filter((board) => showAll || board.isActive)

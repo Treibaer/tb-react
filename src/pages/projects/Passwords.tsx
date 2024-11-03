@@ -57,7 +57,7 @@ const Passwords: React.FC = () => {
         {environments.map((environment: any) => (
           <div
             key={environment.id}
-            className="relative w-[45%] md:w-[240px] h-[300px] gap-4  flex justify-center items-center p-8 m-2 border hover:bg-slate-800 rounded-md text-white"
+            className="relative w-[45%] md:w-[240px] h-[300px] gap-4 flex justify-center bg-row items-center p-8 m-2 border border-border hover:bg-hover rounded-md text-white"
           >
             <NavLink
               key={environment.id}
@@ -67,7 +67,7 @@ const Passwords: React.FC = () => {
               <div className="text-lg font-semibold text-center">
                 {environment.title}
               </div>
-              <div className="bg-mediumBlue rounded px-2 py-1 text-center">
+              <div className="bg-row rounded px-2 py-1 text-center">
                 {environment.numberOfEntries}
               </div>
             </NavLink>

@@ -37,7 +37,7 @@ const Dialog: React.FC<{
         </div>
       )}
       <div
-        className="backdrop-blur-xl bg-[rgba(17,21,36,0.8)] w-[calc(100vw-16px)] border border-lightBlue max-w-[500px] sm:max-w-[500px] md:max-w-[600px] p-2 rounded shadow-lg absolute top-1/2 sm:top-2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:-translate-y-0"
+        className="backdrop-blur-xl bg-transparentDialog w-[calc(100vw-16px)] border border-border max-w-[500px] sm:max-w-[500px] md:max-w-[600px] p-2 rounded shadow-lg absolute top-1/2 sm:top-2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:-translate-y-0"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex justify-between mb-2 select-none">

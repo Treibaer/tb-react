@@ -114,7 +114,7 @@ const ClosedTicketsChart: React.FC<{
   };
 
   return (
-    <div>
+    <div className="mx-2">
       <h2>Tickets (Last 30 Days)</h2>
       {chartData.labels.length > 0 && (
         <Bar data={chartData} options={options} />

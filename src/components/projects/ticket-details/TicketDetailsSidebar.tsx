@@ -97,8 +97,8 @@ export const TicketDetailsSidebar: React.FC<{
   }
 
   return (
-    <div className="sm:h-[calc(100vh-56px)] overflow-auto max-h-full bg-mediumBlue border-t border-t-lightBlue border-r border-r-lightBlue w-full sm:w-[254px] cursor-default">
-      <div className="border-b border-b-lightBlue px-4 h-14 flex items-center text-gray-400">
+    <div className="sm:h-[calc(100vh-56px)] overflow-auto max-h-full bg-row  w-full sm:w-[254px] cursor-default">
+      <div className="border-b border-b-border px-4 h-14 flex items-center text-gray-400">
         {ticket.slug}
       </div>
       <div className="px-2 py-3 flex flex-col">
@@ -177,7 +177,7 @@ export const TicketDetailsSidebar: React.FC<{
             {ticket.type}
           </div>
         </div>
-        <hr className="my-4" />
+        <div className="my-4 h-[1px] bg-border" />
         <TicketDetailsRow title="Creator">
           <TicketAssigneeField user={ticket.creator} />
         </TicketDetailsRow>

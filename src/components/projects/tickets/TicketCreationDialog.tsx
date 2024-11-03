@@ -287,7 +287,7 @@ export const TicketCreationDialog: React.FC<{
             </AnimatePresence>
             <div
               id="assigneeDropdown"
-              className="select2-dropdown  w-32"
+              className="select2-dropdown w-32"
               onClick={() => toggleDropdown(DropdownType.ASSIGNEE)}
             >
               <TicketAssigneeField user={selectedAssignee} />

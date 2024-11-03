@@ -84,14 +84,7 @@ const TicketRowDnDWrapper: React.FC<{
       ref={ref}
       style={{
         opacity,
-        background:
-          index === dragIndex
-            ? "transparent"
-            : index === hoverIndex
-            ? "rgba(0, 0, 0, 0.2)"
-            : "transparent",
       }}
-      className="bg-red-500"
     >
       <TicketRow
         project={project}

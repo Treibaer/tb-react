@@ -62,7 +62,7 @@ export class BoardsController {
     @Param('boardId') boardId: number,
     @Body() data: Record<string, any>,
   ) {
-    await this.boardsService.moveTicket(slug, boardId, data);
+    await this.boardsService.moveTicket(slug, +boardId, data);
     return { message: 'Board updated' };
   }
 }

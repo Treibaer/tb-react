@@ -83,7 +83,7 @@ const FinanceDetailDialogView: React.FC<{
         />
         <div className="flex items-center gap-2">
           <select
-            className="bg-mediumBlue border border-lightBlue px-2 rounded-md ml-1 h-10"
+            className="bg-section border border-border px-2 rounded-md ml-1 h-10"
             ref={signRef}
             defaultValue={-1}
           >
@@ -106,7 +106,7 @@ const FinanceDetailDialogView: React.FC<{
           ref={purchasedATRef}
         />
         <select
-          className="bg-mediumBlue border border-lightBlue rounded-md p-1 mt-1 ml-1 w-48"
+          className="bg-section border border-border rounded-md p-1 mt-1 ml-1 w-48"
           ref={tagRef}
         >
           <option value={0}>None</option>

@@ -26,13 +26,13 @@ export default function MainNavigation() {
   };
 
   const backgroundColor =
-    import.meta.env.MODE === "development" ? "bg-lightBlue" : "bg-darkBlue";
+    import.meta.env.MODE === "development" ? "bg-border" : "bg-section";
 
   // const appCtx = useContext(AppContext);
 
   return (
     <header
-      className={`w-full h-screen ${backgroundColor} px-2 pt-2 border-x border-[#2c2d3c] relative`}
+      className={`w-full h-screen ${backgroundColor} px-2 pt-2 border-x border-border relative`}
     >
       <AnimatePresence>
         {showSettings && <UserMenu onClose={toggleSettings} />}

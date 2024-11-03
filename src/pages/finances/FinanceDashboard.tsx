@@ -38,13 +38,13 @@ const FinanceDashboard = () => {
 
       <div className="flex flex-col gap-4 mt-2">
         <div className="flex flex-col sm:flex-row justify-between md:justify-normal gap-2 mx-2">
-          <div className="flex flex-col p-4 gap-2 bg-mediumBlue rounded-xl hover:bg-hoverBlue cursor-default select-none">
+          <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
             <div>Current Balance</div>
             <div className="text-4xl">
               {(data.balanceInCents / 100).toFixed(2)}€
             </div>
           </div>
-          <div className="flex flex-col p-4 gap-2 bg-mediumBlue rounded-xl hover:bg-hoverBlue cursor-default select-none">
+          <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
             <div>Savings {currentYear}</div>
             <div className="text-4xl text-[rgb(30,142,72)]">
               {savings.toFixed(2)}€
@@ -54,7 +54,7 @@ const FinanceDashboard = () => {
         <div className="sm:h-72">
           <FinanceChart data={data.chartValues} />
         </div>
-        <div className="flex flex-col gap-2 border border-mediumBlue rounded-xl mx-2">
+        <div className="flex flex-col gap-1 bg-section border border-border rounded-xl mx-1 px-1">
           <div className="flex items-center justify-between">
             <div className="p-4 text-xl">Transactions</div>
             <div className="p-4">
@@ -68,13 +68,13 @@ const FinanceDashboard = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between md:justify-normal gap-2 m-2">
-        <div className="flex flex-col p-4 gap-2 bg-mediumBlue rounded-xl hover:bg-hoverBlue cursor-default select-none">
+        <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
           <div>Income</div>
           <div className="text-2xl">
             {(data.currentIncomeInCents / m / 100).toFixed(2)}€
           </div>
         </div>
-        <div className="flex flex-col p-4 gap-2 bg-mediumBlue rounded-xl hover:bg-hoverBlue cursor-default select-none">
+        <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
           <div>Expanses</div>
           <div className="text-2xl">
             {(Math.abs(data.currentExpensesInCents) / m / 100).toFixed(2)}€{" "}
@@ -83,7 +83,7 @@ const FinanceDashboard = () => {
             </span>
           </div>
         </div>
-        <div className="flex flex-col p-4 gap-2 bg-mediumBlue rounded-xl hover:bg-hoverBlue cursor-default select-none">
+        <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
           <div>
             Savings{" "}
             <span className="text-sm text-gray-400">

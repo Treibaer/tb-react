@@ -50,7 +50,7 @@ export const TicketCommentArea: React.FC<{
   }
 
   return (
-    <div className="border-t border-t-lightBlue mt-1">
+    <div className="border-t border-t-border mt-1">
       <AnimatePresence>
         {removeCommentId && (
           <Confirmation
@@ -63,7 +63,7 @@ export const TicketCommentArea: React.FC<{
         <div
           key={comment.id}
           className="
-          bg-mediumBlue p-2 mt-2 border border-lightBlue rounded flex gap-2
+          bg-row p-2 mt-2 border border-border rounded flex gap-2
           justify-between
         "
         >
@@ -84,7 +84,7 @@ export const TicketCommentArea: React.FC<{
       ))}
       <div className="text-2xl">Comments</div>
       <textarea
-        className="w-full resize-none p-2 mt-2 bg-[rgb(32,33,46)] text-gray-100 border border-lightBlue rounded focus:outline-none focus:border-focusBlue"
+        className="w-full resize-none p-2 mt-2 bg-row text-gray-100 border border-border rounded focus:outline-none focus:border-border"
         placeholder="Leave a comment..."
         rows={3}
         ref={contentRef}

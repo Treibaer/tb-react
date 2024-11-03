@@ -11,8 +11,8 @@ export const NavigationLink: React.FC<{
       to={to}
       // className="hover:bg-[#262736] h-[27px] px-1 items-center flex rounded gap-2"
       className={({ isActive }) =>
-        `hover:bg-mediumBlue3 h-[34px] px-1 items-center flex rounded gap-2 ${
-          isActive ? "bg-mediumBlue3" : undefined
+        `hover:bg-hover h-[34px] px-1 items-center flex rounded gap-2 ${
+          isActive ? "bg-hover" : undefined
         }`
       }
       end

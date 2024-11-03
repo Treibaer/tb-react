@@ -150,9 +150,9 @@ const showToast = (
   if (template) {
     toast(template(ticketId, value, avatarUrl), {
       style: {
-        background: "#262736", // Etwas helleres Dunkelblau
+        background: "#1e1e1e", // Etwas helleres Dunkelblau
         color: "#FFFFFF", // Weiß für den Text
-        border: "1px solid rgb(53,56,74)", // Ein hellerer Rand, um mehr Kontrast zu schaffen
+        border: "1px solid #2e2e2e", // Ein hellerer Rand, um mehr Kontrast zu schaffen
         borderRadius: "8px",
         boxShadow: "0 4px 15px rgba(0, 0, 0, 0.5)",
         padding: "10px",

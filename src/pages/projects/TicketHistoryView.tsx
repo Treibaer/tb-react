@@ -35,8 +35,8 @@ export default function TicketHistoryView() {
     <>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="text-3xl p-4">History</div>
-      <div className="flex flex-col gap-1">
-        <div className="flex justify-between font-semibold text-xl px-2">
+      <div className="flex flex-col gap-1 mx-2">
+        <div className="flex bg-header h-10 rounded-lg items-center justify-between font-semibold text-xl px-2">
           <div className="flex-1 text-center">Version</div>
           <div className="flex-1 text-center">Creator</div>
           <div className="flex-1 text-center">Created At</div>
@@ -47,7 +47,7 @@ export default function TicketHistoryView() {
               historyItem.versionNumber
             }`}
             key={historyItem.createdAt}
-            className="flex justify-between gap-4 border-b border-b-mediumBlue3 p-2 items-center bg-darkBlue hover:bg-hoverBlue"
+            className="flex justify-between gap-4 border-b rounded-lg border-b-border p-2 items-center bg-row hover:bg-hover"
           >
             <div className="flex-1 text-center">
               #{historyItem.versionNumber}

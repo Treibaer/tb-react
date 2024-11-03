@@ -44,7 +44,7 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
       transition={{ duration: 0.15 }}
       exit={{ opacity: 0 }}
       ref={dropdownRef}
-      className="tb-container active tb-transparent-menu tb-context-menu show absolute right-2 pt-1 top-12 w-[140px]"
+      className="tb-transparent-menu absolute right-2 pt-1 top-12 w-[140px]"
     >
       <NavLink className="tb-dropdown-item" to={ROUTES.SETTINGS}>
         <div className="flex items-center">

@@ -107,7 +107,7 @@ const PasswordEntries: React.FC = () => {
             type="text"
             ref={inputRef}
             placeholder="Search"
-            className="bg-mediumBlue rounded-xl px-3 w-48 sm:w-64 py-1 h-10 me-4"
+            className="bg-row rounded-xl border-border border px-3 w-48 sm:w-64 py-1 h-10 me-4"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>

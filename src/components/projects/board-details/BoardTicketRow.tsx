@@ -32,10 +32,8 @@ export const BoardTicketRow: React.FC<{
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
       <div
-        className="flex flex-col gap-1 p-3 rounded-lg"
+        className="flex flex-col gap-1 p-3 rounded-lg bg-row hover:bg-hover border border-border"
         style={{
-          border: "1px solid rgba(82, 82, 111, 0.44)",
-          backgroundColor: "rgb(32, 33, 46)",
           boxShadow: "rgba(0, 0, 0, 0.2) 0px 4px 24px",
         }}
       >

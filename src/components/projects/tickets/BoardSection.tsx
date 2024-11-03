@@ -61,7 +61,7 @@ export const BoardSection: React.FC<{
 
   return (
     <div key={board.id} className={tickets.length === 0 ? "hidden" : ""}>
-      <div className="flex flex-row justify-between px-4 sm:h-11 bg-mediumBlue border-b border-b-darkBlue">
+      <div className="flex flex-row justify-between px-4 sm:h-11 bg-header mb-1 rounded-lg">
         <div className="flex gap-2 h-11 items-center w-1/2 ">
           <div className="text-base overflow-x-hidden text-ellipsis max-w-[100%]">
             {board.id === 0 ? (
@@ -96,23 +96,25 @@ export const BoardSection: React.FC<{
           </div>
         </div>
       </div>
-      {isBoardVisible &&
-        tickets.map((ticket: Ticket) => (
-          <TicketRowDnDWrapper
-            key={ticket.id}
-            project={project}
-            ticket={ticket}
-            onContextMenu={onContextMenu}
-            onTouchStart={onTouchStart}
-            dragIndex={dragIndex}
-            hoverIndex={hoverIndex}
-            setDragIndex={setDragIndex}
-            setHoverIndex={setHoverIndex}
-            index={ticket.id}
-            id={ticket.id}
-            moveTicket={moveTicket}
-          />
-        ))}
+      <div className="mb-1">
+        {isBoardVisible &&
+          tickets.map((ticket: Ticket) => (
+            <TicketRowDnDWrapper
+              key={ticket.id}
+              project={project}
+              ticket={ticket}
+              onContextMenu={onContextMenu}
+              onTouchStart={onTouchStart}
+              dragIndex={dragIndex}
+              hoverIndex={hoverIndex}
+              setDragIndex={setDragIndex}
+              setHoverIndex={setHoverIndex}
+              index={ticket.id}
+              id={ticket.id}
+              moveTicket={moveTicket}
+            />
+          ))}
+      </div>
     </div>
   );
 };

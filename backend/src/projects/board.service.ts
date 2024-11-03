@@ -178,7 +178,7 @@ export class BoardService {
     }
 
     const isSwitchingBoard =
-      boardId !== 0 && +targetTicketRaw.board_id !== +originTicketRaw.board_id;
+      +targetTicketRaw.board_id !== +originTicketRaw.board_id;
 
     if (isSwitchingBoard) {
       originTicketRaw.board_id = targetTicketRaw.board_id;
@@ -192,7 +192,7 @@ export class BoardService {
     if (!originTicket) {
       throw new Error('Ticket not found');
     }
-
+    
     if (targetTicketIndex === -1) {
       throw new Error('Target ticket not found');
     }

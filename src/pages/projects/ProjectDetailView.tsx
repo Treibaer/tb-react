@@ -6,7 +6,6 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { ProjectDashboardData } from "../../models/projects/project-dashboard-data";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
-import ProjectChart from "./ProjectChart";
 import ClosedTicketsChart from "./ProjectChart";
 
 export const ProjectDetailView: React.FC = () => {
@@ -17,7 +16,6 @@ export const ProjectDetailView: React.FC = () => {
     { title: "Projects", link: ROUTES.PROJECTS },
     { title: project.title, link: "" },
   ];
-  const chartValues = tickets.map((ticket) => ticket.id);
 
   let tickets2: { id: number; closedDate: Date }[] = [];
   let openedTickets: { id: number; createdAt: Date }[] = [];
@@ -59,22 +57,26 @@ export const ProjectDetailView: React.FC = () => {
         openTickets={openedTickets}
       />
 
-      <div className="flex items-center justify-between px-4 h-11 bg-mediumBlue border-b border-b-darkBlue">
-        My Tickets
-      </div>
-      <div className="flex flex-col w-full">
-        {tickets.map((ticket) => (
-          <TicketRow
-            key={ticket.id}
-            ticket={ticket}
-            project={project}
-            onContextMenu={() => {}}
-          />
-        ))}
+      <div className="p-2 flex gap-1 flex-col">
+        <div className="flex items-center justify-between px-4 h-11 bg-header border-b border-b-border rounded-lg">
+          My Tickets
+        </div>
+        <div className="flex flex-col w-full">
+          {tickets.map((ticket) => (
+            <TicketRow
+              key={ticket.id}
+              ticket={ticket}
+              project={project}
+              onContextMenu={() => {}}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
 };
+
+export default ProjectDetailView;
 
 export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,
@@ -85,5 +87,3 @@ export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   }
   return await ProjectService.shared.getDashboardData(projectSlug);
 };
-
-export default ProjectDetailView;

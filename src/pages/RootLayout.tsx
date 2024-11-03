@@ -51,7 +51,7 @@ export const RootLayout: React.FC = () => {
               <Outlet />
             </div>
             {!Constants.isDemoMode && (
-              <div className="h-[58px] pb-2 md:hidden border-t border-t-lightBlue text-white text-center flex">
+              <div className="h-[58px] pb-2 md:hidden border-t border-t-border text-white text-center flex">
                 <MobileNavigation />
               </div>
             )}

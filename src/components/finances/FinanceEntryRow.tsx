@@ -10,7 +10,7 @@ const FinanceEntryRow: React.FC<{
       className="tb-row w-full flex gap-2 items-center cursor-pointer select-none px-4"
       onClick={onClick}
     >
-      <div className="w-8 h-8 bg-lightBlue rounded-full text-center p-1">
+      <div className="w-8 h-8 bg-lighter rounded-full text-center p-1">
         {entry.icon}
       </div>
       <div className="flex-1  md:order-3">{entry.title}</div>

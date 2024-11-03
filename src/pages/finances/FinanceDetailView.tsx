@@ -86,14 +86,14 @@ const FinanceDetailView = () => {
       )}
       </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <div className="overflow-auto max-h-[calc(100vh-57px)]">
+      <div className="overflow-auto max-h-[calc(100vh-57px)] mx-2">
         <div className="flex flex-col sm:flex-row items-center justify-between me-2">
           <TitleView title="Finances" openDialog={openDialog} />
           <div className="flex items-center">
             <input
               type="text"
               placeholder="Search"
-              className="bg-mediumBlue rounded-xl px-3 w-64 py-1 h-10 me-4"
+              className="bg-row rounded-xl border-border border px-3 w-64 py-1 h-10 me-4"
               onChange={handleSearch}
             />
             <div className="text-lg cursor-pointer" onClick={showEditBalance}>

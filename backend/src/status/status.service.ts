@@ -41,7 +41,7 @@ export class StatusService {
     port: number,
   ): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
-      const fullUrl = `${url}:${port}`;
+      const fullUrl = `${url}:${port}/socket.io/?EIO=4&transport=websocket`;
       const socket = new WebSocket(fullUrl);
 
       socket.on('open', () => {

@@ -120,7 +120,7 @@ const TicketList: React.FC = () => {
       </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Tickets" openDialog={openDialog} />
-      <div>
+      <div className="m-2">
         {tickets.map((ticket) => (
           <TicketRow
             key={ticket.id}

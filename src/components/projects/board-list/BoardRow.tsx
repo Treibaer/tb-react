@@ -51,7 +51,7 @@ export const BoardRow: React.FC<{
     <NavLink
       to={ROUTES.BOARD_DETAILS(projectSlug, board.id)}
       style={{ display: "flex" }}
-      className="flex justify-between items-center gap-4 border-b-gray-700 border-b h-12 px-2 bg-darkBlue hover:bg-hoverBlue"
+      className="flex justify-between items-center gap-4 h-12 px-2 bg-row hover:bg-hover rounded-lg"
     >
       <div
         className="flex-1 whitespace-nowrap overflow-x-hidden text-ellipsis"

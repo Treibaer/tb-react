@@ -40,6 +40,7 @@ export const PasswordEnvironmentCreationDialog: React.FC<{
           await PasswordService.shared.createEnvironment(newEnvironment);
         }
         onClose();
+        showToast("success", "", `Environment ${title} ${editingEntry ? "updated" : "created"}`);
       } catch (error: Error | any) {
         showToast("error", "", error.message);
       }

@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import HeaderView from "../../components/HeaderView";
@@ -8,7 +9,6 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
-import { AnimatePresence } from "framer-motion";
 
 const projectService = ProjectService.shared;
 
@@ -39,7 +39,7 @@ export default function Projects() {
       </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Projects" openDialog={openDialog} />
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap mx-2 gap-2">
         {projects.map((project: any) => (
           <ProjectCard key={project.id} project={project} />
         ))}
