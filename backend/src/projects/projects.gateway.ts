@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -11,9 +11,10 @@ import { Server, Socket } from 'socket.io';
 import { AccessToken } from 'src/auth/entities/access-token';
 import { Connection } from './models/connection';
 import { User } from 'src/users/entities/user.entity';
-import { UserService } from 'src/users/user.service';
 import { ProjectService } from './project.service';
-import { PageService } from './page.service';
+import { BoardService } from './board.service';
+import { Board } from './entities/board';
+import { ModuleRef, NestFactory } from '@nestjs/core';
 
 @WebSocketGateway(3000, {
   cors: {
@@ -93,6 +94,38 @@ export class EventsGateway
     console.log(`Client disconnected: ${client.id}`);
     this.clients.delete(client.id);
     this.connections.delete(client.id);
+  }
+
+  @SubscribeMessage('realtime')
+  async handleMessageMessagesrealtime(
+    client: Socket,
+    wrapper: any & { data: { type: string }, requestId?: string },
+  ) {
+
+    const type = wrapper.type;
+    const connection = this.connections.get(client.id);
+    if (!connection) {
+      // ignore not authenticated connections
+      console.error('Connection not found for client: ', client.id);
+      // return;
+    }
+    if (!type) {
+      console.error('No type in message:', wrapper);
+      return;
+    }
+    // if (!connection.hasAuthenticated) {
+      // console.error('Not authenticated:', connection);
+      // client.disconnect(true);
+      // return;
+    // }
+    console.log('realtime message received', wrapper);
+
+    const structure = null;
+    client.emit('realtime', {
+      type: type,
+      data: structure,
+      requestId: wrapper.requestId,
+    });
   }
 
   @SubscribeMessage('matches')

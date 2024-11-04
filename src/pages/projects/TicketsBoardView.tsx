@@ -36,6 +36,7 @@ const TicketsBoardView: React.FC = () => {
     ticket: null,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const data = useLoaderData() as {
     boardStructure: BoardStructure;
@@ -56,16 +57,16 @@ const TicketsBoardView: React.FC = () => {
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement> | KeyboardEvent
   ) => {
+    if (document.activeElement === inputRef.current) {
+      return;
+    }
     if (event.key === "c") {
       openDialog();
     }
   };
 
   useEffect(() => {
-    // Add event listener for keydown
     window.addEventListener("keydown", handleKeyDown);
-
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -129,6 +130,7 @@ const TicketsBoardView: React.FC = () => {
     const boardStructure = await boardService.getBoardStructure(project.slug);
     setBoardStructure(boardStructure);
     setClosedBoardIds(boardStructure.closed);
+
   }
 
   async function toggleBoard(boardId: number) {
@@ -232,6 +234,7 @@ const TicketsBoardView: React.FC = () => {
               />
               <input
                 type="text"
+                ref={inputRef}
                 placeholder="Search"
                 className="bg-row border border-border text-text rounded-md p-2"
                 style={{ boxShadow: "none", outline: "none" }}

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -98,6 +99,12 @@ export class FinancesController {
     const createdEntry =
       await this.financeService.createAccountEntry(accountEntry);
     return this.accountEntry(createdEntry);
+  }
+
+  @Delete('entries/:id')
+  async deleteAccountEntry(@Param('id') id: number) {
+    await this.financeService.deleteAccountEntry(id);
+    return {};
   }
 
   @Patch('entries/:id')

@@ -192,7 +192,7 @@ export class BoardService {
     if (!originTicket) {
       throw new Error('Ticket not found');
     }
-    
+
     if (targetTicketIndex === -1) {
       throw new Error('Target ticket not found');
     }

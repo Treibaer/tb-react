@@ -37,7 +37,6 @@ export class FinanceService {
     }>(`/finances/entries${suffix}`);
   }
 
-
   async getDashboardData(
   ) {
     return this.client.get<{
@@ -66,10 +65,14 @@ export class FinanceService {
       purchasedAt: Math.floor(new Date(purchasedAt).getTime() / 1000),
       tagId,
     };
-    if (id) {
+    if (id && id > 0) {
       return this.client.patch(`/finances/entries/${id}`, entry);
     }
     return this.client.post("/finances/entries", entry);
+  }
+
+  async removeEntry(id: number) {
+    return this.client.delete(`/finances/entries/${id}`);
   }
 
   async updateBalance(value: number) {

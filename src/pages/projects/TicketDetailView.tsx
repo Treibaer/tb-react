@@ -27,7 +27,7 @@ export default function TicketDetailView() {
     metadata,
     ticket: initialTicket,
     isOldVersion,
-    history,
+    history: initialHistory,
     comments,
   } = useLoaderData() as {
     metadata: ProjectMeta;
@@ -38,6 +38,7 @@ export default function TicketDetailView() {
   };
   const project = metadata.project;
   const [ticket, setTicket] = useState<Ticket>(initialTicket);
+  const [history, setHistory] = useState<TicketHistory[]>(initialHistory);
   const currentTitle = useRef<HTMLInputElement>(null);
   const currentDescription = useRef(ticket.description);
   const [isEditing, setIsEditing] = useState(false);
@@ -72,6 +73,14 @@ export default function TicketDetailView() {
     };
   }, [ticket]);
 
+  async function updateHistory() {
+    const newHistory = await ticketService.getHistory(
+      project.slug,
+      ticket.slug
+    );
+    setHistory(newHistory);
+  }
+
   async function toggleEdit() {
     if (isOldVersion) {
       return;
@@ -86,6 +95,7 @@ export default function TicketDetailView() {
       );
       setTicket(updatedTicket);
       showToast("success", ticket.slug, "Saved");
+      await updateHistory();
     }
     setIsEditing((prev) => !prev);
   }
@@ -162,7 +172,11 @@ export default function TicketDetailView() {
               <DescriptionView description={currentDescription} />
             </div>
           )}
-          <TicketCommentArea project={project} ticket={ticket} comments={comments} />
+          <TicketCommentArea
+            project={project}
+            ticket={ticket}
+            comments={comments}
+          />
         </div>
         <TicketDetailsSidebar
           metadata={metadata}

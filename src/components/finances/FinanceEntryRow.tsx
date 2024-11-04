@@ -3,12 +3,10 @@ import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 
 const FinanceEntryRow: React.FC<{
   entry: AccountEntry;
-  onClick?: () => void;
-}> = ({ entry, onClick }) => {
+}> = ({ entry }) => {
   return (
     <div
-      className="tb-row w-full flex gap-2 items-center cursor-pointer select-none px-4"
-      onClick={onClick}
+      className="tb-row flex gap-2 items-center cursor-pointer select-none px-4"
     >
       <div className="w-8 h-8 bg-lighter rounded-full text-center p-1">
         {entry.icon}

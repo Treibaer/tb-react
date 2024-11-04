@@ -82,16 +82,13 @@ const TicketRowDnDWrapper: React.FC<{
   return (
     <div
       ref={ref}
-      style={{
-        opacity,
-      }}
+      style={{ opacity }}
+      onContextMenu={(e) => onContextMenu(e, ticket)}
+      onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
     >
       <TicketRow
         project={project}
         ticket={ticket}
-        onContextMenu={onContextMenu}
-        onTouchStart={onTouchStart}
-        backgroundColor={"transparent"}
         opacity={index === dragIndex ? 0.5 : index === hoverIndex ? 0.2 : 1}
       />
     </div>

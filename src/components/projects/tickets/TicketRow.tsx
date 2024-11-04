@@ -9,31 +9,18 @@ import UserView from "../../UserView";
 interface TicketRowProps {
   project: Project;
   ticket: Ticket;
-  onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
-  onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
-  backgroundColor?: string;
   opacity?: number;
 }
 
 export default function TicketRow({
   project,
   ticket,
-  onContextMenu,
-  onTouchStart,
-  backgroundColor,
   opacity,
 }: TicketRowProps) {
-  const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-    onContextMenu(e, ticket);
-  };
-
   return (
     <NavLink
       to={ROUTES.TICKET_DETAILS(project.slug, ticket.slug)}
       key={ticket.id}
-      onContextMenu={handleContextMenu}
-      onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
     >
       <div className="tb-row" style={{ opacity }}>
         <div className="flex-grow flex gap-1 sm:gap-4 items-center">

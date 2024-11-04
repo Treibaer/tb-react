@@ -2,6 +2,7 @@
 export type Wrapper<T> = {
   type: string;
   data: T;
+  requestId?: string;
 };
 
 export type Listener = {

@@ -16,6 +16,8 @@ const FinanceDetailDialogView: React.FC<{
   const purchasedATRef = useRef<HTMLInputElement>(null);
   const tagRef = useRef<HTMLSelectElement>(null);
 
+  const isNew = !editingEntry || editingEntry.id === 0;
+
   useEffect(() => {
     if (editingEntry) {
       titleRef.current!.value = editingEntry.title;
@@ -57,11 +59,7 @@ const FinanceDetailDialogView: React.FC<{
         tagId
       );
       onClose(true);
-      showToast(
-        "success",
-        "",
-        "Entry " + (editingEntry ? "Updated" : "Created")
-      );
+      showToast("success", "", "Entry " + (isNew ? "Created" : "Updated"));
     } catch (error: Error | any) {
       showToast("error", "", error.message);
     }
@@ -70,10 +68,10 @@ const FinanceDetailDialogView: React.FC<{
   return (
     <>
       <Dialog
-        title={`Finances > ${editingEntry ? "Update" : "Create"} Entry`}
+        title={`Finances > ${isNew ? "Create" : "Update"} Entry`}
         onClose={() => onClose(false)}
         onSubmit={onSubmit}
-        submitTitle={editingEntry ? "Update" : "Create"}
+        submitTitle={isNew ? "Create" : "Update"}
       >
         <input
           type="text"

@@ -82,6 +82,18 @@ export class FinanceService {
     return createdAccountEntry;
   }
 
+  async deleteAccountEntry(id: number) {
+    const user = await this.usersService.user;
+    const accountEntry = await AccountEntry.findByPk(id);
+    if (!accountEntry) {
+      throw new Error('Entry not found');
+    }
+    if (accountEntry.creator_id !== user.id) {
+      throw new Error('Not authorized');
+    }
+    await accountEntry.destroy();
+  }
+
   async updateAccountEntry(id: number, accountEntry: AccountEntryDto) {
     const user = await this.usersService.user;
 
