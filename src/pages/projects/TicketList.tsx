@@ -122,13 +122,13 @@ const TicketList: React.FC = () => {
       <TitleView title="Tickets" openDialog={openDialog} />
       <div className="m-2">
         {tickets.map((ticket) => (
-          <TicketRow
+          <div
             key={ticket.id}
-            project={project}
-            ticket={ticket}
-            onContextMenu={onContextMenu}
-            onTouchStart={handleTouchStart}
-          />
+            onContextMenu={(e) => onContextMenu(e, ticket)}
+            onTouchStart={(e) => handleTouchStart(e, ticket)}
+          >
+            <TicketRow project={project} ticket={ticket} />
+          </div>
         ))}
       </div>
     </>
