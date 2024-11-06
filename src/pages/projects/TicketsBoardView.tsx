@@ -20,7 +20,6 @@ import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-conf
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/BoardService";
 import ProjectService from "../../services/ProjectService";
-import PartyComponent from "./PartyComponent";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
@@ -98,6 +97,27 @@ const TicketsBoardView: React.FC = () => {
     emit("matches", "update", {});
   }
 
+
+  const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
+    if (event.touches.length !== 2) {
+      return;
+    }
+    const board = boardStructure.activeBoards.find((b) =>
+      b.tickets.find((t) => t.id === ticket.id)
+    );
+    const touch = event.touches[0];
+    const touch1 = event.touches[1];
+    const touchX = Math.min(touch.clientX, touch1.clientX);
+    const touchY = Math.min(touch.clientY, touch1.clientY);
+    setConfig({
+      top: touchY,
+      left: touchX,
+      show: true,
+      ticket,
+      board,
+    });
+  };
+  
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
     e.preventDefault();
 
@@ -187,31 +207,10 @@ const TicketsBoardView: React.FC = () => {
       setProject(updatedProject);
     }
   }
-
-  const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
-    if (event.touches.length !== 2) {
-      return;
-    }
-    const board = boardStructure.activeBoards.find((b) =>
-      b.tickets.find((t) => t.id === ticket.id)
-    );
-    const touch = event.touches[0];
-    const touch1 = event.touches[1];
-    const touchX = Math.min(touch.clientX, touch1.clientX);
-    const touchY = Math.min(touch.clientY, touch1.clientY);
-    setConfig({
-      top: touchY,
-      left: touchX,
-      show: true,
-      ticket,
-      board,
-    });
-  };
   const [hoverIndex, setHoverIndex] = useState(-1);
 
   return (
     <>
-      <PartyComponent />
       <AnimatePresence>
         {isCreating && (
           <TicketCreationDialog

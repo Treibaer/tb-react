@@ -22,7 +22,7 @@ export class TicketService {
   async fetchTickets(projectSlug: string): Promise<Ticket[]> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
     return await Ticket.findAll({
-      where: { project_id: project.id },
+      where: { project_id: project.id, parentId: null },
       order: [['id', 'ASC']],
     });
   }
@@ -56,7 +56,7 @@ export class TicketService {
     });
 
     const maxTicketId: number = await Ticket.max('ticket_id', {
-      where: { project_id: project.id }
+      where: { project_id: project.id },
     });
 
     const ticketId = maxTicketId ? maxTicketId + 1 : 1;
@@ -76,6 +76,7 @@ export class TicketService {
       status: ticket.status,
       board_id: boardId,
       closedAt: ticket.status === 'done' ? Math.floor(Date.now() / 1000) : null,
+      parentId: ticket.parentId,
     });
     await this.createHistoryEntry(createdTicket);
     return await this.transformer.ticket(projectSlug, createdTicket);
@@ -163,7 +164,11 @@ export class TicketService {
 
       await ticket.save();
       const tickets = await Ticket.findAll({
-        where: { board_id: ticket.board_id, project_id: project.id },
+        where: {
+          board_id: ticket.board_id,
+          project_id: project.id,
+          parentId: null,
+        },
         order: [['position', 'ASC']],
       });
       for (let i = 0; i < tickets.length; i++) {
@@ -175,7 +180,11 @@ export class TicketService {
     if (data.position !== undefined) {
       // get all tickets from the same board
       let tickets = await Ticket.findAll({
-        where: { board_id: ticket.board_id },
+        where: {
+          board_id: ticket.board_id,
+          project_id: project.id,
+          parentId: null,
+        },
         order: [['position', 'ASC']],
       });
       // remove the ticket from the array
@@ -211,6 +220,13 @@ export class TicketService {
     });
     if (!ticket) {
       throw new Error('Ticket not found');
+    }
+    // check if children exists
+    const children = await Ticket.findAll({
+      where: { parentId: ticket.id },
+    });
+    if (children.length > 0) {
+      throw new Error('Ticket has subtasks');
     }
     // destroy all history tickets
     await TicketHistory.destroy({ where: { ticket_id: ticket.id } });

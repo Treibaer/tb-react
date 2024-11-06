@@ -6,6 +6,7 @@ import { ROUTES } from "../../../routes";
 import { doneIcon, inProgressIcon, openIcon } from "../../../utils/ticketUtils";
 import UserView from "../../UserView";
 import ProgressCircle from "../../common/ProgressCircle";
+import Button from "../../Button";
 
 interface TicketRowProps {
   project: Project;
@@ -44,6 +45,9 @@ export default function TicketRow({
             done={finishedSubtasks}
             total={ticket.children.length}
           />
+        )}
+        {ticket.parentId && (
+          <div className="rounded border-gray-500 border px-2">Subtask</div>
         )}
         {ticket.type && (
           <div className="rounded border-gray-500 border px-2">

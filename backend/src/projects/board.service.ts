@@ -31,7 +31,7 @@ export class BoardService {
       order: [['position', 'ASC']],
     });
     const backlog = await Ticket.findAll({
-      where: { project_id: project.id, board_id: null },
+      where: { project_id: project.id, board_id: null, parentId: null },
       order: [['position', 'ASC']],
     });
     const backlogTicketDTOs = await Promise.all(
@@ -228,7 +228,7 @@ export class BoardService {
   async board(board: Board): Promise<BoardDto> {
     const project = await Project.findByPk(board.project_id);
     const tickets = await Ticket.findAll({
-      where: { board_id: board.id },
+      where: { board_id: board.id, parentId: null, project_id: project!.id },
       order: [['position', 'ASC']],
     });
     const ticketDTOs = await Promise.all(

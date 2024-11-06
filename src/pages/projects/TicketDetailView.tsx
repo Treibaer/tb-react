@@ -1,11 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import {
-  LoaderFunction,
-  NavLink,
-  useBlocker,
-  useLoaderData,
-} from "react-router-dom";
+import { FaPencil } from "react-icons/fa6";
+import { LoaderFunction, useBlocker, useRevalidator } from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import Confirmation from "../../components/common/Confirmation";
@@ -13,19 +9,18 @@ import HeaderView from "../../components/HeaderView";
 import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
 import TicketCommentArea from "../../components/projects/ticket-details/TicketCommentArea";
 import TicketDetailsSidebar from "../../components/projects/ticket-details/TicketDetailsSidebar";
+import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
+import TicketRow from "../../components/projects/tickets/TicketRow";
+import useTicketData from "../../hooks/useTicketData";
 import { Breadcrumb } from "../../models/breadcrumb";
-import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import TicketService from "../../services/TicketService";
 import { showToast } from "../../utils/tbToast";
-import { FaPencil } from "react-icons/fa6";
-import { TicketHistory } from "../../models/ticket-history";
-import { TicketComment } from "../../models/ticket-comment";
-import TicketStatusView from "../../components/projects/ticket-details/TicketStatusView";
-import TicketDetailsRow from "../../components/projects/ticket-details/TicketDetailsRow";
-import TicketRow from "../../components/projects/tickets/TicketRow";
+import { ImSuperscript } from "react-icons/im";
+import ContextMenu from "../../components/contextmenu/ContextMenu";
+import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
@@ -33,37 +28,57 @@ const ticketService = TicketService.shared;
 export default function TicketDetailView() {
   const {
     metadata,
-    ticket: initialTicket,
+    ticket,
+    setTicket,
+    history,
     isOldVersion,
-    history: initialHistory,
     comments,
-  } = useLoaderData() as {
-    metadata: ProjectMeta;
-    ticket: Ticket;
-    isOldVersion: boolean;
-    history: TicketHistory[];
-    comments: TicketComment[];
-  };
-  const project = metadata.project;
-  const [ticket, setTicket] = useState<Ticket>(initialTicket);
-  const [history, setHistory] = useState<TicketHistory[]>(initialHistory);
+    fetchHistory,
+  } = useTicketData();
+
   const currentTitle = useRef<HTMLInputElement | null>(null);
   const currentDescription = useRef(ticket.description);
   const [isEditing, setIsEditing] = useState(false);
-  const initialRender = useRef(true);
+  const project = metadata.project;
+  const [config, setConfig] = useState<TicketsContextMenuConfig>({
+    top: 0,
+    left: 0,
+    show: false,
+    ticket: null,
+  });
 
-  // re-render on url change (loader data change)
+  const revalidator = useRevalidator();
+
+  function onClose(updated: boolean) {
+    if (updated) {
+      revalidator.revalidate();
+    }
+    setIsCreating(false);
+  }
+
   useEffect(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
+    currentDescription.current = ticket.description;
+    setIsEditing(false);
+    setIsCreating(false);
+  }, [ticket.slug]);
+
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement> | KeyboardEvent
+  ) => {
+    if (isEditing) {
       return;
     }
-    setTicket(initialTicket);
-    currentDescription.current = initialTicket.description;
-    setHistory(initialHistory);
-    setIsEditing(false);
-    currentTitle.current = null;
-  }, [initialTicket]);
+    if (event.key === "c") {
+      setIsCreating(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isEditing]);
 
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
@@ -81,8 +96,6 @@ export default function TicketDetailView() {
 
   useEffect(() => {
     const handleBeforeUnload = (e: any) => {
-      console.log("beforeunload");
-      console.log(ticket.description, currentDescription.current);
       if (ticket.description !== currentDescription.current) {
         e.preventDefault();
         e.returnValue = "";
@@ -94,14 +107,6 @@ export default function TicketDetailView() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [ticket]);
-
-  async function updateHistory() {
-    const newHistory = await ticketService.getHistory(
-      project.slug,
-      ticket.slug
-    );
-    setHistory(newHistory);
-  }
 
   async function toggleEdit() {
     if (isOldVersion) {
@@ -117,14 +122,58 @@ export default function TicketDetailView() {
       );
       setTicket(updatedTicket);
       showToast("success", ticket.slug, "Saved");
-      await updateHistory();
+      await fetchHistory();
+    } else {
     }
     setIsEditing((prev) => !prev);
+    // wait 1ms for the state to update
+    await new Promise((resolve) => setTimeout(resolve, 1));
+    currentTitle.current?.focus();
+  }
+
+  const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
+    if (event.touches.length !== 2) {
+      return;
+    }
+    const touch = event.touches[0];
+    const touch1 = event.touches[1];
+    const touchX = Math.min(touch.clientX, touch1.clientX);
+    const touchY = Math.min(touch.clientY, touch1.clientY);
+    setConfig({
+      top: touchY,
+      left: touchX,
+      show: true,
+      ticket,
+    });
+  };
+
+  function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
+    e.preventDefault();
+    const maxX = window.innerWidth - 175;
+    const maxY = window.innerHeight - 175;
+    setConfig({
+      top: Math.min(e.pageY, maxY),
+      left: Math.min(e.pageX, maxX),
+      show: true,
+      ticket,
+    });
+  }
+
+  async function closeContextMenu(shouldUpdate: boolean) {
+    setConfig({
+      ...config,
+      show: false,
+      ticket: null,
+    });
+    if (shouldUpdate) {
+      revalidator.revalidate();
+    }
   }
 
   function update(ticket: Ticket) {
     setTicket(ticket);
   }
+  const [isCreating, setIsCreating] = useState(false);
 
   return (
     <>
@@ -137,6 +186,23 @@ export default function TicketDetailView() {
             onCancel={blocker.reset}
           />
         ) : null}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isCreating && (
+          <TicketCreationDialog
+            metadata={metadata}
+            onClose={onClose}
+            updateBoardView={revalidator.revalidate}
+            parentId={ticket.id}
+          />
+        )}
+        {config.show && (
+          <ContextMenu
+            metadata={metadata}
+            config={config}
+            onClose={closeContextMenu}
+          />
+        )}
       </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row">
@@ -199,7 +265,13 @@ export default function TicketDetailView() {
             <>
               <div className="text-gray-400 mb-2 text-lg">Subtasks</div>
               {ticket.children.map((child) => (
-                <TicketRow project={project} ticket={child} />
+                <div
+                key={child.id}
+                  onContextMenu={(e) => onContextMenu(e, child)}
+                  onTouchStart={(e) => handleTouchStart(e, child)}
+                >
+                  <TicketRow project={project} ticket={child} />
+                </div>
               ))}
             </>
           )}
@@ -215,6 +287,7 @@ export default function TicketDetailView() {
           ticket={ticket}
           history={history}
           update={update}
+          addSubtask={() => setIsCreating(true)}
         />
       </div>
     </>

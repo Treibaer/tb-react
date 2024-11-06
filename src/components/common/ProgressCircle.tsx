@@ -9,12 +9,12 @@ const ProgressCircle: React.FC<{
   const strokeDashoffset = circumference - circumference * (done / total);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       <div className="relative w-6 h-6">
-        <svg className="w-full h-full scale-[8]" viewBox="0 0 100 100">
+        <svg className="w-full h-full scale-[1]" viewBox="0 0 16 16">
           <circle
-            cx="50"
-            cy="50"
+            cx="8"
+            cy="8"
             r={normalizedRadius}
             fill="transparent"
             strokeWidth={stroke}
@@ -24,8 +24,8 @@ const ProgressCircle: React.FC<{
             }}
           />
           <circle
-            cx="50"
-            cy="50"
+            cx="8"
+            cy="8"
             r={normalizedRadius}
             fill="transparent"
             strokeWidth={stroke}

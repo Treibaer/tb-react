@@ -2,6 +2,7 @@ import { useDrag } from "react-dnd";
 import { NavLink } from "react-router-dom";
 import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
+import ProgressCircle from "../../common/ProgressCircle";
 import TicketAssigneeField from "../../projects/ticket-details/TicketAssigneeField";
 
 export const BoardTicketRow: React.FC<{
@@ -23,6 +24,9 @@ export const BoardTicketRow: React.FC<{
     onContextMenu(e, ticket);
   };
 
+  const finishedSubtasks = ticket.children.filter(
+    (c) => c.status === "done"
+  ).length;
   return (
     <NavLink
       to={ROUTES.TICKET_DETAILS(projectSlug, ticket.slug)}
@@ -38,7 +42,12 @@ export const BoardTicketRow: React.FC<{
         }}
       >
         <div>{`${ticket.slug}: ${ticket.title}`}</div>
-        <TicketAssigneeField user={ticket.assignee} />
+        <div className="flex justify-between">
+          <TicketAssigneeField user={ticket.assignee} />
+          {ticket.children.length > 0 && (
+            <ProgressCircle done={finishedSubtasks} total={ticket.children.length} />
+          )}
+        </div>
       </div>
     </NavLink>
   );

@@ -29,6 +29,7 @@ export default class TicketService {
       position?: number;
       title?: string;
       description?: string;
+      parentId?: number;
     }
   ) {
     const ticket = this.createTicketObject(data);
@@ -99,6 +100,7 @@ export default class TicketService {
     position?: number;
     title?: string;
     description?: string;
+    parentId?: number;
   }) {
     return {
       id: 0,
@@ -108,6 +110,7 @@ export default class TicketService {
       status: data.status ?? "open",
       boardId: data.boardId ?? 0,
       assigneeId: data.assigneeId,
+      parentId: data.parentId,
     };
   }
 

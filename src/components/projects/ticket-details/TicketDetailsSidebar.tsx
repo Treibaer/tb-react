@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import useParty from "../../../hooks/useParty";
 import { DropdownType } from "../../../models/dropdown-type";
 import { ProjectMeta } from "../../../models/project-meta";
 import { Ticket } from "../../../models/ticket";
+import { TicketHistory } from "../../../models/ticket-history";
 import { TicketStatus } from "../../../models/ticket-status";
 import TicketService from "../../../services/TicketService";
 import { FormatType, formatUnixTimestamp } from "../../../utils/dataUtils";
+import { showToast } from "../../../utils/tbToast";
+import Button from "../../Button";
 import TicketAssigneeField from "./TicketAssigneeField";
 import TicketDetailsRow from "./TicketDetailsRow";
 import TicketStatusView from "./TicketStatusView";
@@ -12,10 +17,6 @@ import AssigneeDropdown from "./dropdowns/AssigneeDropdown";
 import BoardDropdown from "./dropdowns/BoardDropdown";
 import StatusDropdown from "./dropdowns/StatusDropdown";
 import TypeDropdown from "./dropdowns/TypeDropdown";
-import { NavLink } from "react-router-dom";
-import { TicketHistory } from "../../../models/ticket-history";
-import useParty from "../../../hooks/useParty";
-import { showToast } from "../../../utils/tbToast";
 
 const ticketService = TicketService.shared;
 
@@ -24,7 +25,8 @@ export const TicketDetailsSidebar: React.FC<{
   ticket: Ticket;
   history: TicketHistory[];
   update: (ticket: Ticket) => void;
-}> = ({ ticket, update, metadata, history }) => {
+  addSubtask: () => void;
+}> = ({ ticket, update, metadata, history, addSubtask }) => {
   const { startParty } = useParty();
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
   const project = metadata.project;
@@ -96,6 +98,10 @@ export const TicketDetailsSidebar: React.FC<{
     showToast("board", ticket.slug, updatedTicket.board?.title);
   }
 
+  function onAddSubtask() {
+    addSubtask();
+  }
+
   return (
     <div className="sm:h-[calc(100vh-56px)] overflow-auto max-h-full bg-row  w-full sm:w-[254px] cursor-default">
       <div className="border-b border-b-border px-4 h-14 flex items-center text-gray-400">
@@ -140,43 +146,48 @@ export const TicketDetailsSidebar: React.FC<{
             <TicketAssigneeField user={ticket.assignee} />
           </div>
         </div>
-        <div className="flex items-center relative">
-          {dropdown === DropdownType.BOARD && (
-            <BoardDropdown
-              selectedBoardId={ticket.board?.id ?? 0}
-              boards={metadata.boards}
-              onClose={updateBoard}
-              style={{ left: 80, top: 34 }}
-            />
-          )}
-          <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Board</div>
-          <div
-            id="boardDropdown"
-            className="select2-dropdown overflow-x-hidden whitespace-nowrap"
-            title={ticket.board?.title}
-            onClick={() => setDropdown(DropdownType.BOARD)}
-          >
-            {ticket.board?.title}
-          </div>
-        </div>
-        <div className="flex items-center relative">
-          {dropdown === DropdownType.TYPE && (
-            <TypeDropdown
-              selectedType={ticket.type}
-              types={metadata.types}
-              onClose={updateType}
-              style={{ left: 80, top: 34 }}
-            />
-          )}
-          <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Type</div>
-          <div
-            id="typeDropdown"
-            className="select2-dropdown"
-            onClick={() => setDropdown(DropdownType.TYPE)}
-          >
-            {ticket.type}
-          </div>
-        </div>
+        {ticket.parentId === null && (
+          <>
+            <div className="flex items-center relative">
+              {dropdown === DropdownType.BOARD && (
+                <BoardDropdown
+                  selectedBoardId={ticket.board?.id ?? 0}
+                  boards={metadata.boards}
+                  onClose={updateBoard}
+                  style={{ left: 80, top: 34 }}
+                />
+              )}
+              <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Board</div>
+              <div
+                id="boardDropdown"
+                className="select2-dropdown overflow-x-hidden whitespace-nowrap"
+                title={ticket.board?.title}
+                onClick={() => setDropdown(DropdownType.BOARD)}
+              >
+                {ticket.board?.title}
+              </div>
+            </div>
+            <div className="flex items-center relative">
+              {dropdown === DropdownType.TYPE && (
+                <TypeDropdown
+                  selectedType={ticket.type}
+                  types={metadata.types}
+                  onClose={updateType}
+                  style={{ left: 80, top: 34 }}
+                />
+              )}
+              <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Type</div>
+              <div
+                id="typeDropdown"
+                className="select2-dropdown"
+                onClick={() => setDropdown(DropdownType.TYPE)}
+              >
+                {ticket.type}
+              </div>
+            </div>
+          </>
+        )}
+
         <div className="my-4 h-[1px] bg-border" />
         <TicketDetailsRow title="Creator">
           <TicketAssigneeField user={ticket.creator} />
@@ -201,6 +212,7 @@ export const TicketDetailsSidebar: React.FC<{
           </NavLink>
         </TicketDetailsRow>
       </div>
+      <Button onClick={onAddSubtask} title="Add Subtask" />
     </div>
   );
 };

@@ -125,10 +125,15 @@ export const ContextMenu: React.FC<{
   );
 
   async function removeTicket() {
-    if (removingTicketSlug) {
+    if (!removingTicketSlug) {
+      return;
+    }
+    try {
       await ticketService.remove(project.slug, removingTicketSlug);
       onClose(true);
       showToast("success", "", "Ticket deleted");
+    } catch (error: any) {
+      showToast("error", "", error.message);
     }
   }
 

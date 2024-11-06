@@ -129,6 +129,7 @@ export class ProjectService {
     const closedTicketsLast30Days = await Ticket.findAll({
       where: {
         project_id: project.id,
+        parentId: null,
         state: 'done',
         closedAt: {
           [Op.gt]: dateBefore30Days,
@@ -145,6 +146,7 @@ export class ProjectService {
     const openedTicketsLast30Days = await Ticket.findAll({
       where: {
         project_id: project.id,
+        parentId: null,
         createdAt: {
           [Op.gt]: dateBefore30Days,
         },

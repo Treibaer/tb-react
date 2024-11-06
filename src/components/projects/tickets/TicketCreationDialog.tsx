@@ -21,9 +21,10 @@ const ticketService = TicketService.shared;
 export const TicketCreationDialog: React.FC<{
   metadata: ProjectMeta;
   initialBoardId?: number;
+  parentId?: number;
   onClose: (update: boolean) => void;
   updateBoardView: () => void;
-}> = ({ metadata, onClose, initialBoardId, updateBoardView }) => {
+}> = ({ metadata, onClose, initialBoardId, updateBoardView, parentId }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const toggleRef = useRef<HTMLInputElement>(null);
@@ -168,6 +169,7 @@ export const TicketCreationDialog: React.FC<{
         status: selectedStatus,
         type: selectedType,
         boardId: selectedBoard?.id,
+        parentId,
       });
       showToast("success", "", `Ticket ${ticket.slug} Created`);
     } catch (err: any) {
@@ -226,16 +228,15 @@ export const TicketCreationDialog: React.FC<{
   }
 
   function toggleStayOpen() {
-    setStayOpen(!stayOpen);
+    setStayOpen((prev) => !prev);
   }
 
   function toggleDropdown(type: DropdownType) {
     setDropdown(dropdown === type ? DropdownType.NONE : type);
   }
-
   return (
     <Dialog
-      title={`${project.title} > Create ticket`}
+      title={`${project.title} > Create ${parentId ? "subtask" : "ticket"}`}
       onClose={() => onClose(false)}
       onSubmit={createTicket}
     >
@@ -294,50 +295,53 @@ export const TicketCreationDialog: React.FC<{
             </div>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row">
-          <div className="relative">
-            <AnimatePresence>
-              {dropdown === DropdownType.BOARD && (
-                <BoardDropdown
-                  selectedBoardId={selectedBoard?.id ?? 0}
-                  boards={metadata.boards}
-                  onClose={updateBoard}
-                  style={{ left: -4, top: 34, minWidth: 160 }}
-                  showNumbers
-                />
-              )}
-            </AnimatePresence>
-            <div
-              id="boardDropdown"
-              className="select2-dropdown"
-              title={selectedBoard?.title}
-              onClick={() => toggleDropdown(DropdownType.BOARD)}
-            >
-              <div className=" overflow-x-hidden whitespace-nowrap w-32">
-                {selectedBoard?.title ?? "No board"}
+
+        {parentId === null && (
+          <div className="flex flex-col sm:flex-row">
+            <div className="relative">
+              <AnimatePresence>
+                {dropdown === DropdownType.BOARD && (
+                  <BoardDropdown
+                    selectedBoardId={selectedBoard?.id ?? 0}
+                    boards={metadata.boards}
+                    onClose={updateBoard}
+                    style={{ left: -4, top: 34, minWidth: 160 }}
+                    showNumbers
+                  />
+                )}
+              </AnimatePresence>
+              <div
+                id="boardDropdown"
+                className="select2-dropdown"
+                title={selectedBoard?.title}
+                onClick={() => toggleDropdown(DropdownType.BOARD)}
+              >
+                <div className=" overflow-x-hidden whitespace-nowrap w-32">
+                  {selectedBoard?.title ?? "No board"}
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <AnimatePresence>
+                {dropdown === DropdownType.TYPE && (
+                  <TypeDropdown
+                    selectedType={selectedType}
+                    types={metadata.types}
+                    onClose={updateType}
+                    style={{ left: -4, top: 34 }}
+                  />
+                )}
+              </AnimatePresence>
+              <div
+                id="typeDropdown"
+                className="select2-dropdown w-32"
+                onClick={() => toggleDropdown(DropdownType.TYPE)}
+              >
+                {selectedType === "" ? "None" : selectedType}
               </div>
             </div>
           </div>
-          <div className="relative">
-            <AnimatePresence>
-              {dropdown === DropdownType.TYPE && (
-                <TypeDropdown
-                  selectedType={selectedType}
-                  types={metadata.types}
-                  onClose={updateType}
-                  style={{ left: -4, top: 34 }}
-                />
-              )}
-            </AnimatePresence>
-            <div
-              id="typeDropdown"
-              className="select2-dropdown w-32"
-              onClick={() => toggleDropdown(DropdownType.TYPE)}
-            >
-              {selectedType === "" ? "None" : selectedType}
-            </div>
-          </div>
-        </div>
+        )}
         <Toggle
           title=""
           defaultChecked={false}

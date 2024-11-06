@@ -103,7 +103,9 @@ export default class Client {
       },
     });
     if (options.method === "DELETE") {
-      return null as any;
+      if (response.ok) {
+        return null as any;
+      }
     }
     return this.handleResponse(response);
   }
