@@ -17,4 +17,6 @@ export interface Ticket {
   createdAt: number;
   updatedAt: number;
   closedAt: number | null;
+  parentId: number | null;
+  children: Ticket[];
 }

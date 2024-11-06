@@ -4,6 +4,7 @@ import {
   BelongsTo,
   Column,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -81,4 +82,14 @@ export class Ticket extends Model {
 
   @Column({ allowNull: true, field: 'closed_at', defaultValue: true })
   closedAt: number;
+
+  @ForeignKey(() => Ticket)
+  @Column({ allowNull: true, field: 'parent_id' })
+  parentId: number;
+
+  @BelongsTo(() => Ticket, 'parentId')
+  parent: Ticket;
+
+  @HasMany(() => Ticket, 'parentId')
+  children: Ticket[];
 }

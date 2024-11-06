@@ -24,4 +24,6 @@ export class TicketDto {
   createdAt: number;
   updatedAt: number;
   closedAt: number | null;
+  parentId: number | null;
+  children: TicketDto[];
 }

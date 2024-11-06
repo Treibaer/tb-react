@@ -3,13 +3,14 @@ import { doneIcon, inProgressIcon, openIcon } from "../../../utils/ticketUtils";
 
 export const TicketStatusView: React.FC<{
   status: TicketStatus;
-}> = ({ status }) => {
+  onlyIcon?: boolean;
+}> = ({ status, onlyIcon: ignoreText }) => {
   return (
     <div className="flex gap-2 items-center capitalize">
       {status === "open" && openIcon}
       {status === "inProgress" && inProgressIcon}
       {status === "done" && doneIcon}
-      {status}
+      {!ignoreText && status}
     </div>
   );
 };

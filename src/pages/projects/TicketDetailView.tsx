@@ -1,6 +1,11 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { LoaderFunction, useBlocker, useLoaderData } from "react-router-dom";
+import {
+  LoaderFunction,
+  NavLink,
+  useBlocker,
+  useLoaderData,
+} from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import Confirmation from "../../components/common/Confirmation";
@@ -18,6 +23,9 @@ import { showToast } from "../../utils/tbToast";
 import { FaPencil } from "react-icons/fa6";
 import { TicketHistory } from "../../models/ticket-history";
 import { TicketComment } from "../../models/ticket-comment";
+import TicketStatusView from "../../components/projects/ticket-details/TicketStatusView";
+import TicketDetailsRow from "../../components/projects/ticket-details/TicketDetailsRow";
+import TicketRow from "../../components/projects/tickets/TicketRow";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
@@ -39,9 +47,23 @@ export default function TicketDetailView() {
   const project = metadata.project;
   const [ticket, setTicket] = useState<Ticket>(initialTicket);
   const [history, setHistory] = useState<TicketHistory[]>(initialHistory);
-  const currentTitle = useRef<HTMLInputElement>(null);
+  const currentTitle = useRef<HTMLInputElement | null>(null);
   const currentDescription = useRef(ticket.description);
   const [isEditing, setIsEditing] = useState(false);
+  const initialRender = useRef(true);
+
+  // re-render on url change (loader data change)
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    setTicket(initialTicket);
+    currentDescription.current = initialTicket.description;
+    setHistory(initialHistory);
+    setIsEditing(false);
+    currentTitle.current = null;
+  }, [initialTicket]);
 
   const breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
@@ -172,6 +194,16 @@ export default function TicketDetailView() {
               <DescriptionView description={currentDescription} />
             </div>
           )}
+
+          {ticket.children.length > 0 && (
+            <>
+              <div className="text-gray-400 mb-2 text-lg">Subtasks</div>
+              {ticket.children.map((child) => (
+                <TicketRow project={project} ticket={child} />
+              ))}
+            </>
+          )}
+
           <TicketCommentArea
             project={project}
             ticket={ticket}

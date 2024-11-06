@@ -18,6 +18,17 @@ export const TicketCommentArea: React.FC<{
   const [comments, setComments] = useState<TicketComment[]>(initialComments);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const [removeCommentId, setRemoveCommentId] = useState<number | null>(null);
+  const initialRender = useRef(true);
+
+    // re-render on url change (loader data change)
+    useEffect(() => {
+      if (initialRender.current) {
+        initialRender.current = false;
+        return;
+      }
+      setComments(initialComments);
+    }, [initialComments]);
+  
 
   async function addComment() {
     if (!contentRef.current?.value) return;
@@ -50,7 +61,7 @@ export const TicketCommentArea: React.FC<{
   }
 
   return (
-    <div className="border-t border-t-border mt-1">
+    <div className="border-t border-t-border mt-1 pt-1">
       <AnimatePresence>
         {removeCommentId && (
           <Confirmation
@@ -59,6 +70,7 @@ export const TicketCommentArea: React.FC<{
           />
         )}
       </AnimatePresence>
+      <div className="text-2xl">Comments</div>
       {comments.map((comment) => (
         <div
           key={comment.id}
@@ -82,7 +94,6 @@ export const TicketCommentArea: React.FC<{
           />
         </div>
       ))}
-      <div className="text-2xl">Comments</div>
       <textarea
         className="w-full resize-none p-2 mt-2 bg-row text-gray-100 border border-border rounded focus:outline-none focus:border-border"
         placeholder="Leave a comment..."

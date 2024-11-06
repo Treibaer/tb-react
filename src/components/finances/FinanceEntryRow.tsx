@@ -31,23 +31,3 @@ const FinanceEntryRow: React.FC<{
   );
 };
 export default FinanceEntryRow;
-
-/*
-
-
-            <div
-              key={entry.id}
-              onClick={() => openEditDialog(entry)}
-              className="tb-row w-full cursor-pointer"
-            >
-              <div className="text-gray-500">
-                {formatUnixTimestamp(entry.purchasedAt, FormatType.DAY)}
-              </div>
-              <div className="w-1">{entry.icon}</div>
-
-              <div className="flex-1">{entry.title}</div>
-              <div className="me-4 py-1 px-2 text-slate-400 text-sm rounded-lg border border-[rgb(133,134,153)]">
-                {entry.tag}
-              </div>
-            </div>
-*/

@@ -18,7 +18,7 @@ const useParty = () => {
     dispatch(uiActions.startParty());
     const newTimer = setTimeout(() => {
       dispatch(uiActions.stopParty());
-    }, 3000);
+    }, 5000);
     timer.current = newTimer;
   }
   return {

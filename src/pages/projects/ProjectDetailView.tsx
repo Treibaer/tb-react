@@ -58,7 +58,7 @@ export const ProjectDetailView: React.FC = () => {
       />
 
       <div className="p-2 flex gap-1 flex-col">
-        <div className="flex items-center justify-between px-4 h-11 bg-header border-b border-b-border rounded-lg">
+        <div className="flex items-center justify-between px-4 h-11 bg-header rounded-lg">
           My Tickets
         </div>
         <div className="flex flex-col w-full">
@@ -67,7 +67,6 @@ export const ProjectDetailView: React.FC = () => {
               key={ticket.id}
               ticket={ticket}
               project={project}
-              onContextMenu={() => {}}
             />
           ))}
         </div>
