@@ -44,10 +44,10 @@ export const BoardColumn: React.FC<{
       if (status === oldStatus) {
         return;
       }
-      await TicketService.shared.update(project.slug, item.slug, {
+      const ticket = await TicketService.shared.update(project.slug, item.slug, {
         status,
       });
-      if (status === "done") {
+      if (status === "done" && ticket.parent === null) {
         startParty();
       }
       showToast("state", item.slug, status);

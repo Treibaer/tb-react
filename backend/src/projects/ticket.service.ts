@@ -41,6 +41,7 @@ export class TicketService {
     ticket: TicketDto & {
       assigneeId?: number;
       boardId?: number;
+      parentId?: number;
     },
   ): Promise<TicketDto> {
     const project = await this.findProjectBySlug(projectSlug);
@@ -51,8 +52,22 @@ export class TicketService {
       throw new Error('Title is required');
     }
 
-    const allTickets = await Ticket.findAll({
-      where: { project_id: project.id },
+    let position: number;
+
+    if (ticket.parent === null) {
+      const maxPosition: number = await Ticket.max('position', {
+        where: { project_id: project.id, board_id: boardId, parentId: null },
+      });
+      position = maxPosition ? maxPosition + 1 : 0;
+    } else {
+      const maxPosition: number = await Ticket.max('position', {
+        where: { project_id: project.id, parentId: ticket.parentId },
+      });
+      position = maxPosition ? maxPosition + 1 : 0;
+    }
+
+    const boardTickets = await Ticket.findAll({
+      where: { project_id: project.id, board_id: boardId, parentId: ticket.parentId },
     });
 
     const maxTicketId: number = await Ticket.max('ticket_id', {
@@ -60,9 +75,8 @@ export class TicketService {
     });
 
     const ticketId = maxTicketId ? maxTicketId + 1 : 1;
-    const boardTickets = allTickets.filter((t) => t.board_id === boardId);
 
-    const position = boardTickets.length;
+    // const position = boardTickets.length;
 
     const createdTicket = await Ticket.create({
       title: ticket.title,
@@ -114,6 +128,7 @@ export class TicketService {
       assigneeId?: number;
       boardId?: number;
       position?: number;
+      parentId?: number;
     },
   ): Promise<TicketDto> {
     const project = await this.findProjectBySlug(projectSlug);
@@ -284,6 +299,43 @@ export class TicketService {
     await TicketComment.destroy({
       where: { ticket_id: ticket.id, id: commentId },
     });
+  }
+
+  async moveSubtask(
+    ticketSlug: string,
+    origin: number,
+    target: number,
+  ): Promise<void> {
+    const ticket = await this.getBySlug(ticketSlug);
+    const children = await Ticket.findAll({
+      where: { parentId: ticket.id },
+      order: [['position', 'ASC']],
+    });
+    const targetTicket = children.find((t) => t.id === target);
+    if (!targetTicket) {
+      throw new Error('Target ticket not found');
+    }
+    const originTicket = children.find((t) => t.id === origin);
+    if (!originTicket) {
+      throw new Error('Origin ticket not found');
+    }
+    const originPosition = originTicket.position;
+    const targetPosition = targetTicket.position;
+    if (originPosition < targetPosition) {
+      for (let i = originPosition + 1; i <= targetPosition; i++) {
+        children[i].position = i - 1;
+        await children[i].save();
+      }
+      originTicket.position = targetPosition;
+      await originTicket.save();
+    } else {
+      for (let i = targetPosition; i < originPosition; i++) {
+        children[i].position = i + 1;
+        await children[i].save();
+      }
+      originTicket.position = targetPosition;
+      await originTicket.save();
+    }
   }
 
   private async getBySlug(slug: string): Promise<Ticket> {

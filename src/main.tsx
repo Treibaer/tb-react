@@ -1,4 +1,5 @@
 import { createRoot } from "react-dom/client";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
 import "./index.css";
 import setFavicon from "./utils/faviconSwitcher.ts";
@@ -8,6 +9,11 @@ setFavicon();
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
-  <App />
+  <HelmetProvider>
+    <Helmet>
+      <title>TB - React</title>
+    </Helmet>
+    <App />
+  </HelmetProvider>
   // </StrictMode>,
 );

@@ -147,4 +147,14 @@ export default class TicketService {
     const url = `/projects/${projectSlug}/boards/${boardId}/move`;
     return this.client.post(url, { origin, target });
   }
+
+  async moveSubtask(
+    projectSlug: string,
+    ticketSlug: string,
+    origin: number,
+    target: number
+  ) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}/move`;
+    return this.client.post(url, { origin, target });
+  }
 }

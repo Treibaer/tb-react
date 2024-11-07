@@ -1,3 +1,4 @@
+import { Provider } from "react-redux";
 import {
   createBrowserRouter,
   NavLink,
@@ -6,6 +7,13 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Button from "./components/Button";
+import AssetDetailView, {
+  loader as assetDetailsLoader,
+} from "./pages/AssetDetails";
+import Assets, { loader as assetsLoader } from "./pages/Assets";
+import Changelog, {
+  loader as changelogLoader
+} from "./pages/Changelog";
 import Dashboard from "./pages/Dashboard";
 import FinanceDashboard, {
   loader as financeDashboardLoader,
@@ -25,6 +33,12 @@ import PageDetailView, {
   loader as pageDetailsLoader,
 } from "./pages/projects/PageDetailView";
 import Pages, { loader as pagesLoader } from "./pages/projects/Pages";
+import PasswordEntries, {
+  loader as passwordEntriesLoader,
+} from "./pages/projects/PasswordEntries";
+import Passwords, {
+  loader as passwordsLoader,
+} from "./pages/projects/Passwords";
 import ProjectDetailView, {
   loader as projectDetailsLoader,
 } from "./pages/projects/ProjectDetailView";
@@ -45,23 +59,9 @@ import Register from "./pages/Register";
 import RootLayout from "./pages/RootLayout";
 import Settings from "./pages/Settings";
 import StatusView from "./pages/StatusView";
-import Passwords, {
-  loader as passwordsLoader,
-} from "./pages/projects/Passwords";
-import PasswordEntries, {
-  loader as passwordEntriesLoader,
-} from "./pages/projects/PasswordEntries";
 import { AppContextProvider } from "./store/AppContext";
-import { ToastProvider } from "./store/ToastContext";
-import { Provider } from "react-redux";
 import { store } from "./store/store";
-import Assets, { loader as assetsLoader } from "./pages/Assets";
-import AssetDetailView, {
-  loader as assetDetailsLoader,
-} from "./pages/AssetDetails";
-import Changelog, {loader as 
-  changelogLoader
-} from "./pages/Changelog";
+import { ToastProvider } from "./store/ToastContext";
 
 const router = createBrowserRouter([
   {

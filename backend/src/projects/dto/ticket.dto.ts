@@ -2,6 +2,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 import { TicketStatus } from '../models/ticket-status';
 import { SmallBoardDto } from './small-board.dto';
 import { IsEnum, IsString, MinLength } from 'class-validator';
+import { TIcketParentDto } from './ticket-parent-dto';
 
 export class TicketDto {
   id: number;
@@ -24,6 +25,6 @@ export class TicketDto {
   createdAt: number;
   updatedAt: number;
   closedAt: number | null;
-  parentId: number | null;
+  parent: TIcketParentDto | null;
   children: TicketDto[];
 }

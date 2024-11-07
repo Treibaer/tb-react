@@ -41,7 +41,7 @@ export const TicketDetailsSidebar: React.FC<{
       ticket.slug,
       { status }
     );
-    if (status === "done") {
+    if (status === "done" && updatedTicket.parent === null) {
       startParty();
     }
     update(updatedTicket);
@@ -105,7 +105,12 @@ export const TicketDetailsSidebar: React.FC<{
   return (
     <div className="sm:h-[calc(100vh-56px)] overflow-auto max-h-full bg-row  w-full sm:w-[254px] cursor-default">
       <div className="border-b border-b-border px-4 h-14 flex items-center text-gray-400">
-        {ticket.slug}
+        <div className="flex justify-between items-center w-full">
+          <div>{ticket.slug}</div>
+          {ticket.parent && (
+            <div className="rounded border-gray-500 border px-2">Subtask</div>
+          )}
+        </div>
       </div>
       <div className="px-2 py-3 flex flex-col">
         <div className="flex items-center relative">
@@ -146,7 +151,7 @@ export const TicketDetailsSidebar: React.FC<{
             <TicketAssigneeField user={ticket.assignee} />
           </div>
         </div>
-        {ticket.parentId === null && (
+        {ticket.parent === null && (
           <>
             <div className="flex items-center relative">
               {dropdown === DropdownType.BOARD && (
@@ -212,7 +217,10 @@ export const TicketDetailsSidebar: React.FC<{
           </NavLink>
         </TicketDetailsRow>
       </div>
-      <Button onClick={onAddSubtask} title="Add Subtask" />
+
+      {ticket.parent == null && (
+        <Button onClick={onAddSubtask} title="Add Subtask" />
+      )}
     </div>
   );
 };

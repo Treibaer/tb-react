@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaPencil } from "react-icons/fa6";
 import {
   LoaderFunction,
-  useLoaderData,
-  useSearchParams,
+  useLoaderData
 } from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";

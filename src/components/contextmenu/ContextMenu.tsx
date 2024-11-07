@@ -76,7 +76,7 @@ export const ContextMenu: React.FC<{
       // showToast(`${ticket.slug} updated`, `Status changed to ${status}`);
       showToast("state", ticket.slug, status);
 
-      if (status === "done") {
+      if (status === "done" && ticket.parent === null) {
         startParty();
       }
     }

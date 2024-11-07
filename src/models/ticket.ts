@@ -1,4 +1,5 @@
 import { SmallBoard } from "./board-structure";
+import { TicketParent } from "./ticket-parent";
 import { TicketStatus } from "./ticket-status";
 import { User } from "./user";
 
@@ -17,6 +18,6 @@ export interface Ticket {
   createdAt: number;
   updatedAt: number;
   closedAt: number | null;
-  parentId: number | null;
+  parent: TicketParent | null;
   children: Ticket[];
 }

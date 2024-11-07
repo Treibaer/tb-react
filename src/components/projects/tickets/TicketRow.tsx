@@ -46,7 +46,7 @@ export default function TicketRow({
             total={ticket.children.length}
           />
         )}
-        {ticket.parentId && (
+        {ticket.parent && (
           <div className="rounded border-gray-500 border px-2">Subtask</div>
         )}
         {ticket.type && (

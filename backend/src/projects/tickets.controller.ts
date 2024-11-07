@@ -84,4 +84,13 @@ export class TicketsController {
   ) {
     await this.ticketService.removeComment(ticketSlug, commentId);
   }
+
+  @Post(':slug/tickets/:ticketSlug/move')
+  async moveTicket(
+    @Param('ticketSlug') ticketSlug: string,
+    @Body() data: Record<string, any>,
+  ) {
+    await this.ticketService.moveSubtask(ticketSlug, data.origin, data.target);
+    return { message: 'Ticket updated' };
+  }
 }

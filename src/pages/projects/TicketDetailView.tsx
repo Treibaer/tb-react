@@ -1,26 +1,27 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { FaPencil } from "react-icons/fa6";
 import { LoaderFunction, useBlocker, useRevalidator } from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import Confirmation from "../../components/common/Confirmation";
+import ContextMenu from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
 import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
 import TicketCommentArea from "../../components/projects/ticket-details/TicketCommentArea";
 import TicketDetailsSidebar from "../../components/projects/ticket-details/TicketDetailsSidebar";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
-import TicketRow from "../../components/projects/tickets/TicketRow";
+import TicketRowDnDWrapper from "../../components/projects/tickets/TicketRowDnDWrapper";
 import useTicketData from "../../hooks/useTicketData";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Ticket } from "../../models/ticket";
+import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import TicketService from "../../services/TicketService";
 import { showToast } from "../../utils/tbToast";
-import { ImSuperscript } from "react-icons/im";
-import ContextMenu from "../../components/contextmenu/ContextMenu";
-import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
@@ -68,6 +69,15 @@ export default function TicketDetailView() {
     if (isEditing) {
       return;
     }
+    if (
+      document.activeElement &&
+      ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)
+    ) {
+      return;
+    }
+    if (event.key === "e") {
+      setIsEditing(true);
+    }
     if (event.key === "c") {
       setIsCreating(true);
     }
@@ -80,13 +90,23 @@ export default function TicketDetailView() {
     };
   }, [isEditing]);
 
-  const breadcrumbs: Breadcrumb[] = [
+  let breadcrumbs: Breadcrumb[] = [
     { title: "Home", link: ROUTES.HOME },
     { title: "Projects", link: ROUTES.PROJECTS },
     { title: project.title, link: ROUTES.PROJECT_DETAILS(project.slug) },
     { title: "Tickets", link: ROUTES.TICKETS_BOARD_VIEW(project.slug) },
-    { title: ticket.slug, link: "" },
   ];
+
+  if (ticket.parent) {
+    breadcrumbs.push({
+      title: ticket.parent.slug,
+      link: ROUTES.TICKET_DETAILS(project.slug, ticket.parent.slug),
+    });
+  }
+
+  breadcrumbs.push({ title: ticket.slug, link: "" });
+
+  //
 
   let blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
@@ -175,6 +195,23 @@ export default function TicketDetailView() {
   }
   const [isCreating, setIsCreating] = useState(false);
 
+  const [dragIndex, setDragIndex] = useState(-1);
+  const [hoverIndex, setHoverIndex] = useState(-1);
+
+  async function moveTicket(dragIndex: number, hoverIndex: number) {
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+    console.log("Moving subtask", dragIndex, hoverIndex);
+    await TicketService.shared.moveSubtask(
+      project.slug,
+      ticket.slug,
+      dragIndex,
+      hoverIndex
+    );
+    revalidator.revalidate();
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -204,21 +241,24 @@ export default function TicketDetailView() {
           />
         )}
       </AnimatePresence>
-      <HeaderView breadcrumbs={breadcrumbs} />
+      <HeaderView
+        title={`${ticket.slug} - ${ticket.title}`}
+        breadcrumbs={breadcrumbs}
+      />
       <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row">
         <div className="w-full sm:w-[calc(100%-240px)] sm:h-[calc(100vh-56px)] px-2 flex flex-col">
-          <div className="border-b-border border-b mb-4">
+          <div className="border-b-border border-b mb-4 h-14 items-center flex w-full justify-between">
             {isOldVersion && (
               <div className="text-red-500 text-center">
                 You are viewing an old version of this ticket
               </div>
             )}
-            <div className="flex min-h-12 items-center gap-2">
+            <div className="flex min-h-14 items-center gap-2 w-full">
               {isEditing && (
                 <input
                   ref={currentTitle}
                   type="text"
-                  className="w-full bg-hover text-2xl border border-border rounded-md px-2"
+                  className="w-full bg-hover text-2xl h-10 border border-border rounded-md px-2"
                   defaultValue={ticket.title}
                 />
               )}
@@ -262,18 +302,27 @@ export default function TicketDetailView() {
           )}
 
           {ticket.children.length > 0 && (
-            <>
+            <DndProvider backend={HTML5Backend}>
               <div className="text-gray-400 mb-2 text-lg">Subtasks</div>
               {ticket.children.map((child) => (
-                <div
-                key={child.id}
-                  onContextMenu={(e) => onContextMenu(e, child)}
-                  onTouchStart={(e) => handleTouchStart(e, child)}
-                >
-                  <TicketRow project={project} ticket={child} />
+                <div key={child.id}>
+                  {/* <TicketRow project={project} ticket={child} /> */}
+                  <TicketRowDnDWrapper
+                    project={project}
+                    ticket={child}
+                    onContextMenu={onContextMenu}
+                    onTouchStart={handleTouchStart}
+                    dragIndex={dragIndex}
+                    hoverIndex={hoverIndex}
+                    setDragIndex={setDragIndex}
+                    setHoverIndex={setHoverIndex}
+                    index={child.id}
+                    id={child.id}
+                    moveTicket={moveTicket}
+                  />
                 </div>
               ))}
-            </>
+            </DndProvider>
           )}
 
           <TicketCommentArea

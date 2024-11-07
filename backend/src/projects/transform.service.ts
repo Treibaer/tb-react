@@ -47,14 +47,25 @@ export class TransformService {
         (await Board.findByPk(ticket.board_id)))
       : null;
 
-      const children = await Ticket.findAll({
-        where: {
-          parentId: ticket.id,
-        },
-      });
-      const childrenDto = await Promise.all(
-        children.map((child) => this.ticket(projectSlug, child)),
-      );
+    const parent = await Ticket.findByPk(ticket.parentId);
+
+    const children = await Ticket.findAll({
+      where: {
+        parentId: ticket.id,
+      },
+      order: [['position', 'ASC']],
+    });
+    const childrenDto = await Promise.all(
+      children.map((child) => this.ticket(projectSlug, child)),
+    );
+
+    const ticketParentDto = parent
+      ? {
+          id: parent.id,
+          title: parent.title,
+          slug: `${projectSlug}-${parent.ticketId}`,
+        }
+      : null;
 
     return {
       id: ticket.id,
@@ -76,7 +87,7 @@ export class TransformService {
       createdAt: ticket.createdAt,
       updatedAt: ticket.changedAt,
       closedAt: ticket.closedAt,
-      parentId: ticket.parentId,
+      parent: ticketParentDto,
       children: childrenDto,
     };
   }
