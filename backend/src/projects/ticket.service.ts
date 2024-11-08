@@ -58,16 +58,16 @@ export class TicketService {
       const maxPosition: number = await Ticket.max('position', {
         where: { project_id: project.id, board_id: boardId, parentId: null },
       });
-      position = maxPosition ? maxPosition + 1 : 0;
+      position = maxPosition !== null ? maxPosition + 1 : 0;
     } else {
       const maxPosition: number = await Ticket.max('position', {
-        where: { project_id: project.id, parentId: ticket.parentId },
+        where: { project_id: project.id, parentId: ticket.parentId ?? null },
       });
-      position = maxPosition ? maxPosition + 1 : 0;
+      position = maxPosition !== null ? maxPosition + 1 : 0;
     }
 
     const boardTickets = await Ticket.findAll({
-      where: { project_id: project.id, board_id: boardId, parentId: ticket.parentId },
+      where: { project_id: project.id, board_id: boardId, parentId: ticket.parentId ?? null },
     });
 
     const maxTicketId: number = await Ticket.max('ticket_id', {
@@ -90,7 +90,7 @@ export class TicketService {
       status: ticket.status,
       board_id: boardId,
       closedAt: ticket.status === 'done' ? Math.floor(Date.now() / 1000) : null,
-      parentId: ticket.parentId,
+      parentId: ticket.parentId ?? null,
     });
     await this.createHistoryEntry(createdTicket);
     return await this.transformer.ticket(projectSlug, createdTicket);

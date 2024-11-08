@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { SmallBoard } from "../../../models/board-structure";
 import { DropdownType } from "../../../models/dropdown-type";
@@ -14,7 +15,6 @@ import AssigneeDropdown from "../ticket-details/dropdowns/AssigneeDropdown";
 import BoardDropdown from "../ticket-details/dropdowns/BoardDropdown";
 import StatusDropdown from "../ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../ticket-details/dropdowns/TypeDropdown";
-import { AnimatePresence } from "framer-motion";
 
 const ticketService = TicketService.shared;
 
@@ -296,7 +296,7 @@ export const TicketCreationDialog: React.FC<{
           </div>
         </div>
 
-        {parentId === null && (
+        {!parentId && (
           <div className="flex flex-col sm:flex-row">
             <div className="relative">
               <AnimatePresence>

@@ -78,7 +78,7 @@ export default function TicketDetailView() {
     if (event.key === "e") {
       setIsEditing(true);
     }
-    if (event.key === "c") {
+    if (event.key === "c" && !event.ctrlKey && !event.metaKey) {
       setIsCreating(true);
     }
   };
