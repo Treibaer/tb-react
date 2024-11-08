@@ -1,21 +1,30 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import * as bodyParser from 'body-parser';
+import * as express from 'express';
+import { join } from 'path';
+import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './utils/all-exceptions.filter';
 import { LoggingInterceptor } from './utils/logger.interceptor';
-import { join } from 'path';
-import * as express from 'express';
-import { ValidationPipe } from '@nestjs/common';
-import * as bodyParser from 'body-parser';
 import { SocketIoAdapter } from './utils/ws-adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn'],
   });
-  app.enableCors();
 
-  // Increase the limit to 10MB for example (adjust as necessary)
+  configureMiddleware(app);
+  configureStaticAssets(app);
+  configureWebSocket(app);
+
+  const port = process.env.PORT || 3000;
+  console.log(`Listening on port ${port}`);
+  await app.listen(port);
+}
+
+function configureMiddleware(app) {
+  app.enableCors();
   app.use(bodyParser.json({ limit: '10mb' }));
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
@@ -23,19 +32,19 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalPipes(new ValidationPipe());
-  const port = process.env.PORT || 3000;
-  console.log(`Listening on port ${port}`);
+}
 
+function configureStaticAssets(app) {
   app.use(
     '/avatars',
     express.static(join(__dirname, '..', 'public', 'avatars')),
   );
   app.use('/images', express.static(join(__dirname, '..', 'public', 'images')));
-
-  const configService = app.get(ConfigService);
-  
-  app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
-
-  await app.listen(port);
 }
+
+function configureWebSocket(app) {
+  const configService = app.get(ConfigService);
+  app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
+}
+
 bootstrap();

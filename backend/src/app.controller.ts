@@ -1,8 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, InternalServerErrorException } from '@nestjs/common';
 import { UrlService } from './shared/urlservice';
 import { UserService } from './users/user.service';
 import { execSync } from 'child_process';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -28,26 +28,30 @@ export class AppController {
       icon: `${this.urlService.getBackendUrl()}${user.avatar}`,
     };
   }
+
   @Get('api/v3/changelog')
   async getChangelog(): Promise<Commit[]> {
     try {
-      const result = this.readGitLog();
+      const result = await this.readGitLog();
       const commits = this.parseGitLog(result);
       return commits;
     } catch (error) {
-      throw new Error('Unable to fetch changelog.');
+      throw new InternalServerErrorException('Unable to fetch changelog.');
     }
   }
 
-  private readGitLog(): string[] {
+  private async readGitLog(): Promise<string[]> {
     const filePath = this.getGitLogFilePath();
-    this.ensureDirectoryExists(path.dirname(filePath));
+    await this.ensureDirectoryExists(path.dirname(filePath));
 
     try {
       execSync(`git log > ${filePath}`);
-      return fs.readFileSync(filePath, 'utf-8').split('\n');
+      const data = await fs.readFile(filePath, 'utf-8');
+      return data.split('\n');
     } catch (error) {
-      throw new Error(`Failed to read git log: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Failed to read git log: ${error.message}`,
+      );
     }
   }
 
@@ -56,17 +60,22 @@ export class AppController {
       return 'C:/temp/gitlog_kde.txt';
     } else if (
       os.platform() === 'darwin' &&
-      process.env.HTTP_USER_AGENT?.includes('Macintosh') &&
-      false
+      process.env.HTTP_USER_AGENT?.includes('Macintosh')
     ) {
       return '/tmp/gitlog_kde.txt';
     }
     return path.join(__dirname, '../cache/gitlog_kde.txt');
   }
 
-  private ensureDirectoryExists(directory: string): void {
-    if (!fs.existsSync(directory)) {
-      fs.mkdirSync(directory, { recursive: true });
+  private async ensureDirectoryExists(directory: string): Promise<void> {
+    try {
+      await fs.mkdir(directory, { recursive: true });
+    } catch (error) {
+      if (error.code !== 'EEXIST') {
+        throw new InternalServerErrorException(
+          `Failed to create directory: ${error.message}`,
+        );
+      }
     }
   }
 
@@ -76,6 +85,7 @@ export class AppController {
     let lineCount = 0;
 
     for (const line of logLines) {
+      console.log(line);
       switch (lineCount) {
         case 0:
           currentCommit.commitId = line.split('commit ')[1];
@@ -87,7 +97,7 @@ export class AppController {
             .trim();
           break;
         case 2:
-          currentCommit.date = line.split('Date: ')[1].trim();
+          currentCommit.date = line.split('Date: ')[1];
           break;
         case 3:
           break;
