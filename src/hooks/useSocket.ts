@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import socket from "../services/socket";
+import { v4 as uuidv4 } from "uuid";
 import { Listener, Wrapper } from "../models/websocket";
-import { v4 as uuidv4 } from 'uuid'; // npm install uuid for generating unique IDs
-
+import socket from "../services/socket";
 
 export const useSocket = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -31,7 +30,6 @@ export const useSocket = () => {
     socket.emit(event, { type, data, requestId });
   }
 
-
   function request<T>(event: string, type: string, data: any): Promise<T> {
     const requestId = uuidv4(); // Unique ID for this request
     return new Promise<T>((resolve) => {
@@ -59,15 +57,14 @@ export const useSocket = () => {
     }
 
     function onRealtimeEvent(value: Wrapper<any>) {
-      const { requestId, type, data } = value;
-      
+      const { requestId, data } = value;
+
       // Check if this is a response to a pending request
       if (requestId && pendingRequests[requestId]) {
         pendingRequests[requestId](data); // Resolve the promise
         delete pendingRequests[requestId]; // Remove the request
         return;
       }
-
     }
 
     function onMatchesEvent(value: Wrapper<any>) {
@@ -112,6 +109,6 @@ export const useSocket = () => {
     listenOn,
     listenOff,
     emit,
-    request
+    request,
   };
 };

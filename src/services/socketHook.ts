@@ -7,8 +7,5 @@ export default function useSocketHook() {
     return await socket.request<T>("realtime", "boardStructure", data);
   }
 
-  return {
-    socket,
-    get,
-  };
+  return { socket, get };
 }

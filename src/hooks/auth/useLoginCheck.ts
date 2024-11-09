@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AppResponse } from "../../models/app-response";
 import { uiActions } from "../../store/ui-slice";
 import Constants from "../../services/Constants";
-import { useAppDispatch } from "../storeHoooks";
+import { useAppDispatch } from "../storeHooks";
 
 export function useLoginCheck() {
   const [checkingLogin, setCheckingLogin] = useState(true);

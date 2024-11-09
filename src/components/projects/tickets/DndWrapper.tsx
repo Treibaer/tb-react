@@ -36,24 +36,20 @@ const DnDWrapper: React.FC<{
       if (!ref.current) {
         return;
       }
-      const dragIndex = item.id;
-      const hoverIndex = id;
-      setHoverIndex(hoverIndex);
-      setDragIndex(dragIndex);
+      setHoverIndex(id);
+      setDragIndex(item.id);
     },
     drop(item: DragItem) {
       if (!ref.current) {
         return;
       }
-      const dragIndex = item.id;
-      const hoverIndex = id;
       setHoverIndex(-1);
       setDragIndex(-1);
-      moveTicket(dragIndex, hoverIndex);
+      moveTicket(item.id, id);
     },
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{}, drag] = useDrag({
     type: "card",
     item: () => {
       setDragIndex(id);
@@ -64,7 +60,6 @@ const DnDWrapper: React.FC<{
     }),
   });
 
-  const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
   return (
     <div

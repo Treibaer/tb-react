@@ -1,14 +1,14 @@
-import { Outlet, ScrollRestoration, useNavigation } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
+import { Outlet, useNavigation } from "react-router-dom";
 import DelayedLoadingSpinner from "../components/common/DelayedLoadingSpinner";
 import MainNavigation from "../components/Navigation/MainNavigation";
 import MobileNavigation from "../components/Navigation/MobileNavigation";
 import { useLoginCheck } from "../hooks/auth/useLoginCheck";
 import Constants from "../services/Constants";
-import LoginView from "./LoginView";
 import AppContext from "../store/AppContext";
-import { useContext, useEffect } from "react";
+import LoginView from "./LoginView";
 import PartyComponent from "./projects/PartyComponent";
-import { Toaster } from "react-hot-toast";
 
 export const RootLayout: React.FC = () => {
   const { state } = useNavigation();

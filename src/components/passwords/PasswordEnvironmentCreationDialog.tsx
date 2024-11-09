@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import Dialog from "../common/Dialog";
+import { useEffect, useRef } from "react";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
-import { PasswordService } from "../../services/PasswordService";
+import { PasswordService } from "../../services/passwordService";
 import { showToast } from "../../utils/tbToast";
+import Dialog from "../common/Dialog";
 
 export const PasswordEnvironmentCreationDialog: React.FC<{
   onClose: () => void;

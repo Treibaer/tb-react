@@ -8,24 +8,17 @@ import HeaderView from "../../components/HeaderView";
 import { BoardColumn } from "../../components/projects/board-details/BoardColumn";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
 import TitleView from "../../components/TitleView";
+import useContextMenu from "../../hooks/useContextMenu";
 import { useSocket } from "../../hooks/useSocket";
 import { Board } from "../../models/board-structure";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { ProjectMeta } from "../../models/project-meta";
-import { Ticket } from "../../models/ticket";
 import { ROUTES } from "../../routes";
-import { BoardService } from "../../services/BoardService";
-import ProjectService from "../../services/ProjectService";
+import { BoardService } from "../../services/boardService";
+import ProjectService from "../../services/projectService";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
-
-type Config = {
-  top: number;
-  left: number;
-  show: boolean;
-  ticket: Ticket | null;
-};
 
 export const BoardDetails: React.FC = () => {
   const { listenOn, listenOff, emit } = useSocket();
@@ -40,12 +33,8 @@ export const BoardDetails: React.FC = () => {
   const project = metadata.project;
 
   useEffect(() => {
-    listenOn("matches", "update", (_) => {
-      updateBoard();
-    });
-    return () => {
-      listenOff("matches", "update");
-    };
+    listenOn("matches", "update", updateBoard);
+    return () => listenOff("matches", "update");
   }, []);
 
   function openDialog() {
@@ -58,13 +47,6 @@ export const BoardDetails: React.FC = () => {
     }
     setIsCreating(false);
   }
-
-  const [config, setConfig] = useState<Config>({
-    top: 0,
-    left: 0,
-    show: false,
-    ticket: null,
-  });
 
   const openTickets = board.tickets.filter(
     (ticket) => ticket.status === "open"
@@ -84,18 +66,6 @@ export const BoardDetails: React.FC = () => {
     { title: board.title, link: "" },
   ];
 
-  function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
-    e.preventDefault();
-    const maxX = window.innerWidth - 175;
-    const maxY = window.innerHeight - 175;
-    setConfig({
-      top: Math.min(e.pageY, maxY),
-      left: Math.min(e.pageX, maxX),
-      show: true,
-      ticket,
-    });
-  }
-
   async function updateBoard() {
     const updatedBoard = await boardService.get(project.slug, board.id);
     setBoard(updatedBoard);
@@ -106,32 +76,8 @@ export const BoardDetails: React.FC = () => {
     emit("matches", "update", {});
   }
 
-  async function closeContextMenu(update: boolean) {
-    setConfig({
-      ...config,
-      show: false,
-      ticket: null,
-    });
-    if (update) {
-      await refresh();
-    }
-  }
-
-  const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
-    if (event.touches.length !== 2) {
-      return;
-    }
-    const touch = event.touches[0];
-    const touch1 = event.touches[1];
-    const touchX = Math.min(touch.clientX, touch1.clientX);
-    const touchY = Math.min(touch.clientY, touch1.clientY);
-    setConfig({
-      top: touchY,
-      left: touchX,
-      show: true,
-      ticket,
-    });
-  };
+  const { config, openContextMenu, openContextMenuTouch, closeContextMenu } =
+    useContextMenu({ refresh });
 
   return (
     <>
@@ -161,24 +107,24 @@ export const BoardDetails: React.FC = () => {
             project={project}
             tickets={openTickets}
             update={refresh}
-            onContextMenu={onContextMenu}
-            onTouchStart={handleTouchStart}
+            onContextMenu={openContextMenu}
+            onTouchStart={openContextMenuTouch}
           />
           <BoardColumn
             status="inProgress"
             project={project}
             tickets={inProgressTickets}
             update={refresh}
-            onContextMenu={onContextMenu}
-            onTouchStart={handleTouchStart}
+            onContextMenu={openContextMenu}
+            onTouchStart={openContextMenuTouch}
           />
           <BoardColumn
             status="done"
             project={project}
             tickets={doneTickets}
             update={refresh}
-            onContextMenu={onContextMenu}
-            onTouchStart={handleTouchStart}
+            onContextMenu={openContextMenu}
+            onTouchStart={openContextMenuTouch}
           />
         </div>
       </DndProvider>

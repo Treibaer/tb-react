@@ -32,9 +32,7 @@ export const UserMenu: React.FC<{ onClose: Function }> = ({ onClose }) => {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   });
 
   return (

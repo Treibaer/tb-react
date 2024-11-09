@@ -12,7 +12,7 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { PasswordEntry } from "../../models/passwords/password-entry";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { ROUTES } from "../../routes";
-import { PasswordService } from "../../services/PasswordService";
+import { PasswordService } from "../../services/passwordService";
 import { showToast } from "../../utils/tbToast";
 
 const passwordService = PasswordService.shared;

@@ -6,7 +6,7 @@ import {
   FinanceTagEntry,
 } from "../../models/finances/finance-summary";
 import { ROUTES } from "../../routes";
-import { FinanceService } from "../../services/FinanceService";
+import { FinanceService } from "../../services/financeService";
 import Col from "./Col";
 
 enum SearchType {

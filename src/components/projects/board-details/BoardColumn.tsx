@@ -3,7 +3,7 @@ import useParty from "../../../hooks/useParty";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
 import { TicketStatus } from "../../../models/ticket-status";
-import TicketService from "../../../services/TicketService";
+import TicketService from "../../../services/ticketService";
 import { showToast } from "../../../utils/tbToast";
 import { doneIcon, inProgressIcon, openIcon } from "../../../utils/ticketUtils";
 import BoardTicketRow from "./BoardTicketRow";
@@ -20,7 +20,6 @@ export const BoardColumn: React.FC<{
 
   let title: string;
   let icon: JSX.Element;
-  let color: string;
 
   switch (status) {
     case "open":
@@ -44,9 +43,13 @@ export const BoardColumn: React.FC<{
       if (status === oldStatus) {
         return;
       }
-      const ticket = await TicketService.shared.update(project.slug, item.slug, {
-        status,
-      });
+      const ticket = await TicketService.shared.update(
+        project.slug,
+        item.slug,
+        {
+          status,
+        }
+      );
       if (status === "done" && ticket.parent === null) {
         startParty();
       }

@@ -1,17 +1,16 @@
-import React from "react";
-import { Line } from "react-chartjs-2";
 import {
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
   LinearScale,
-  PointElement,
   LineElement,
+  PointElement,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
+import React from "react";
+import { Line } from "react-chartjs-2";
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,24 +28,6 @@ type Commit = {
   content: string;
 };
 
-// Example data
-const commits: Commit[] = [
-  {
-    commitId: "9c26c88c6f890957dae80151f794b83d05b8346e",
-    author: "Hannes Kühnel",
-    date: "Fri Nov 1 21:14:41 2024 +0100",
-    content: "add completion animation, switch to react-hot-toast & fa icons",
-  },
-  {
-    commitId: "db886acf33b44781deac232ab1cf64aafd21b89c",
-    author: "Hannes Kühnel",
-    date: "Fri Nov 1 16:09:34 2024 +0100",
-    content: "adjust windows scrollbars",
-  },
-  // Add more commit data as needed
-];
-
-// Function to calculate ISO week number
 const getISOWeek = (date: Date) => {
   const target = new Date(date.valueOf());
   const dayNr = (date.getUTCDay() + 6) % 7; // Get day number (0 = Monday, ..., 6 = Sunday)

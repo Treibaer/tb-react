@@ -11,38 +11,30 @@ import BoardSection from "../../components/projects/tickets/BoardSection";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
 import TitleView from "../../components/TitleView";
 import { Toggle } from "../../components/Toggle";
+import useContextMenu from "../../hooks/useContextMenu";
 import { useSocket } from "../../hooks/useSocket";
 import { Board, BoardStructure } from "../../models/board-structure";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
-import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
-import { BoardService } from "../../services/BoardService";
-import ProjectService from "../../services/ProjectService";
+import { BoardService } from "../../services/boardService";
+import ProjectService from "../../services/projectService";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
 
 const TicketsBoardView: React.FC = () => {
-  const initialRender = useRef(true);
-
-  const [isCreating, setIsCreating] = useState(false);
-  const [config, setConfig] = useState<TicketsContextMenuConfig>({
-    top: 0,
-    left: 0,
-    show: false,
-    ticket: null,
-  });
-  const [searchTerm, setSearchTerm] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const data = useLoaderData() as {
     boardStructure: BoardStructure;
     metadata: ProjectMeta;
   };
 
+  const initialRender = useRef(true);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [project, setProject] = useState<Project>(data.metadata.project);
   const [ticketPreview, setTicketPreview] = useState<Ticket | null>(null);
   const [boardStructure, setBoardStructure] = useState<BoardStructure>(
@@ -68,18 +60,12 @@ const TicketsBoardView: React.FC = () => {
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   useEffect(() => {
-    listenOn("matches", "update", (_) => {
-      updateBoardStructure();
-    });
-    return () => {
-      listenOff("matches", "update");
-    };
+    listenOn("matches", "update", updateBoardStructure);
+    return () => listenOff("matches", "update");
   }, []);
 
   // re-render on url change (loader data change)
@@ -99,53 +85,15 @@ const TicketsBoardView: React.FC = () => {
     emit("matches", "update", {});
   }
 
+  const { config, openContextMenu, openContextMenuTouch, closeContextMenu } =
+    useContextMenu({ refresh });
+
   const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
-    if (event.touches.length !== 2) {
-      return;
-    }
     const board = boardStructure.activeBoards.find((b) =>
       b.tickets.find((t) => t.id === ticket.id)
     );
-    const touch = event.touches[0];
-    const touch1 = event.touches[1];
-    const touchX = Math.min(touch.clientX, touch1.clientX);
-    const touchY = Math.min(touch.clientY, touch1.clientY);
-    setConfig({
-      top: touchY,
-      left: touchX,
-      show: true,
-      ticket,
-      board,
-    });
+    openContextMenuTouch(event, ticket, board);
   };
-
-  function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
-    e.preventDefault();
-
-    const board = boardStructure.activeBoards.find((b) =>
-      b.tickets.find((t) => t.id === ticket.id)
-    );
-    const maxX = window.innerWidth - 175;
-    const maxY = window.innerHeight - 175;
-    setConfig({
-      top: Math.min(e.pageY, maxY),
-      left: Math.min(e.pageX, maxX),
-      show: true,
-      ticket,
-      board,
-    });
-  }
-
-  async function closeContextMenu(shouldUpdate: boolean) {
-    setConfig({
-      ...config,
-      show: false,
-      ticket: null,
-    });
-    if (shouldUpdate) {
-      await refresh();
-    }
-  }
 
   async function updateBoardStructure() {
     const boardStructure = await boardService.getBoardStructure(project.slug);
@@ -224,21 +172,23 @@ const TicketsBoardView: React.FC = () => {
           />
         )}
       </AnimatePresence>
-      {ticketPreview && (
-        <Dialog
-          title={ticketPreview.title}
-          submitTitle="Close"
-          onClose={() => setTicketPreview(null)}
-          onSubmit={() => setTicketPreview(null)}
-        >
-          <div className="my-2 max-h-[90vh] overflow-scroll">
-            <p
-              className="px-2 leading-7 flex-1 rawDescription min-h-32 overflow-auto max-h-full text-wrap break-words"
-              dangerouslySetInnerHTML={{ __html: ticketPreview.description }}
-            ></p>
-          </div>
-        </Dialog>
-      )}
+      <AnimatePresence>
+        {ticketPreview && (
+          <Dialog
+            title={ticketPreview.title}
+            submitTitle="Close"
+            onClose={() => setTicketPreview(null)}
+            onSubmit={() => setTicketPreview(null)}
+          >
+            <div className="my-2 max-h-[90vh] overflow-scroll">
+              <p
+                className="px-2 leading-7 flex-1 rawDescription min-h-32 overflow-auto max-h-full text-wrap break-words"
+                dangerouslySetInnerHTML={{ __html: ticketPreview.description }}
+              ></p>
+            </div>
+          </Dialog>
+        )}
+      </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="overflow-auto max-h-[calc(100vh-57px)]">
         <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
@@ -263,14 +213,12 @@ const TicketsBoardView: React.FC = () => {
               <NavLink to={ROUTES.BOARDS(project.slug)}>
                 <Button title="Boards" />
               </NavLink>
-
               <NavLink to={ROUTES.TICKETS_LIST(project.slug)}>
                 <Button title="All Tickets" />
               </NavLink>
             </div>
           </div>
         </div>
-
         <div className="board-structure px-2 bg-section">
           {config.show && (
             <ContextMenu
@@ -286,7 +234,7 @@ const TicketsBoardView: React.FC = () => {
                 key={board.id}
                 board={board}
                 isBoardVisible={isBoardVisible(board.id)}
-                onContextMenu={onContextMenu}
+                onContextMenu={openContextMenu}
                 onTouchStart={handleTouchStart}
                 toggleBoard={toggleBoard}
                 hideDone={hideDone}

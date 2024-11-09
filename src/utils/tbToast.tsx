@@ -28,7 +28,7 @@ const toastTemplates = {
   state: (
     ticketId: string,
     state: "open" | "inProgress" | "done",
-    avatarUrl?: string
+    _?: string
   ) => {
     let icon = <div style={{ marginRight: "10px" }}>{doneIcon}</div>;
     let message = "";
@@ -103,7 +103,7 @@ const toastTemplates = {
     );
   },
 
-  type: (ticketId: string, type: string, avatarUrl?: string) => {
+  type: (ticketId: string, type: string, _?: string) => {
     const icon = (
       <FaClipboardList
         style={{ color: "#FF9800", marginRight: "10px", fontSize: "24px" }}
@@ -119,7 +119,7 @@ const toastTemplates = {
     );
   },
 
-  board: (ticketId: string, boardName?: string, avatarUrl?: string) => {
+  board: (ticketId: string, boardName?: string, _?: string) => {
     const icon = (
       <FaClipboardList
         style={{ color: "#FF9800", marginRight: "10px", fontSize: "24px" }}

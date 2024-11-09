@@ -53,7 +53,7 @@ export class BoardService {
     data: {
       title?: string;
       position?: number;
-      isActive?: boolean
+      isActive?: boolean;
     }
   ) {
     const url = `/projects/${projectSlug}/boards/${boardId}`;
@@ -93,6 +93,14 @@ export class BoardService {
     return this.client.post(path, { hideDone: value });
   }
 
+  /**
+   * Moves a board to a new position within a project.
+   * @param projectSlug - The slug identifier of the project.
+   * @param origin - The current position of the board.
+   * @param target - The new position for the board.
+   * @returns A promise that resolves when the board is successfully moved
+   * to the new position.
+   */
   async moveBoard(projectSlug: string, origin: number, target: number) {
     const path = `/projects/${projectSlug}/boards/move`;
     return this.client.post(path, { origin, target });

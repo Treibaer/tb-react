@@ -7,7 +7,7 @@ import TitleView from "../../components/TitleView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import { ROUTES } from "../../routes";
-import { PasswordService } from "../../services/PasswordService";
+import { PasswordService } from "../../services/passwordService";
 import { AnimatePresence } from "framer-motion";
 
 const passwordService = PasswordService.shared;

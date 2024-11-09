@@ -6,7 +6,6 @@ import { ROUTES } from "../../../routes";
 import { doneIcon, inProgressIcon, openIcon } from "../../../utils/ticketUtils";
 import UserView from "../../UserView";
 import ProgressCircle from "../../common/ProgressCircle";
-import Button from "../../Button";
 
 interface TicketRowProps {
   project: Project;
@@ -22,7 +21,6 @@ export default function TicketRow({
   opacity,
   onContextMenu,
   onTouchStart,
-
 }: TicketRowProps) {
   const finishedSubtasks = ticket.children.filter(
     (c) => c.status === "done"
@@ -53,13 +51,13 @@ export default function TicketRow({
             total={ticket.children.length}
           />
         )}
-        {ticket.parent && (
-          <div className="rounded border-gray-500 border px-2">Subtask</div>
-        )}
         {ticket.type && (
           <div className="rounded border-gray-500 border px-2">
             {ticket.type}
           </div>
+        )}
+        {ticket.parent && (
+          <div className="rounded border-gray-500 border px-2">Subtask</div>
         )}
         <UserView user={ticket.assignee} />
       </div>

@@ -5,8 +5,8 @@ import { Project } from "../../models/project";
 import { Ticket } from "../../models/ticket";
 import { TicketHistory } from "../../models/ticket-history";
 import { ROUTES } from "../../routes";
-import ProjectService from "../../services/ProjectService";
-import TicketService from "../../services/TicketService";
+import ProjectService from "../../services/projectService";
+import TicketService from "../../services/ticketService";
 import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 
 const projectService = ProjectService.shared;

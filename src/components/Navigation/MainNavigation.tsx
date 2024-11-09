@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaBorderAll, FaChartBar, FaChartPie, FaCoins, FaFile, FaImages, FaLock } from "react-icons/fa";
 import { FaChartSimple, FaHouse, FaTicket } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
-import { useAppSelector } from "../../hooks/storeHoooks";
+import { useAppSelector } from "../../hooks/storeHooks";
 import { ROUTES } from "../../routes";
 import Constants from "../../services/Constants";
 import NavigationLink from "./NavigationLink";

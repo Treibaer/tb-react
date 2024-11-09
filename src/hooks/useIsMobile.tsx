@@ -4,16 +4,11 @@ const useIsMobile = (breakpoint: number = 768) => {
   const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < breakpoint);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth < breakpoint);
 
-    handleResize(); // Check on initial load
-    window.addEventListener("resize", handleResize); // Add listener on resize
-
-    return () => {
-      window.removeEventListener("resize", handleResize); // Clean up listener on unmount
-    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [breakpoint]);
 
   return isMobile;

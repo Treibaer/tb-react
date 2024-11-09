@@ -5,7 +5,7 @@ import { Board } from "../../../models/board-structure";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
-import TicketService from "../../../services/TicketService";
+import TicketService from "../../../services/ticketService";
 import { ButtonIcon } from "../../ButtonIcon";
 import DnDWrapper from "./DndWrapper";
 import TicketRow from "./TicketRow";
@@ -46,12 +46,10 @@ export const BoardSection: React.FC<{
 
   const [dragIndex, setDragIndex] = useState<number>(-1);
 
-
   async function moveTicket(dragIndex: number, hoverIndex: number) {
     if (dragIndex === hoverIndex) {
       return;
     }
-    console.log("Moving ticket", dragIndex, hoverIndex);
     await TicketService.shared.moveTicket(
       project.slug,
       board.id,

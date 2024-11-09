@@ -15,8 +15,8 @@ import { Board } from "../../models/board-structure";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
-import { BoardService } from "../../services/BoardService";
-import ProjectService from "../../services/ProjectService";
+import { BoardService } from "../../services/boardService";
+import ProjectService from "../../services/projectService";
 import { showToast } from "../../utils/tbToast";
 
 const projectService = ProjectService.shared;
@@ -45,16 +45,10 @@ export const Boards: React.FC = () => {
     }, 100);
   }, []);
 
-
   useEffect(() => {
-    listenOn("matches", "update", (_) => {
-      updateBoardList();
-    });
-    return () => {
-      listenOff("matches", "update");
-    };
+    listenOn("matches", "update", updateBoardList);
+    return () => listenOff("matches", "update");
   }, []);
-
 
   async function refresh() {
     await updateBoardList();
@@ -98,17 +92,17 @@ export const Boards: React.FC = () => {
 
   async function handleUpdateBoard() {
     const title = editInputRef.current?.value;
-    if (title && editBoard) {
-      try {
-        await boardService.update(project.slug, editBoard.id, { title });
-        setEditBoard(null);
-        refresh();
-        showToast("success", editBoard.title, "Saved");
-      } catch (error: Error | any) {
-        showToast("error", "", error.message);
-      }
-    } else {
+    if (!title || !editBoard) {
       showToast("error", "Title is required", "Please enter a title to update");
+      return;
+    }
+    try {
+      await boardService.update(project.slug, editBoard.id, { title });
+      setEditBoard(null);
+      refresh();
+      showToast("success", editBoard.title, "Saved");
+    } catch (error: Error | any) {
+      showToast("error", "", error.message);
     }
   }
 

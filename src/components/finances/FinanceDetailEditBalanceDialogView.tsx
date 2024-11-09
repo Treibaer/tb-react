@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FinanceService } from "../../services/FinanceService";
+import { FinanceService } from "../../services/financeService";
 import { showToast } from "../../utils/tbToast";
 import Dialog from "../common/Dialog";
 

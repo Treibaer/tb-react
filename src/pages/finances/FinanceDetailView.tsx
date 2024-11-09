@@ -7,13 +7,13 @@ import FinanceDetailEditBalanceDialogView from "../../components/finances/Financ
 import FinanceEntryRow from "../../components/finances/FinanceEntryRow";
 import HeaderView from "../../components/HeaderView";
 import TitleView from "../../components/TitleView";
+import useContextMenu from "../../hooks/useContextMenu";
+import useIsMobile from "../../hooks/useIsMobile";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { AccountEntry } from "../../models/finances/account-entry";
 import { AcccountTag } from "../../models/finances/account-tag";
-import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
-import { FinanceService } from "../../services/FinanceService";
-import useIsMobile from "../../hooks/useIsMobile";
+import { FinanceService } from "../../services/financeService";
 
 const FinanceDetailView = () => {
   const breadcrumbs: Breadcrumb[] = [
@@ -37,16 +37,6 @@ const FinanceDetailView = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [config, setConfig] = useState<
-    TicketsContextMenuConfig & { entry: AccountEntry | null }
-  >({
-    top: 0,
-    left: 0,
-    show: false,
-    ticket: null,
-    entry: null,
-  });
-
   useEffect(() => {
     if (!isMobile) {
       setTimeout(() => {
@@ -55,31 +45,10 @@ const FinanceDetailView = () => {
     }
   }, [isMobile]);
 
-  function onContextMenu(e: React.MouseEvent, entry: AccountEntry) {
-    e.preventDefault();
 
-    const maxX = window.innerWidth - 175;
-    const maxY = window.innerHeight - 175;
-    setConfig({
-      top: Math.min(e.pageY, maxY),
-      left: Math.min(e.pageX, maxX),
-      show: true,
-      ticket: null,
-      entry,
-    });
-  }
 
-  async function closeContextMenu(shouldUpdate: boolean) {
-    setConfig({
-      ...config,
-      show: false,
-      ticket: null,
-      entry: null,
-    });
-    if (shouldUpdate) {
-      await reloadEntries();
-    }
-  }
+  const { config, openContextMenu, openContextMenuTouch, closeContextMenu } =
+    useContextMenu({ refresh });
 
   function openDialog() {
     setIsCreating(true);
@@ -87,13 +56,13 @@ const FinanceDetailView = () => {
 
   async function onClose(reload: boolean) {
     if (reload) {
-      await reloadEntries();
+      await refresh();
     }
     setIsCreating(false);
     setEditingEntry(null);
   }
 
-  async function reloadEntries() {
+  async function refresh() {
     const data = await FinanceService.shared.getAccountEntries();
     setEntries(data.entries);
     setBalanceInCents(data.balanceInCents);
@@ -122,24 +91,6 @@ const FinanceDetailView = () => {
     setSearchTerm(e.target.value);
   }
 
-  const handleTouchStart = (event: React.TouchEvent, entry: AccountEntry) => {
-    event.preventDefault();
-    if (event.touches.length !== 2) {
-      return;
-    }
-    const touch = event.touches[0];
-    const touch1 = event.touches[1];
-    const touchX = Math.min(touch.clientX, touch1.clientX);
-    const touchY = Math.min(touch.clientY, touch1.clientY);
-    setConfig({
-      top: touchY,
-      left: touchX,
-      show: true,
-      ticket: null,
-      entry,
-    });
-  };
-
   return (
     <div>
       <AnimatePresence>
@@ -157,7 +108,7 @@ const FinanceDetailView = () => {
             value={balanceInCents}
             onClose={async () => {
               setEditBalance(false);
-              await reloadEntries();
+              await refresh();
             }}
           />
         )}
@@ -197,9 +148,9 @@ const FinanceDetailView = () => {
               <div
                 className="w-full"
                 key={entry.id}
-                onTouchStart={(e) => handleTouchStart(e, entry)}
+                onTouchStart={(e) => openContextMenuTouch(e, entry)}
                 onClick={() => openEditDialog(entry)}
-                onContextMenu={(e) => onContextMenu(e, entry)}
+                onContextMenu={(e) => openContextMenu(e, entry)}
               >
                 <FinanceEntryRow entry={entry} />
               </div>

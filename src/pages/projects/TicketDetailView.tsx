@@ -1,28 +1,23 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { FaPencil } from "react-icons/fa6";
 import { LoaderFunction, useBlocker, useRevalidator } from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import Confirmation from "../../components/common/Confirmation";
-import ContextMenu from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
 import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
 import TicketCommentArea from "../../components/projects/ticket-details/TicketCommentArea";
 import TicketDetailsSidebar from "../../components/projects/ticket-details/TicketDetailsSidebar";
-import DnDWrapper from "../../components/projects/tickets/DndWrapper";
+import TicketDetailsSubtasks from "../../components/projects/ticket-details/TicketDetailsSubtasks";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
-import TicketRow from "../../components/projects/tickets/TicketRow";
 import { useSocket } from "../../hooks/useSocket";
 import useTicketData from "../../hooks/useTicketData";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Ticket } from "../../models/ticket";
-import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
-import ProjectService from "../../services/ProjectService";
-import TicketService from "../../services/TicketService";
+import ProjectService from "../../services/projectService";
+import TicketService from "../../services/ticketService";
 import { showToast } from "../../utils/tbToast";
 
 const projectService = ProjectService.shared;
@@ -47,27 +42,18 @@ export default function TicketDetailView() {
   const currentDescription = useRef(ticket.description);
   const [isEditing, setIsEditing] = useState(false);
   const project = metadata.project;
-  const [config, setConfig] = useState<TicketsContextMenuConfig>({
-    top: 0,
-    left: 0,
-    show: false,
-    ticket: null,
-  });
+  const [isCreating, setIsCreating] = useState(false);
 
-  function onClose(updated: boolean) {
-    if (updated) {
+  function onClose(update: boolean) {
+    if (update) {
       revalidator.revalidate();
     }
     setIsCreating(false);
   }
 
   useEffect(() => {
-    listenOn("matches", "update", (_) => {
-      revalidator.revalidate();
-    });
-    return () => {
-      listenOff("matches", "update");
-    };
+    listenOn("matches", "update", revalidator.revalidate);
+    return () => listenOff("matches", "update");
   }, []);
 
   useEffect(() => {
@@ -81,9 +67,7 @@ export default function TicketDetailView() {
     emit("matches", "update", {});
   }
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLDivElement> | KeyboardEvent
-  ) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     if (isEditing) {
       if (
         event.key === "Enter" &&
@@ -109,9 +93,7 @@ export default function TicketDetailView() {
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isEditing]);
 
   let breadcrumbs: Breadcrumb[] = [
@@ -144,9 +126,7 @@ export default function TicketDetailView() {
       }
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [ticket]);
 
   async function toggleEdit() {
@@ -171,67 +151,10 @@ export default function TicketDetailView() {
     currentTitle.current?.focus();
   }
 
-  const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
-    if (event.touches.length !== 2) {
-      return;
-    }
-    const touch = event.touches[0];
-    const touch1 = event.touches[1];
-    const touchX = Math.min(touch.clientX, touch1.clientX);
-    const touchY = Math.min(touch.clientY, touch1.clientY);
-    setConfig({
-      top: touchY,
-      left: touchX,
-      show: true,
-      ticket,
-    });
-  };
-
-  function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
-    e.preventDefault();
-    const maxX = window.innerWidth - 175;
-    const maxY = window.innerHeight - 175;
-    setConfig({
-      top: Math.min(e.pageY, maxY),
-      left: Math.min(e.pageX, maxX),
-      show: true,
-      ticket,
-    });
-  }
-
-  async function closeContextMenu(shouldUpdate: boolean) {
-    setConfig({
-      ...config,
-      show: false,
-      ticket: null,
-    });
-    if (shouldUpdate) {
-      refresh();
-    }
-  }
-
   function update(ticket: Ticket) {
     setTicket(ticket);
     emit("matches", "update", {});
   }
-
-  const [isCreating, setIsCreating] = useState(false);
-  const [dragIndex, setDragIndex] = useState(-1);
-  const [hoverIndex, setHoverIndex] = useState(-1);
-
-  async function moveTicket(dragIndex: number, hoverIndex: number) {
-    if (dragIndex === hoverIndex) {
-      return;
-    }
-    await TicketService.shared.moveSubtask(
-      project.slug,
-      ticket.slug,
-      dragIndex,
-      hoverIndex
-    );
-    refresh();
-  }
-
   return (
     <>
       <AnimatePresence>
@@ -251,13 +174,6 @@ export default function TicketDetailView() {
             onClose={onClose}
             updateBoardView={revalidator.revalidate}
             parentId={ticket.id}
-          />
-        )}
-        {config.show && (
-          <ContextMenu
-            metadata={metadata}
-            config={config}
-            onClose={closeContextMenu}
           />
         )}
       </AnimatePresence>
@@ -320,31 +236,11 @@ export default function TicketDetailView() {
               <DescriptionView description={currentDescription} />
             </div>
           )}
-
-          {ticket.children.length > 0 && (
-            <DndProvider backend={HTML5Backend}>
-              <div className="text-gray-400 mb-2 text-lg">Subtasks</div>
-              {ticket.children.map((child) => (
-                <DnDWrapper
-                  key={child.id}
-                  dragIndex={dragIndex}
-                  hoverIndex={hoverIndex}
-                  setDragIndex={setDragIndex}
-                  setHoverIndex={setHoverIndex}
-                  id={child.id}
-                  moveTicket={moveTicket}
-                >
-                  <TicketRow
-                    project={project}
-                    ticket={child}
-                    onContextMenu={onContextMenu}
-                    onTouchStart={handleTouchStart}
-                  />
-                </DnDWrapper>
-              ))}
-            </DndProvider>
-          )}
-
+          <TicketDetailsSubtasks
+            metadata={metadata}
+            ticket={ticket}
+            refresh={refresh}
+          />
           <TicketCommentArea
             project={project}
             ticket={ticket}

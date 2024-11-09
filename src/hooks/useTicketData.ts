@@ -4,7 +4,7 @@ import { ProjectMeta } from "../models/project-meta";
 import { Ticket } from "../models/ticket";
 import { TicketComment } from "../models/ticket-comment";
 import { TicketHistory } from "../models/ticket-history";
-import TicketService from "../services/TicketService";
+import TicketService from "../services/ticketService";
 
 const ticketService = TicketService.shared;
 

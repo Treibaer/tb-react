@@ -45,7 +45,10 @@ export const BoardTicketRow: React.FC<{
         <div className="flex justify-between">
           <TicketAssigneeField user={ticket.assignee} />
           {ticket.children.length > 0 && (
-            <ProgressCircle done={finishedSubtasks} total={ticket.children.length} />
+            <ProgressCircle
+              done={finishedSubtasks}
+              total={ticket.children.length}
+            />
           )}
         </div>
       </div>

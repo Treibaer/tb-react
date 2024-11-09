@@ -5,7 +5,7 @@ import HeaderView from "../../components/HeaderView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { AccountEntry } from "../../models/finances/account-entry";
 import { ROUTES } from "../../routes";
-import { FinanceService } from "../../services/FinanceService";
+import { FinanceService } from "../../services/financeService";
 
 const FinanceDashboard = () => {
   const breadcrumbs: Breadcrumb[] = [

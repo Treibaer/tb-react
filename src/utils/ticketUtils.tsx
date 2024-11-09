@@ -1,4 +1,4 @@
-import { FaCheckCircle, FaCircleNotch, FaSpinner, FaUserCircle } from "react-icons/fa";
+import { FaCheckCircle, FaCircleNotch, FaSpinner } from "react-icons/fa";
 
 export const openIcon = (
   <FaCircleNotch style={{ color: "#3A7CA5", fontSize: "18px" }} />

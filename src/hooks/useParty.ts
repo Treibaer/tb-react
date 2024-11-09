@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../store/ui-slice";
-import { useAppSelector } from "./storeHoooks";
+import { useAppSelector } from "./storeHooks";
 
 const useParty = () => {
   const dispatch = useDispatch();

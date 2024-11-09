@@ -4,8 +4,8 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { Page } from "../../models/page";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
-import PageService from "../../services/PageService";
-import ProjectService from "../../services/ProjectService";
+import PageService from "../../services/pageService";
+import ProjectService from "../../services/projectService";
 import { FormatType, formatUnixTimestamp } from "../../utils/dataUtils";
 import PageStructureView from "./PageStructureView";
 

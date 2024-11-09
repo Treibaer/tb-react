@@ -14,12 +14,11 @@ export const TicketDetailsDropdown: React.FC<{
 
   const height = isMobile ? 214 : 280;
 
-  const style2 = {...style}
+  const style2 = { ...style };
   const maxY = window.innerHeight - height - 5;
   if (Number(style2.top) > maxY) {
     style2.top = maxY;
   }
-
 
   style2.maxHeight = height;
 
@@ -35,10 +34,8 @@ export const TicketDetailsDropdown: React.FC<{
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  });
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <motion.div

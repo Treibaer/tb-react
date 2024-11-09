@@ -1,6 +1,5 @@
-import { useState } from "react";
-import Client from "../services/Client";
 import { useLoaderData } from "react-router-dom";
+import Client from "../services/Client";
 import CommitLineChart from "./ChangelogChart";
 
 type Commit = {

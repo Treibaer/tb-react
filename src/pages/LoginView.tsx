@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
+import Button from "../components/Button";
 import FullscreenLoadingSpinner from "../components/common/FullscreenLoadingSpinner";
 import { useLogin } from "../hooks/auth/useLogin";
-import Button from "../components/Button";
 
 export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
   setIsLoggedIn,
 }) => {
-  const { email, setEmail, password, setPassword, isSubmitting, handleLogin } =
+  const { setEmail, setPassword, isSubmitting, handleLogin } =
     useLogin(setIsLoggedIn);
 
   const inputRef = useRef<HTMLInputElement>(null);

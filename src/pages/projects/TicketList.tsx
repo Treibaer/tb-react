@@ -12,8 +12,8 @@ import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import { ROUTES } from "../../routes";
-import ProjectService from "../../services/ProjectService";
-import TicketService from "../../services/TicketService";
+import ProjectService from "../../services/projectService";
+import TicketService from "../../services/ticketService";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
@@ -29,7 +29,7 @@ const TicketList: React.FC = () => {
     top: 0,
     left: 0,
     show: false,
-    ticket: null,
+    value: null,
   });
 
   const [tickets, setTickets] = useState<Ticket[]>(data.tickets);
@@ -61,7 +61,7 @@ const TicketList: React.FC = () => {
       top: Math.min(e.pageY, maxY),
       left: Math.min(e.pageX, maxX),
       show: true,
-      ticket,
+      value: ticket,
     });
   }
 
@@ -69,7 +69,7 @@ const TicketList: React.FC = () => {
     setConfig({
       ...config,
       show: false,
-      ticket: null,
+      value: null,
     });
     if (shouldUpdate) {
       const tickets = await ticketService.getAll(project.slug);
@@ -89,7 +89,7 @@ const TicketList: React.FC = () => {
       top: touchY,
       left: touchX,
       show: true,
-      ticket,
+      value: ticket,
     });
   };
 
@@ -122,13 +122,13 @@ const TicketList: React.FC = () => {
       <TitleView title="Tickets" openDialog={openDialog} />
       <div className="m-2">
         {tickets.map((ticket) => (
-          <div
+          <TicketRow
             key={ticket.id}
             onContextMenu={(e) => onContextMenu(e, ticket)}
             onTouchStart={(e) => handleTouchStart(e, ticket)}
-          >
-            <TicketRow project={project} ticket={ticket} />
-          </div>
+            project={project}
+            ticket={ticket}
+          />
         ))}
       </div>
     </>

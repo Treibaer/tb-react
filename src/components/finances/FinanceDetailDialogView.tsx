@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { AccountEntry } from "../../models/finances/account-entry";
 import { AcccountTag } from "../../models/finances/account-tag";
-import { FinanceService } from "../../services/FinanceService";
+import { FinanceService } from "../../services/financeService";
 import Dialog from "../common/Dialog";
 import { showToast } from "../../utils/tbToast";
 

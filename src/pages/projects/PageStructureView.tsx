@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Page } from "../../models/page";
-import PageService from "../../services/PageService";
+import PageService from "../../services/pageService";
 import PageStructure from "./PageStructure";
 
 const pageService = PageService.shared;

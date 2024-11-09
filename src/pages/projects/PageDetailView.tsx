@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FaPencil } from "react-icons/fa6";
-import {
-  LoaderFunction,
-  useLoaderData
-} from "react-router-dom";
+import { LoaderFunction, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import HeaderView from "../../components/HeaderView";
@@ -12,8 +9,8 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { Page } from "../../models/page";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
-import PageService from "../../services/PageService";
-import ProjectService from "../../services/ProjectService";
+import PageService from "../../services/pageService";
+import ProjectService from "../../services/projectService";
 import PageStructureView from "./PageStructureView";
 
 const pageService = PageService.shared;

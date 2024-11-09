@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import Dialog from "../../components/common/Dialog";
 import { Project } from "../../models/project";
-import ProjectService from "../../services/ProjectService";
 import { ROUTES } from "../../routes";
+import ProjectService from "../../services/projectService";
 import { showToast } from "../../utils/tbToast";
 
 export const ProjectCreationDialog: React.FC<{

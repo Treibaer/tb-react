@@ -4,7 +4,7 @@ import { FaXmark } from "react-icons/fa6";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
 import { TicketComment } from "../../../models/ticket-comment";
-import TicketService from "../../../services/TicketService";
+import TicketService from "../../../services/ticketService";
 import { FormatType, formatUnixTimestamp } from "../../../utils/dataUtils";
 import Button from "../../Button";
 import Confirmation from "../../common/Confirmation";

@@ -8,7 +8,7 @@ import TitleView from "../../components/TitleView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
-import ProjectService from "../../services/ProjectService";
+import ProjectService from "../../services/projectService";
 
 const projectService = ProjectService.shared;
 
@@ -28,7 +28,7 @@ export default function Projects() {
 
   async function onClose() {
     setIsCreating(false);
-    // refresh projects always
+    // always refresh projects
     setProjects(await projectService.getAll());
   }
 

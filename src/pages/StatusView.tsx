@@ -23,9 +23,7 @@ export const StatusView: React.FC = () => {
   useEffect(() => {
     updateStatus();
     const interval = setInterval(updateStatus, 30 * 1000);
-    return () => {
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const developmentStates = status.filter((s) => s.type === "development");

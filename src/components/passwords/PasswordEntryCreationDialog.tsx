@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Dialog from "../../components/common/Dialog";
 import { PasswordEntry } from "../../models/passwords/password-entry";
-import { PasswordService } from "../../services/PasswordService";
+import { PasswordService } from "../../services/passwordService";
 import { PasswordEnvironment } from "../../models/passwords/password-environment";
 import useIsMobile from "../../hooks/useIsMobile";
 import Button from "../Button";

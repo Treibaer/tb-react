@@ -5,7 +5,7 @@ import { DropdownType } from "../../../models/dropdown-type";
 import { ProjectMeta } from "../../../models/project-meta";
 import { TicketStatus } from "../../../models/ticket-status";
 import { User } from "../../../models/user";
-import TicketService from "../../../services/TicketService";
+import TicketService from "../../../services/ticketService";
 import { showToast } from "../../../utils/tbToast";
 import { Toggle } from "../../Toggle";
 import Dialog from "../../common/Dialog";
@@ -137,13 +137,8 @@ export const TicketCreationDialog: React.FC<{
   }
 
   useEffect(() => {
-    // Add event listener for keydown
     window.addEventListener("keydown", handleKeyDown);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [dropdown]);
 
   const [stayOpen, setStayOpen] = useState(false);

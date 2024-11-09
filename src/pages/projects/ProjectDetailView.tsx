@@ -5,7 +5,7 @@ import TicketRow from "../../components/projects/tickets/TicketRow";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { ProjectDashboardData } from "../../models/projects/project-dashboard-data";
 import { ROUTES } from "../../routes";
-import ProjectService from "../../services/ProjectService";
+import ProjectService from "../../services/projectService";
 import ClosedTicketsChart from "./ProjectChart";
 
 export const ProjectDetailView: React.FC = () => {
@@ -67,6 +67,8 @@ export const ProjectDetailView: React.FC = () => {
               key={ticket.id}
               ticket={ticket}
               project={project}
+              onContextMenu={() => {}}
+              onTouchStart={() => {}}
             />
           ))}
         </div>

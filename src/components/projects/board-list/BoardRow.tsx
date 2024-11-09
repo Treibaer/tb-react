@@ -1,11 +1,11 @@
-import { FaArchive, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaArchive } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import { Board } from "../../../models/board-structure";
 import { ROUTES } from "../../../routes";
-import { BoardService } from "../../../services/BoardService";
-import { ButtonIcon } from "../../ButtonIcon";
+import { BoardService } from "../../../services/boardService";
 import { showToast } from "../../../utils/tbToast";
+import { ButtonIcon } from "../../ButtonIcon";
 
 export const BoardRow: React.FC<{
   projectSlug: string;

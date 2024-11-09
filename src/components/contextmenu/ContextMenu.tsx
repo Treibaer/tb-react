@@ -15,7 +15,6 @@ import { ProjectMeta } from "../../models/project-meta";
 import { Ticket } from "../../models/ticket";
 import { TicketStatus } from "../../models/ticket-status";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
-import TicketService from "../../services/TicketService";
 import { showToast } from "../../utils/tbToast";
 import Confirmation from "../common/Confirmation";
 import AssigneeDropdown from "../projects/ticket-details/dropdowns/AssigneeDropdown";
@@ -24,6 +23,7 @@ import DropdownElement from "../projects/ticket-details/dropdowns/DropdownElemen
 import PositionDropdown from "../projects/ticket-details/dropdowns/PositionDropdown";
 import StatusDropdown from "../projects/ticket-details/dropdowns/StatusDropdown";
 import TypeDropdown from "../projects/ticket-details/dropdowns/TypeDropdown";
+import TicketService from "../../services/ticketService";
 
 const ticketService = TicketService.shared;
 
@@ -32,11 +32,12 @@ export const ContextMenu: React.FC<{
   config: TicketsContextMenuConfig;
   onClose: (update: boolean) => void;
   showPreview?: (ticket: Ticket) => void;
-}> = ({ metadata, config, onClose, showPreview }) => {
+  showBoard?: boolean;
+}> = ({ metadata, config, onClose, showPreview, showBoard = true }) => {
   const { startParty } = useParty();
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
 
-  const ticket = config.ticket!;
+  const ticket = config.value as Ticket;
   const project = metadata.project;
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -51,10 +52,8 @@ export const ContextMenu: React.FC<{
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  });
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   async function onAssigneeChange(assigneeId: number | null) {
     if (assigneeId === null) {
@@ -220,16 +219,18 @@ export const ContextMenu: React.FC<{
             <FaChevronRight className="h-5 w-5 text-gray-400" />
           </div>
         </DropdownElement>
-        <DropdownElement
-          isSelected={false}
-          onMouseOver={() => setDropdown(DropdownType.BOARD)}
-        >
-          <div className="flex gap-2">
-            <FaChartPie className="size-4 text-gray-400 mt-1" />
-            <div className="w-[60px]">Board</div>
-            <FaChevronRight className="h-5 w-5 text-gray-400" />
-          </div>
-        </DropdownElement>
+        {showBoard && (
+          <DropdownElement
+            isSelected={false}
+            onMouseOver={() => setDropdown(DropdownType.BOARD)}
+          >
+            <div className="flex gap-2">
+              <FaChartPie className="size-4 text-gray-400 mt-1" />
+              <div className="w-[60px]">Board</div>
+              <FaChevronRight className="h-5 w-5 text-gray-400" />
+            </div>
+          </DropdownElement>
+        )}
         <DropdownElement
           isSelected={false}
           onMouseOver={() => setDropdown(DropdownType.TYPE)}

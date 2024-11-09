@@ -6,7 +6,7 @@ import { ProjectMeta } from "../../../models/project-meta";
 import { Ticket } from "../../../models/ticket";
 import { TicketHistory } from "../../../models/ticket-history";
 import { TicketStatus } from "../../../models/ticket-status";
-import TicketService from "../../../services/TicketService";
+import TicketService from "../../../services/ticketService";
 import { FormatType, formatUnixTimestamp } from "../../../utils/dataUtils";
 import { showToast } from "../../../utils/tbToast";
 import Button from "../../Button";
@@ -152,46 +152,44 @@ export const TicketDetailsSidebar: React.FC<{
           </div>
         </div>
         {ticket.parent === null && (
-          <>
-            <div className="flex items-center relative">
-              {dropdown === DropdownType.BOARD && (
-                <BoardDropdown
-                  selectedBoardId={ticket.board?.id ?? 0}
-                  boards={metadata.boards}
-                  onClose={updateBoard}
-                  style={{ left: 80, top: 34 }}
-                />
-              )}
-              <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Board</div>
-              <div
-                id="boardDropdown"
-                className="select2-dropdown overflow-x-hidden whitespace-nowrap"
-                title={ticket.board?.title}
-                onClick={() => setDropdown(DropdownType.BOARD)}
-              >
-                {ticket.board?.title}
-              </div>
+          <div className="flex items-center relative">
+            {dropdown === DropdownType.BOARD && (
+              <BoardDropdown
+                selectedBoardId={ticket.board?.id ?? 0}
+                boards={metadata.boards}
+                onClose={updateBoard}
+                style={{ left: 80, top: 34 }}
+              />
+            )}
+            <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Board</div>
+            <div
+              id="boardDropdown"
+              className="select2-dropdown overflow-x-hidden whitespace-nowrap"
+              title={ticket.board?.title}
+              onClick={() => setDropdown(DropdownType.BOARD)}
+            >
+              {ticket.board?.title}
             </div>
-            <div className="flex items-center relative">
-              {dropdown === DropdownType.TYPE && (
-                <TypeDropdown
-                  selectedType={ticket.type}
-                  types={metadata.types}
-                  onClose={updateType}
-                  style={{ left: 80, top: 34 }}
-                />
-              )}
-              <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Type</div>
-              <div
-                id="typeDropdown"
-                className="select2-dropdown"
-                onClick={() => setDropdown(DropdownType.TYPE)}
-              >
-                {ticket.type}
-              </div>
-            </div>
-          </>
+          </div>
         )}
+        <div className="flex items-center relative">
+          {dropdown === DropdownType.TYPE && (
+            <TypeDropdown
+              selectedType={ticket.type}
+              types={metadata.types}
+              onClose={updateType}
+              style={{ left: 80, top: 34 }}
+            />
+          )}
+          <div className="min-w-20 h-8 py-1 px-2 text-gray-400">Type</div>
+          <div
+            id="typeDropdown"
+            className="select2-dropdown"
+            onClick={() => setDropdown(DropdownType.TYPE)}
+          >
+            {ticket.type}
+          </div>
+        </div>
 
         <div className="my-4 h-[1px] bg-border" />
         <TicketDetailsRow title="Creator">
