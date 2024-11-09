@@ -12,8 +12,10 @@ import HeaderView from "../../components/HeaderView";
 import DescriptionView from "../../components/projects/ticket-details/DescriptionView";
 import TicketCommentArea from "../../components/projects/ticket-details/TicketCommentArea";
 import TicketDetailsSidebar from "../../components/projects/ticket-details/TicketDetailsSidebar";
+import DnDWrapper from "../../components/projects/tickets/DndWrapper";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
-import TicketRowDnDWrapper from "../../components/projects/tickets/TicketRowDnDWrapper";
+import TicketRow from "../../components/projects/tickets/TicketRow";
+import { useSocket } from "../../hooks/useSocket";
 import useTicketData from "../../hooks/useTicketData";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Ticket } from "../../models/ticket";
@@ -27,6 +29,8 @@ const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
 
 export default function TicketDetailView() {
+  const { listenOn, listenOff, emit } = useSocket();
+
   const {
     metadata,
     ticket,
@@ -36,6 +40,8 @@ export default function TicketDetailView() {
     comments,
     fetchHistory,
   } = useTicketData();
+
+  const revalidator = useRevalidator();
 
   const currentTitle = useRef<HTMLInputElement | null>(null);
   const currentDescription = useRef(ticket.description);
@@ -48,8 +54,6 @@ export default function TicketDetailView() {
     ticket: null,
   });
 
-  const revalidator = useRevalidator();
-
   function onClose(updated: boolean) {
     if (updated) {
       revalidator.revalidate();
@@ -58,15 +62,35 @@ export default function TicketDetailView() {
   }
 
   useEffect(() => {
+    listenOn("matches", "update", (_) => {
+      revalidator.revalidate();
+    });
+    return () => {
+      listenOff("matches", "update");
+    };
+  }, []);
+
+  useEffect(() => {
     currentDescription.current = ticket.description;
     setIsEditing(false);
     setIsCreating(false);
   }, [ticket.slug]);
 
+  function refresh() {
+    revalidator.revalidate();
+    emit("matches", "update", {});
+  }
+
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement> | KeyboardEvent
   ) => {
     if (isEditing) {
+      if (
+        event.key === "Enter" &&
+        document.activeElement === currentTitle.current
+      ) {
+        toggleEdit();
+      }
       return;
     }
     if (
@@ -76,7 +100,7 @@ export default function TicketDetailView() {
       return;
     }
     if (event.key === "e") {
-      setIsEditing(true);
+      toggleEdit();
     }
     if (event.key === "c" && !event.ctrlKey && !event.metaKey) {
       setIsCreating(true);
@@ -106,8 +130,6 @@ export default function TicketDetailView() {
 
   breadcrumbs.push({ title: ticket.slug, link: "" });
 
-  //
-
   let blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
       ticket.description !== currentDescription.current &&
@@ -121,7 +143,6 @@ export default function TicketDetailView() {
         e.returnValue = "";
       }
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -140,13 +161,12 @@ export default function TicketDetailView() {
         ticket.slug,
         { title, description }
       );
-      setTicket(updatedTicket);
+      update(updatedTicket);
+
       showToast("success", ticket.slug, "Saved");
       await fetchHistory();
-    } else {
     }
     setIsEditing((prev) => !prev);
-    // wait 1ms for the state to update
     await new Promise((resolve) => setTimeout(resolve, 1));
     currentTitle.current?.focus();
   }
@@ -186,15 +206,16 @@ export default function TicketDetailView() {
       ticket: null,
     });
     if (shouldUpdate) {
-      revalidator.revalidate();
+      refresh();
     }
   }
 
   function update(ticket: Ticket) {
     setTicket(ticket);
+    emit("matches", "update", {});
   }
-  const [isCreating, setIsCreating] = useState(false);
 
+  const [isCreating, setIsCreating] = useState(false);
   const [dragIndex, setDragIndex] = useState(-1);
   const [hoverIndex, setHoverIndex] = useState(-1);
 
@@ -202,14 +223,13 @@ export default function TicketDetailView() {
     if (dragIndex === hoverIndex) {
       return;
     }
-    console.log("Moving subtask", dragIndex, hoverIndex);
     await TicketService.shared.moveSubtask(
       project.slug,
       ticket.slug,
       dragIndex,
       hoverIndex
     );
-    revalidator.revalidate();
+    refresh();
   }
 
   return (
@@ -247,12 +267,12 @@ export default function TicketDetailView() {
       />
       <div className="flex flex-col gap-4 sm:gap-0 sm:flex-row">
         <div className="w-full sm:w-[calc(100%-240px)] sm:h-[calc(100vh-56px)] px-2 flex flex-col">
+          {isOldVersion && (
+            <div className="text-red-400 text-center">
+              You are viewing an old version of this ticket
+            </div>
+          )}
           <div className="border-b-border border-b mb-4 h-14 items-center flex w-full justify-between">
-            {isOldVersion && (
-              <div className="text-red-500 text-center">
-                You are viewing an old version of this ticket
-              </div>
-            )}
             <div className="flex min-h-14 items-center gap-2 w-full">
               {isEditing && (
                 <input
@@ -305,22 +325,22 @@ export default function TicketDetailView() {
             <DndProvider backend={HTML5Backend}>
               <div className="text-gray-400 mb-2 text-lg">Subtasks</div>
               {ticket.children.map((child) => (
-                <div key={child.id}>
-                  {/* <TicketRow project={project} ticket={child} /> */}
-                  <TicketRowDnDWrapper
+                <DnDWrapper
+                  key={child.id}
+                  dragIndex={dragIndex}
+                  hoverIndex={hoverIndex}
+                  setDragIndex={setDragIndex}
+                  setHoverIndex={setHoverIndex}
+                  id={child.id}
+                  moveTicket={moveTicket}
+                >
+                  <TicketRow
                     project={project}
                     ticket={child}
                     onContextMenu={onContextMenu}
                     onTouchStart={handleTouchStart}
-                    dragIndex={dragIndex}
-                    hoverIndex={hoverIndex}
-                    setDragIndex={setDragIndex}
-                    setHoverIndex={setHoverIndex}
-                    index={child.id}
-                    id={child.id}
-                    moveTicket={moveTicket}
                   />
-                </div>
+                </DnDWrapper>
               ))}
             </DndProvider>
           )}

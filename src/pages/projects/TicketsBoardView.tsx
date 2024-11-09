@@ -4,6 +4,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
+import Dialog from "../../components/common/Dialog";
 import ContextMenu from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
 import BoardSection from "../../components/projects/tickets/BoardSection";
@@ -43,6 +44,7 @@ const TicketsBoardView: React.FC = () => {
   };
 
   const [project, setProject] = useState<Project>(data.metadata.project);
+  const [ticketPreview, setTicketPreview] = useState<Ticket | null>(null);
   const [boardStructure, setBoardStructure] = useState<BoardStructure>(
     data.boardStructure
   );
@@ -97,7 +99,6 @@ const TicketsBoardView: React.FC = () => {
     emit("matches", "update", {});
   }
 
-
   const handleTouchStart = (event: React.TouchEvent, ticket: Ticket) => {
     if (event.touches.length !== 2) {
       return;
@@ -117,7 +118,7 @@ const TicketsBoardView: React.FC = () => {
       board,
     });
   };
-  
+
   function onContextMenu(e: React.MouseEvent, ticket: Ticket) {
     e.preventDefault();
 
@@ -150,7 +151,6 @@ const TicketsBoardView: React.FC = () => {
     const boardStructure = await boardService.getBoardStructure(project.slug);
     setBoardStructure(boardStructure);
     setClosedBoardIds(boardStructure.closed);
-
   }
 
   async function toggleBoard(boardId: number) {
@@ -209,6 +209,10 @@ const TicketsBoardView: React.FC = () => {
   }
   const [hoverIndex, setHoverIndex] = useState(-1);
 
+  async function showPreview(ticket: Ticket) {
+    setTicketPreview(ticket);
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -220,6 +224,21 @@ const TicketsBoardView: React.FC = () => {
           />
         )}
       </AnimatePresence>
+      {ticketPreview && (
+        <Dialog
+          title={ticketPreview.title}
+          submitTitle="Close"
+          onClose={() => setTicketPreview(null)}
+          onSubmit={() => setTicketPreview(null)}
+        >
+          <div className="my-2 max-h-[90vh] overflow-scroll">
+            <p
+              className="px-2 leading-7 flex-1 rawDescription min-h-32 overflow-auto max-h-full text-wrap break-words"
+              dangerouslySetInnerHTML={{ __html: ticketPreview.description }}
+            ></p>
+          </div>
+        </Dialog>
+      )}
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="overflow-auto max-h-[calc(100vh-57px)]">
         <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
@@ -258,6 +277,7 @@ const TicketsBoardView: React.FC = () => {
               metadata={data.metadata}
               config={config}
               onClose={closeContextMenu}
+              showPreview={showPreview}
             />
           )}
           <DndProvider backend={HTML5Backend}>

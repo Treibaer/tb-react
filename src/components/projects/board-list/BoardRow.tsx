@@ -13,25 +13,6 @@ export const BoardRow: React.FC<{
   update: () => void;
   onEdit: (board: Board) => void;
 }> = ({ projectSlug, board, update, onEdit }) => {
-  async function handlePositionUp(event: React.MouseEvent) {
-    event.preventDefault();
-    if (board.position === 0) return;
-    await BoardService.shared.update(projectSlug, board.id, {
-      title: board.title,
-      position: Math.max(0, board.position - 1),
-    });
-    update();
-    showToast("success", "", "Board moved up");
-  }
-  async function handlePositionDown(event: React.MouseEvent) {
-    event.preventDefault();
-    await BoardService.shared.update(projectSlug, board.id, {
-      title: board.title,
-      position: board.position + 1,
-    });
-    update();
-    showToast("success", "", "Board moved down");
-  }
   async function handleEdit(event: React.MouseEvent) {
     event.preventDefault();
     onEdit(board);
@@ -67,13 +48,7 @@ export const BoardRow: React.FC<{
         />
       </div>
       <div className="flex-1 text-center">{board.tickets.length}</div>
-      <div>
-        <ButtonIcon onClick={handlePositionUp}>
-          <FaChevronUp className="w-5 h-5" />
-        </ButtonIcon>
-        <ButtonIcon onClick={handlePositionDown}>
-          <FaChevronDown className="w-5 h-5" />
-        </ButtonIcon>
+      <div className="flex gap-1">
         <ButtonIcon onClick={handleEdit}>
           <FaPencil className="w-5 h-5" />
         </ButtonIcon>

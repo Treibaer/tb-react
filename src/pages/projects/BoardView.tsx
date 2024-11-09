@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
@@ -8,6 +8,7 @@ import HeaderView from "../../components/HeaderView";
 import { BoardColumn } from "../../components/projects/board-details/BoardColumn";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
 import TitleView from "../../components/TitleView";
+import { useSocket } from "../../hooks/useSocket";
 import { Board } from "../../models/board-structure";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { ProjectMeta } from "../../models/project-meta";
@@ -27,6 +28,7 @@ type Config = {
 };
 
 export const BoardDetails: React.FC = () => {
+  const { listenOn, listenOff, emit } = useSocket();
   const [isCreating, setIsCreating] = useState(false);
   const data = useLoaderData() as {
     board: Board;
@@ -37,13 +39,22 @@ export const BoardDetails: React.FC = () => {
   const { metadata } = data;
   const project = metadata.project;
 
+  useEffect(() => {
+    listenOn("matches", "update", (_) => {
+      updateBoard();
+    });
+    return () => {
+      listenOff("matches", "update");
+    };
+  }, []);
+
   function openDialog() {
     setIsCreating(true);
   }
 
   async function onClose(shouldUpdate: boolean) {
     if (shouldUpdate) {
-      await updateBoard();
+      await refresh();
     }
     setIsCreating(false);
   }
@@ -90,6 +101,11 @@ export const BoardDetails: React.FC = () => {
     setBoard(updatedBoard);
   }
 
+  async function refresh() {
+    await updateBoard();
+    emit("matches", "update", {});
+  }
+
   async function closeContextMenu(update: boolean) {
     setConfig({
       ...config,
@@ -97,7 +113,7 @@ export const BoardDetails: React.FC = () => {
       ticket: null,
     });
     if (update) {
-      await updateBoard();
+      await refresh();
     }
   }
 
@@ -125,7 +141,7 @@ export const BoardDetails: React.FC = () => {
             metadata={data.metadata}
             initialBoardId={board.id}
             onClose={onClose}
-            updateBoardView={updateBoard}
+            updateBoardView={refresh}
           />
         )}
       </AnimatePresence>
@@ -144,7 +160,7 @@ export const BoardDetails: React.FC = () => {
             status="open"
             project={project}
             tickets={openTickets}
-            update={updateBoard}
+            update={refresh}
             onContextMenu={onContextMenu}
             onTouchStart={handleTouchStart}
           />
@@ -152,7 +168,7 @@ export const BoardDetails: React.FC = () => {
             status="inProgress"
             project={project}
             tickets={inProgressTickets}
-            update={updateBoard}
+            update={refresh}
             onContextMenu={onContextMenu}
             onTouchStart={handleTouchStart}
           />
@@ -160,7 +176,7 @@ export const BoardDetails: React.FC = () => {
             status="done"
             project={project}
             tickets={doneTickets}
-            update={updateBoard}
+            update={refresh}
             onContextMenu={onContextMenu}
             onTouchStart={handleTouchStart}
           />

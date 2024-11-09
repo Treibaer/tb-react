@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { Board } from "../../../models/board-structure";
 import { Project } from "../../../models/project";
@@ -6,8 +7,8 @@ import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
 import TicketService from "../../../services/TicketService";
 import { ButtonIcon } from "../../ButtonIcon";
-import TicketRowDnDWrapper from "./TicketRowDnDWrapper";
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import DnDWrapper from "./DndWrapper";
+import TicketRow from "./TicketRow";
 
 export const BoardSection: React.FC<{
   board: Board;
@@ -43,7 +44,8 @@ export const BoardSection: React.FC<{
   const totalTickets = board.tickets.length;
   const doneTickets = board.tickets.filter((e) => e.status === "done").length;
 
-  const [dragIndex, setDragIndex] = useState(-1);
+  const [dragIndex, setDragIndex] = useState<number>(-1);
+
 
   async function moveTicket(dragIndex: number, hoverIndex: number) {
     if (dragIndex === hoverIndex) {
@@ -62,7 +64,7 @@ export const BoardSection: React.FC<{
   return (
     <div key={board.id} className={tickets.length === 0 ? "hidden" : ""}>
       <div className="flex flex-row justify-between px-4 sm:h-11 bg-header mb-1 rounded-lg">
-        <div className="flex gap-2 h-11 items-center w-1/2 ">
+        <div className="flex gapoar-2 h-11 items-center w-1/2 ">
           <div className="text-base overflow-x-hidden text-ellipsis max-w-[100%]">
             {board.id === 0 ? (
               <div className="cursor-default">Backlog</div>
@@ -75,7 +77,6 @@ export const BoardSection: React.FC<{
               </NavLink>
             )}
           </div>
-
           <ButtonIcon onClick={toggleBoard.bind(null, board.id)}>
             {isBoardVisible ? (
               <FaChevronDown className="w-5 h-5" />
@@ -99,20 +100,22 @@ export const BoardSection: React.FC<{
       <div className="mb-1">
         {isBoardVisible &&
           tickets.map((ticket: Ticket) => (
-            <TicketRowDnDWrapper
+            <DnDWrapper
               key={ticket.id}
-              project={project}
-              ticket={ticket}
-              onContextMenu={onContextMenu}
-              onTouchStart={onTouchStart}
               dragIndex={dragIndex}
-              hoverIndex={hoverIndex}
               setDragIndex={setDragIndex}
+              hoverIndex={hoverIndex}
               setHoverIndex={setHoverIndex}
-              index={ticket.id}
               id={ticket.id}
               moveTicket={moveTicket}
-            />
+            >
+              <TicketRow
+                project={project}
+                ticket={ticket}
+                onContextMenu={onContextMenu}
+                onTouchStart={onTouchStart}
+              />
+            </DnDWrapper>
           ))}
       </div>
     </div>

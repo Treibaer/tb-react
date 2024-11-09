@@ -1,4 +1,4 @@
-import { Outlet, useNavigation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useNavigation } from "react-router-dom";
 import DelayedLoadingSpinner from "../components/common/DelayedLoadingSpinner";
 import MainNavigation from "../components/Navigation/MainNavigation";
 import MobileNavigation from "../components/Navigation/MobileNavigation";

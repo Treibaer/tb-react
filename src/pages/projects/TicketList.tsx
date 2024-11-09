@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { ContextMenu } from "../../components/contextmenu/ContextMenu";
@@ -13,7 +14,6 @@ import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-conf
 import { ROUTES } from "../../routes";
 import ProjectService from "../../services/ProjectService";
 import TicketService from "../../services/TicketService";
-import { AnimatePresence } from "framer-motion";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;

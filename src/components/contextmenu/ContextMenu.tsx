@@ -8,9 +8,11 @@ import {
   FaTrash,
   FaUserCircle,
 } from "react-icons/fa";
+import { FaMagnifyingGlassPlus } from "react-icons/fa6";
 import useParty from "../../hooks/useParty";
 import { DropdownType } from "../../models/dropdown-type";
 import { ProjectMeta } from "../../models/project-meta";
+import { Ticket } from "../../models/ticket";
 import { TicketStatus } from "../../models/ticket-status";
 import { TicketsContextMenuConfig } from "../../models/tickets-context-menu-config";
 import TicketService from "../../services/TicketService";
@@ -29,14 +31,15 @@ export const ContextMenu: React.FC<{
   metadata: ProjectMeta;
   config: TicketsContextMenuConfig;
   onClose: (update: boolean) => void;
-}> = ({ metadata, config, onClose }) => {
+  showPreview?: (ticket: Ticket) => void;
+}> = ({ metadata, config, onClose, showPreview }) => {
   const { startParty } = useParty();
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
 
   const ticket = config.ticket!;
   const project = metadata.project;
-
   const dropdownRef = useRef<HTMLDivElement>(null);
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
@@ -73,7 +76,6 @@ export const ContextMenu: React.FC<{
     }
     if (status !== ticket.status) {
       await ticketService.update(project.slug, ticket.slug, { status });
-      // showToast(`${ticket.slug} updated`, `Status changed to ${status}`);
       showToast("state", ticket.slug, status);
 
       if (status === "done" && ticket.parent === null) {
@@ -136,6 +138,13 @@ export const ContextMenu: React.FC<{
       showToast("error", "", error.message);
     }
   }
+
+  const openPreview = () => {
+    if (showPreview) {
+      showPreview(ticket);
+      onClose(false);
+    }
+  };
 
   return (
     <div ref={dropdownRef}>
@@ -240,6 +249,18 @@ export const ContextMenu: React.FC<{
               <FaTag className="size-4 text-gray-400 mt-1" />
               <div className="w-[60px]">Position</div>
               <FaChevronRight className="h-5 w-5 text-gray-400" />
+            </div>
+          </DropdownElement>
+        )}
+        {showPreview && (
+          <DropdownElement
+            isSelected={false}
+            onMouseOver={() => setDropdown(DropdownType.NONE)}
+            onClick={openPreview}
+          >
+            <div className="flex gap-2">
+              <FaMagnifyingGlassPlus className="size-4 text-gray-400 mt-1" />
+              <div>Preview</div>
             </div>
           </DropdownElement>
         )}

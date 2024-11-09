@@ -2,7 +2,7 @@ import Constants from "./Constants";
 
 /**
  * Service class for making HTTP requests to the backend API.
- * Provides methods for GET, POST, PATCH, PUT, and DELETE requests.
+ * Provides methods for GET, POST, PATCH, PUT, DELETE requests, and file uploads.
  */
 export default class Client {
   static shared = new Client();
@@ -13,7 +13,7 @@ export default class Client {
    * @param url - The endpoint URL (relative to the API base).
    * @returns A promise that resolves to the response data.
    */
-  async get<T>(url: string) {
+  async get<T>(url: string): Promise<T> {
     return this.request<T>(url, { method: "GET" });
   }
 
@@ -23,14 +23,20 @@ export default class Client {
    * @param data - The data to send in the request body.
    * @returns A promise that resolves to the response data.
    */
-  async post<T>(url: string, data: any) {
+  async post<T>(url: string, data: any): Promise<T> {
     return this.request<T>(url, {
       method: "POST",
       body: JSON.stringify(data),
     });
   }
 
-  async uploadFile<T>(url: string, data: any) {
+  /**
+   * Uploads a file to the specified URL.
+   * @param url - The endpoint URL (relative to the API base).
+   * @param data - The FormData object containing the file and other data.
+   * @returns A promise that resolves to the response data.
+   */
+  async uploadFile<T>(url: string, data: FormData): Promise<T> {
     const response = await fetch(this.api + url, {
       headers: {
         Accept: "application/json",
@@ -82,7 +88,7 @@ export default class Client {
    * Retrieves the authorization token from local storage.
    * @returns The authentication token string.
    */
-  private getAuthToken() {
+  private getAuthToken(): string | null {
     return localStorage.getItem("token");
   }
 
@@ -102,11 +108,6 @@ export default class Client {
         ...options.headers,
       },
     });
-    if (options.method === "DELETE") {
-      if (response.ok) {
-        return null as any;
-      }
-    }
     return this.handleResponse(response);
   }
 

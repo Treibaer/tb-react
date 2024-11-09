@@ -1,39 +1,27 @@
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import { Project } from "../../../models/project";
-import { Ticket } from "../../../models/ticket";
-import TicketRow from "./TicketRow";
+
 export declare type Identifier = string | symbol;
 
 interface DragItem {
-  index: number;
-  id: string;
-  type: string;
+  id: number;
 }
 
-const TicketRowDnDWrapper: React.FC<{
+const DnDWrapper: React.FC<{
   dragIndex: number;
   setDragIndex: (index: number) => void;
   hoverIndex: number;
   setHoverIndex: (index: number) => void;
-  index: number;
   id: number;
-  project: Project;
-  ticket: Ticket;
-  onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
-  onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
+  children: React.ReactNode;
   moveTicket: (dragIndex: number, hoverIndex: number) => void;
 }> = ({
   dragIndex,
   setDragIndex,
   hoverIndex,
   setHoverIndex,
-  index,
   id,
-  project,
-  ticket,
-  onContextMenu,
-  onTouchStart,
+  children,
   moveTicket,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -48,8 +36,8 @@ const TicketRowDnDWrapper: React.FC<{
       if (!ref.current) {
         return;
       }
-      const dragIndex = item.index;
-      const hoverIndex = index;
+      const dragIndex = item.id;
+      const hoverIndex = id;
       setHoverIndex(hoverIndex);
       setDragIndex(dragIndex);
     },
@@ -57,8 +45,8 @@ const TicketRowDnDWrapper: React.FC<{
       if (!ref.current) {
         return;
       }
-      const dragIndex = item.index;
-      const hoverIndex = index;
+      const dragIndex = item.id;
+      const hoverIndex = id;
       setHoverIndex(-1);
       setDragIndex(-1);
       moveTicket(dragIndex, hoverIndex);
@@ -68,8 +56,8 @@ const TicketRowDnDWrapper: React.FC<{
   const [{ isDragging }, drag] = useDrag({
     type: "card",
     item: () => {
-      setDragIndex(index);
-      return { id, index };
+      setDragIndex(id);
+      return { id };
     },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
@@ -78,21 +66,16 @@ const TicketRowDnDWrapper: React.FC<{
 
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
-
   return (
     <div
       ref={ref}
-      style={{ opacity }}
-      onContextMenu={(e) => onContextMenu(e, ticket)}
-      onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
+      style={{
+        opacity: id === dragIndex ? 0.5 : id === hoverIndex ? 0.2 : 1,
+      }}
     >
-      <TicketRow
-        project={project}
-        ticket={ticket}
-        opacity={index === dragIndex ? 0.5 : index === hoverIndex ? 0.2 : 1}
-      />
+      {children}
     </div>
   );
 };
 
-export default TicketRowDnDWrapper;
+export default DnDWrapper;

@@ -199,8 +199,6 @@ export class BoardService {
 
     tickets = tickets.filter((t) => t.id !== origin);
     if (isSwitchingBoard) {
-      // if the origin ticket is moved to the end of the list, don't replace, just push to the end
-      // also check if hide done is enabled and the target ticket is the last non-done ticket
       let targetTicketLastTicket = false;
       if (user.hideDoneProjects.split('_').map(Number).includes(project.id)) {
         const nonDoneTickets = tickets.filter((t) => t.status !== 'done');
@@ -222,6 +220,41 @@ export class BoardService {
     for (let i = 0; i < tickets.length; i++) {
       tickets[i].position = i;
       await tickets[i].save();
+    }
+  }
+
+  async moveBoard(projectSlug: string, origin: number, target: number) {
+    const project = await Project.findOne({ where: { slug: projectSlug } });
+    const boards = await Board.findAll({
+      where: { project_id: project.id },
+      order: [['position', 'ASC']],
+    });
+
+    const originBoard = boards.find((b) => b.id === origin);
+    const targetBoard = boards.find((b) => b.id === target);
+
+    console.log(boards.map((b)=>b.id), origin, target, projectSlug, project.id);
+
+    if (!originBoard || !targetBoard) {
+      throw new Error('Board not found');
+    }
+
+    const originPosition = originBoard.position;
+    const targetPosition = targetBoard.position;
+    if (originPosition < targetPosition) {
+      for (let i = originPosition + 1; i <= targetPosition; i++) {
+        boards[i].position = i - 1;
+        await boards[i].save();
+      }
+      originBoard.position = targetPosition;
+      await originBoard.save();
+    } else {
+      for (let i = targetPosition; i < originPosition; i++) {
+        boards[i].position = i + 1;
+        await boards[i].save();
+      }
+      originBoard.position = targetPosition;
+      await originBoard.save();
     }
   }
 

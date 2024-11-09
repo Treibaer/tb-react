@@ -18,13 +18,21 @@ import { FinanceService } from './finance.service';
 
 @Controller('api/v3/finances')
 export class FinancesController {
-  accountId = 3;
+  private readonly ACCOUNT_ID = 3;
 
   constructor(
     private readonly usersService: UserService,
     private readonly financeService: FinanceService,
   ) {}
 
+  /**
+   * Gets all account entries within the specified date range and tag.
+   * @param dateFrom - The start date for filtering entries.
+   * @param dateTo - The end date for filtering entries.
+   * @param tag - The tag ID for filtering entries.
+   * @param type - The type of entry to filter by.
+   * @returns A transformed list of account entries, tags, and balance in cents.
+   */
   @Get('entries')
   async getAllEntries(
     @Query('dateFrom') dateFrom: string,
@@ -44,7 +52,7 @@ export class FinancesController {
     const tags = await AccountTag.findAll();
     const transformedTags = tags.map((tag) => this.accountTag(tag));
     const balanceInCents =
-      (await Account.findByPk(this.accountId))?.valueInCents || 0;
+      (await Account.findByPk(this.ACCOUNT_ID))?.valueInCents || 0;
 
     return {
       entries: transformedEntries,

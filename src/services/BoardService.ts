@@ -92,4 +92,9 @@ export class BoardService {
     const path = `/projects/${projectSlug}/settings`;
     return this.client.post(path, { hideDone: value });
   }
+
+  async moveBoard(projectSlug: string, origin: number, target: number) {
+    const path = `/projects/${projectSlug}/boards/move`;
+    return this.client.post(path, { origin, target });
+  }
 }

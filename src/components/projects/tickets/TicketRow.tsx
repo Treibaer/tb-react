@@ -12,12 +12,17 @@ interface TicketRowProps {
   project: Project;
   ticket: Ticket;
   opacity?: number;
+  onContextMenu: (event: React.MouseEvent, ticket: Ticket) => void;
+  onTouchStart?: (event: React.TouchEvent, ticket: Ticket) => void;
 }
 
 export default function TicketRow({
   project,
   ticket,
   opacity,
+  onContextMenu,
+  onTouchStart,
+
 }: TicketRowProps) {
   const finishedSubtasks = ticket.children.filter(
     (c) => c.status === "done"
@@ -26,6 +31,8 @@ export default function TicketRow({
     <NavLink
       to={ROUTES.TICKET_DETAILS(project.slug, ticket.slug)}
       key={ticket.id}
+      onContextMenu={(e) => onContextMenu(e, ticket)}
+      onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
     >
       <div className="tb-row" style={{ opacity }}>
         <div className="flex-grow flex gap-2 sm:gap-4 items-center">

@@ -65,4 +65,14 @@ export class BoardsController {
     await this.boardsService.moveTicket(slug, +boardId, data);
     return { message: 'Board updated' };
   }
+
+  @Post(':slug/boards/move')
+  async moveBoard(
+    @Param('slug') slug: string,
+    @Body() data: Record<string, any>,
+  ) {
+    const {origin, target} = data;
+    await this.boardsService.moveBoard(slug, +origin, +target);
+    return { message: 'Board updated' };
+  }
 }

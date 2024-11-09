@@ -81,6 +81,7 @@ export class PasswordService {
         environment_id: environmentId,
         // archived: false,
       },
+      order: [['title', 'ASC']],
     });
   }
 

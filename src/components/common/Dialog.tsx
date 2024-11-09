@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import useIsMobile from "../../hooks/useIsMobile";
 import Button from "../Button";
 import { motion } from "framer-motion";
@@ -18,6 +19,16 @@ const Dialog: React.FC<{
   error,
 }) => {
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
 
   return (
     <motion.div
