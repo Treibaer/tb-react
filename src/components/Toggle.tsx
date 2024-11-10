@@ -4,10 +4,10 @@ export const Toggle = forwardRef<
   HTMLInputElement,
   {
     title: string;
-    defaultChecked: boolean;
+    checked: boolean;
     onChange: () => void;
   }
->(({ defaultChecked, onChange, title }, ref) => {
+>(({ checked: checked, onChange, title }, ref) => {
   return (
     <label className="inline-flex items-center cursor-pointer">
       <input
@@ -15,7 +15,7 @@ export const Toggle = forwardRef<
         value=""
         className="sr-only peer"
         onChange={onChange}
-        defaultChecked={defaultChecked}
+        checked={checked}
         ref={ref}
       />
       <div

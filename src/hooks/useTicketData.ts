@@ -5,6 +5,7 @@ import { Ticket } from "../models/ticket";
 import { TicketComment } from "../models/ticket-comment";
 import { TicketHistory } from "../models/ticket-history";
 import TicketService from "../services/ticketService";
+import { TicketLink } from "../models/ticket-link";
 
 const ticketService = TicketService.shared;
 
@@ -16,12 +17,14 @@ function useTicketData() {
     isOldVersion,
     history: initialHistory,
     comments,
+    links,
   } = useLoaderData() as {
     metadata: ProjectMeta;
     ticket: Ticket;
     isOldVersion: boolean;
     history: TicketHistory[];
     comments: TicketComment[];
+    links: TicketLink[];
   };
 
   const [metadata, setMetadata] = useState(initalMetadata);
@@ -50,7 +53,8 @@ function useTicketData() {
     history,
     isOldVersion,
     comments,
-    fetchHistory
+    fetchHistory,
+    links,
   };
 }
 

@@ -17,13 +17,19 @@ export const ProjectDetailView: React.FC = () => {
     { title: project.title, link: "" },
   ];
 
-  let tickets2: { id: number; closedDate: Date }[] = [];
+  let closedTickets: { id: number; closedDate: Date }[] = [];
   let openedTickets: { id: number; createdAt: Date }[] = [];
 
-  tickets2 = closedTicketsLast30Days.map((ticket) => ({
+  closedTickets = closedTicketsLast30Days.map((ticket) => ({
     id: ticket.id,
     closedDate: new Date((ticket.closedAt ?? 0) * 1000),
   }));
+
+  const activityClosedTickets = closedTicketsLast30Days;
+  // sort by closed date desc
+  activityClosedTickets.sort((a, b) => {
+    return (b.closedAt ?? 0) - (a.closedAt ?? 0);
+  });
 
   openedTickets = openedTicketsLast30Days.map((ticket) => ({
     id: ticket.id,
@@ -53,7 +59,7 @@ export const ProjectDetailView: React.FC = () => {
       </div>
 
       <ClosedTicketsChart
-        closedTickets={tickets2}
+        closedTickets={closedTickets}
         openTickets={openedTickets}
       />
 
@@ -72,6 +78,27 @@ export const ProjectDetailView: React.FC = () => {
             />
           ))}
         </div>
+      </div>
+      <div>
+        {activityClosedTickets.length > 0 && (
+          <div className="p-2 flex gap-1 flex-col">
+            <div className="flex items-center justify-between px-4 h-11 bg-header rounded-lg">
+              <div>Closed Tickets Last 30 Days</div>
+              <div>{activityClosedTickets.length} tickets</div>
+            </div>
+            <div className="flex flex-col w-full">
+              {activityClosedTickets.map((ticket) => (
+                <TicketRow
+                  key={ticket.id}
+                  ticket={ticket}
+                  project={project}
+                  onContextMenu={() => {}}
+                  onTouchStart={() => {}}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

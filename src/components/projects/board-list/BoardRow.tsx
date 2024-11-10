@@ -1,7 +1,7 @@
 import { FaArchive } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import { Board } from "../../../models/board-structure";
+import { Board } from "../../../models/board-structure.dto";
 import { ROUTES } from "../../../routes";
 import { BoardService } from "../../../services/boardService";
 import { showToast } from "../../../utils/tbToast";

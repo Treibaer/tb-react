@@ -33,6 +33,7 @@ import { AssetsModule } from './assets/assets.module';
 import { Asset } from './assets/entities/asset';
 import { AssetEntry } from './assets/entities/asset-entry';
 import { MulterModule } from '@nestjs/platform-express';
+import { TicketRelation } from './projects/entities/ticket-relation';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { MulterModule } from '@nestjs/platform-express';
           Page,
           Asset,
           AssetEntry,
+          TicketRelation,
         ],
         autoLoadModels: true,
         logging: false,
@@ -103,6 +105,7 @@ import { MulterModule } from '@nestjs/platform-express';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     return;
+    TicketRelation.sync({ alter: true });
     Asset.sync({ alter: true });
     AssetEntry.sync({ alter: true });
     User.sync({ alter: true });

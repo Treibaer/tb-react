@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import { Board } from "../../../models/board-structure";
+import { Board } from "../../../models/board-structure.dto";
 import { Project } from "../../../models/project";
 import { Ticket } from "../../../models/ticket";
 import { ROUTES } from "../../../routes";
@@ -62,10 +62,10 @@ export const BoardSection: React.FC<{
   return (
     <div key={board.id} className={tickets.length === 0 ? "hidden" : ""}>
       <div className="flex flex-row justify-between px-4 sm:h-11 bg-header mb-1 rounded-lg">
-        <div className="flex gapoar-2 h-11 items-center w-1/2 ">
+        <div className="flex gap-2 h-11 items-center w-1/2 ">
           <div className="text-base overflow-x-hidden text-ellipsis max-w-[100%]">
             {board.id === 0 ? (
-              <div className="cursor-default">Backlog</div>
+              <div className="cursor-default">{board.title}</div>
             ) : (
               <NavLink
                 to={ROUTES.BOARD_DETAILS(project.slug, board.id)}

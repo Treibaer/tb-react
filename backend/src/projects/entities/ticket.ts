@@ -12,6 +12,7 @@ import {
 import { User } from 'src/users/entities/user.entity';
 import { Project } from './project';
 import { Board } from './board';
+import { TicketRelation } from './ticket-relation';
 
 @Table({ tableName: 'ticket', timestamps: false })
 export class Ticket extends Model {
@@ -92,4 +93,10 @@ export class Ticket extends Model {
 
   @HasMany(() => Ticket, 'parentId')
   children: Ticket[];
+
+  @HasMany(() => TicketRelation, { foreignKey: 'source_id', as: 'sourceRelations' })
+  sourceRelations: TicketRelation[];
+
+  @HasMany(() => TicketRelation, { foreignKey: 'target_id', as: 'targetRelations' })
+  targetRelations: TicketRelation[];
 }

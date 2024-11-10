@@ -50,7 +50,7 @@ export class BoardsController {
   @Post(':slug/settings')
   async updateSettings(
     @Param('slug') slug: string,
-    @Body() settings: Record<string, any>,
+    @Body() settings: { hideDone: boolean },
   ) {
     await this.boardsService.updateSettings(slug, settings);
     return { message: 'Settings updated' };
@@ -60,7 +60,7 @@ export class BoardsController {
   async moveTicket(
     @Param('slug') slug: string,
     @Param('boardId') boardId: number,
-    @Body() data: Record<string, any>,
+    @Body() data: { origin: number; target: number },
   ) {
     await this.boardsService.moveTicket(slug, +boardId, data);
     return { message: 'Board updated' };
@@ -69,10 +69,9 @@ export class BoardsController {
   @Post(':slug/boards/move')
   async moveBoard(
     @Param('slug') slug: string,
-    @Body() data: Record<string, any>,
+    @Body() data: { origin: number; target: number },
   ) {
-    const {origin, target} = data;
-    await this.boardsService.moveBoard(slug, +origin, +target);
+    await this.boardsService.moveBoard(slug, +data.origin, +data.target);
     return { message: 'Board updated' };
   }
 }

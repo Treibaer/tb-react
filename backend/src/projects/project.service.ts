@@ -123,9 +123,8 @@ export class ProjectService {
       ),
     );
 
-    const dateBefore30Days = new Date(
-      new Date().getTime() / 1000 - 30 * 24 * 60 * 60 * 1000,
-    );
+    const dateBefore30Days = Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60;
+
     const closedTicketsLast30Days = await Ticket.findAll({
       where: {
         project_id: project.id,

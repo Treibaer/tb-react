@@ -1,4 +1,4 @@
-import { SmallBoard } from "../../../../models/board-structure";
+import { SmallBoard } from "../../../../models/board-structure.dto";
 import DropdownElement from "./DropdownElement";
 import TicketDetailsDropdown from "./TicketDetailsDropdown";
 
@@ -23,7 +23,7 @@ export const BoardDropdown: React.FC<{
         isSelected={selectedBoardId === 0}
         onClick={onChange.bind(this, 0)}
       >
-        No board
+        Inbox
         {showNumbers && (
           <div className="absolute right-2 text-gray-400">[1]</div>
         )}

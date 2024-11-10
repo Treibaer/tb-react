@@ -52,9 +52,9 @@ import TicketHistoryView, {
 import TicketList, {
   loader as ticketsAllLoader,
 } from "./pages/projects/TicketList";
-import TicketsBoardView, {
+import BoardStructureView, {
   loader as ticketsLoader,
-} from "./pages/projects/TicketsBoardView";
+} from "./pages/projects/BoardStructureView";
 import Register from "./pages/Register";
 import RootLayout from "./pages/RootLayout";
 import Settings from "./pages/Settings";
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/projects/:projectSlug/tickets",
-        element: <TicketsBoardView />,
+        element: <BoardStructureView />,
         loader: ticketsLoader,
       },
       {

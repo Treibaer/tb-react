@@ -13,7 +13,7 @@ import TitleView from "../../components/TitleView";
 import { Toggle } from "../../components/Toggle";
 import useContextMenu from "../../hooks/useContextMenu";
 import { useSocket } from "../../hooks/useSocket";
-import { Board, BoardStructure } from "../../models/board-structure";
+import { Board, BoardStructureDto } from "../../models/board-structure.dto";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ProjectMeta } from "../../models/project-meta";
@@ -25,19 +25,20 @@ import ProjectService from "../../services/projectService";
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
 
-const TicketsBoardView: React.FC = () => {
+const BoardStructureView: React.FC = () => {
   const data = useLoaderData() as {
-    boardStructure: BoardStructure;
+    boardStructure: BoardStructureDto;
     metadata: ProjectMeta;
   };
 
   const initialRender = useRef(true);
   const inputRef = useRef<HTMLInputElement>(null);
+  const toggleRef = useRef<HTMLInputElement>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [project, setProject] = useState<Project>(data.metadata.project);
   const [ticketPreview, setTicketPreview] = useState<Ticket | null>(null);
-  const [boardStructure, setBoardStructure] = useState<BoardStructure>(
+  const [boardStructure, setBoardStructure] = useState<BoardStructureDto>(
     data.boardStructure
   );
   const [closedBoardIds, setClosedBoardIds] = useState<string[]>(
@@ -99,6 +100,8 @@ const TicketsBoardView: React.FC = () => {
     const boardStructure = await boardService.getBoardStructure(project.slug);
     setBoardStructure(boardStructure);
     setClosedBoardIds(boardStructure.closed);
+    setHideDone(boardStructure.hideDone);
+    toggleRef.current!.value = boardStructure.hideDone ? "on" : "off";
   }
 
   async function toggleBoard(boardId: number) {
@@ -115,6 +118,7 @@ const TicketsBoardView: React.FC = () => {
   async function toggleHideDone() {
     setHideDone(!hideDone);
     await boardService.toggleHideDone(project.slug, !hideDone);
+    await refresh();
   }
 
   function isBoardVisible(boardId: number) {
@@ -125,11 +129,11 @@ const TicketsBoardView: React.FC = () => {
     (b) => b.tickets.length > 0
   );
 
-  // merge with boardStructure.backlog
-  if (boardStructure.backlog.tickets.length > 0) {
-    const backlogBoard = boardStructure.backlog as Board;
-    backlogBoard.creator = { id: 0, firstName: "system", avatar: "" };
-    activeBoards.push(backlogBoard);
+  // merge with boardStructure.inbox
+  if (boardStructure.inbox.tickets.length > 0) {
+    const inboxBoard = boardStructure.inbox as Board;
+    inboxBoard.creator = { id: 0, firstName: "system", avatar: "" };
+    activeBoards.push(inboxBoard);
   }
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
@@ -196,8 +200,9 @@ const TicketsBoardView: React.FC = () => {
           <div className="flex items-center gap-4 me-2 flex-col sm:flex-row my-2">
             <div className="flex gap-4">
               <Toggle
+                ref={toggleRef}
                 title="Hide done"
-                defaultChecked={hideDone}
+                checked={hideDone}
                 onChange={toggleHideDone}
               />
               <input
@@ -252,7 +257,7 @@ const TicketsBoardView: React.FC = () => {
   );
 };
 
-export default TicketsBoardView;
+export default BoardStructureView;
 
 export const loader: LoaderFunction<{ projectSlug: string }> = async ({
   params,

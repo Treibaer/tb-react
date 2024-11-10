@@ -1,5 +1,5 @@
-import "./LoadingSpinner.css";
 import { motion } from "framer-motion";
+import "./LoadingSpinner.css";
 
 const BlurredBackground: React.FC<{
   onClose: () => void;

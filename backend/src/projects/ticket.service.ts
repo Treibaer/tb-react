@@ -10,6 +10,9 @@ import { Ticket } from './entities/ticket';
 import { TicketComment } from './entities/ticket-comment';
 import { TicketHistory } from './entities/ticket-history';
 import { TransformService } from './transform.service';
+import { TicketLinkDto } from './dto/ticket-link.dto';
+import { TicketRelation } from './entities/ticket-relation';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class TicketService {
@@ -67,7 +70,11 @@ export class TicketService {
     }
 
     const boardTickets = await Ticket.findAll({
-      where: { project_id: project.id, board_id: boardId, parentId: ticket.parentId ?? null },
+      where: {
+        project_id: project.id,
+        board_id: boardId,
+        parentId: ticket.parentId ?? null,
+      },
     });
 
     const maxTicketId: number = await Ticket.max('ticket_id', {
@@ -75,8 +82,6 @@ export class TicketService {
     });
 
     const ticketId = maxTicketId ? maxTicketId + 1 : 1;
-
-    // const position = boardTickets.length;
 
     const createdTicket = await Ticket.create({
       title: ticket.title,
@@ -261,6 +266,91 @@ export class TicketService {
     return await Promise.all(
       historyList.map((history) => this.ticketHistory(history)),
     );
+  }
+
+  async getLinkedTickets(
+    projectSlug: string,
+    ticketSlug: string,
+  ): Promise<TicketLinkDto[]> {
+    const ticket = await this.getBySlug(ticketSlug);
+    const links = await TicketRelation.findAll({
+      where: {
+        [Op.or]: [{ sourceId: ticket.id }, { targetId: ticket.id }],
+      },
+      include: [
+        {
+          model: Ticket,
+          as: 'source',
+        },
+        {
+          model: Ticket,
+          as: 'target',
+        },
+      ],
+    });
+    // switch source and target if target == ticket
+    links.forEach((link) => {
+      if (link.targetId === ticket.id) {
+        const source = link.source;
+        link.source = link.target;
+        link.target = source;
+      }
+    });
+    return await Promise.all(
+      links.map(async (link) => {
+        return {
+          id: link.id,
+          type: link.type,
+          source: await this.transformer.ticket(projectSlug, link.source),
+          target: await this.transformer.ticket(projectSlug, link.target),
+        };
+      }),
+    );
+  }
+
+  async createLink(
+    projectSlug: string,
+    sourceSlug: string,
+    targetSlug: string,
+    type: string = 'blocks',
+  ): Promise<TicketLinkDto> {
+    const project = await this.findProjectBySlug(projectSlug);
+    const source = await this.getBySlug(sourceSlug);
+    const target = await this.getBySlug(targetSlug);
+
+    // check if they are already linked
+    const existingLinks = await TicketRelation.findAll({
+      where: {
+        [Op.or]: [
+          { sourceId: source.id, targetId: target.id },
+          { sourceId: target.id, targetId: source.id },
+        ],
+      },
+    });
+    if (existingLinks.length > 0) {
+      throw new Error('Tickets are already linked');
+    }
+    const user = this.userService.user;
+    const link = await TicketRelation.create({
+      sourceId: source.id,
+      targetId: target.id,
+      creator_id: user.id,
+      type,
+    });
+    return {
+      id: link.id,
+      type: link.type,
+      source: await this.transformer.ticket(projectSlug, source),
+      target: await this.transformer.ticket(projectSlug, target),
+    };
+  }
+
+  async unlink(linkId: number): Promise<void> {
+    const link = await TicketRelation.findByPk(linkId);
+    if (!link) {
+      throw new Error('Link not found');
+    }
+    await link.destroy();
   }
 
   async fetchComments(ticketSlug: string): Promise<TicketComment[]> {

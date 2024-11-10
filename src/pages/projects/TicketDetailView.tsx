@@ -10,6 +10,7 @@ import DescriptionView from "../../components/projects/ticket-details/Descriptio
 import TicketCommentArea from "../../components/projects/ticket-details/TicketCommentArea";
 import TicketDetailsSidebar from "../../components/projects/ticket-details/TicketDetailsSidebar";
 import TicketDetailsSubtasks from "../../components/projects/ticket-details/TicketDetailsSubtasks";
+import TicketLinkDialog from "../../components/projects/ticket-details/TicketLinkDialog";
 import TicketCreationDialog from "../../components/projects/tickets/TicketCreationDialog";
 import { useSocket } from "../../hooks/useSocket";
 import useTicketData from "../../hooks/useTicketData";
@@ -19,6 +20,7 @@ import { ROUTES } from "../../routes";
 import ProjectService from "../../services/projectService";
 import TicketService from "../../services/ticketService";
 import { showToast } from "../../utils/tbToast";
+import { TicketLink } from "../../models/ticket-link";
 
 const projectService = ProjectService.shared;
 const ticketService = TicketService.shared;
@@ -34,6 +36,7 @@ export default function TicketDetailView() {
     isOldVersion,
     comments,
     fetchHistory,
+    links,
   } = useTicketData();
 
   const revalidator = useRevalidator();
@@ -43,6 +46,7 @@ export default function TicketDetailView() {
   const [isEditing, setIsEditing] = useState(false);
   const project = metadata.project;
   const [isCreating, setIsCreating] = useState(false);
+  const [isLinking, setIsLinking] = useState(false);
 
   function onClose(update: boolean) {
     if (update) {
@@ -88,6 +92,9 @@ export default function TicketDetailView() {
     }
     if (event.key === "c" && !event.ctrlKey && !event.metaKey) {
       setIsCreating(true);
+    }
+    if (event.key === "l" && !event.ctrlKey && !event.metaKey) {
+      setIsLinking(true);
     }
   };
 
@@ -155,6 +162,17 @@ export default function TicketDetailView() {
     setTicket(ticket);
     emit("matches", "update", {});
   }
+
+  async function unlinkTicket(link: TicketLink) {
+    try {
+      await ticketService.unlink(project.slug, link);
+      showToast("success", "Unlink Ticket", "Ticket unlinked successfully");
+      refresh();
+    } catch (error: any) {
+      showToast("error", "Unlink Ticket", error.message);
+    }
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -174,6 +192,20 @@ export default function TicketDetailView() {
             onClose={onClose}
             updateBoardView={revalidator.revalidate}
             parentId={ticket.id}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isLinking && (
+          <TicketLinkDialog
+            projectSlug={project.slug}
+            ticketSlug={ticket.slug}
+            onClose={(update: boolean) => {
+              if (update) {
+                refresh();
+              }
+              setIsLinking(false);
+            }}
           />
         )}
       </AnimatePresence>
@@ -251,8 +283,11 @@ export default function TicketDetailView() {
           metadata={metadata}
           ticket={ticket}
           history={history}
+          links={links}
           update={update}
           addSubtask={() => setIsCreating(true)}
+          linkTicket={() => setIsLinking(true)}
+          unlinkTicket={unlinkTicket}
         />
       </div>
     </>
@@ -266,11 +301,12 @@ export const loader: LoaderFunction<{
   const projectSlug = params.projectSlug ?? "";
   const ticketSlug = params.ticketSlug ?? "";
 
-  const [ticket, metadata, history, comments] = await Promise.all([
+  const [ticket, metadata, history, comments, links] = await Promise.all([
     ticketService.get(projectSlug, ticketSlug),
     projectService.getMetadata(projectSlug),
     ticketService.getHistory(projectSlug, ticketSlug),
     ticketService.getComments(projectSlug, ticketSlug),
+    ticketService.getLinks(projectSlug, ticketSlug),
   ]);
 
   const queryParameters = new URL(request.url).searchParams;
@@ -285,5 +321,5 @@ export const loader: LoaderFunction<{
       isOldVersion = true;
     }
   }
-  return { metadata, ticket, isOldVersion, history, comments };
+  return { metadata, ticket, isOldVersion, history, comments, links };
 };

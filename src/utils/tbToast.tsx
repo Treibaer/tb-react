@@ -1,7 +1,7 @@
 // toastUtils.tsx
 import { toast } from "react-hot-toast";
-import { FaClipboardList, FaUserCircle } from "react-icons/fa";
-import { doneIcon, inProgressIcon, openIcon, errorIcon } from "./ticketUtils";
+import { FaUserCircle } from "react-icons/fa";
+import { doneIcon, errorIcon, inProgressIcon, openIcon } from "./ticketUtils";
 
 // Toast-Vorlagen
 const toastTemplates = {
@@ -9,9 +9,7 @@ const toastTemplates = {
     return () => (
       <div style={{ display: "flex", alignItems: "center" }}>
         <div style={{ marginRight: "10px" }}>{errorIcon}</div>
-        <div>
-          {value}
-        </div>
+        <div>{value}</div>
       </div>
     );
   },
@@ -19,9 +17,7 @@ const toastTemplates = {
     return () => (
       <div style={{ display: "flex", alignItems: "center" }}>
         <div style={{ marginRight: "10px" }}>{doneIcon}</div>
-        <div>
-          {value}
-        </div>
+        <div>{value}</div>
       </div>
     );
   },
@@ -104,14 +100,9 @@ const toastTemplates = {
   },
 
   type: (ticketId: string, type: string, _?: string) => {
-    const icon = (
-      <FaClipboardList
-        style={{ color: "#FF9800", marginRight: "10px", fontSize: "24px" }}
-      />
-    );
     return () => (
       <div style={{ display: "flex", alignItems: "center" }}>
-        {icon}
+        <div style={{ marginRight: "10px" }}>{doneIcon}</div>
         <div>
           Ticket <strong>{ticketId}</strong> type changed to {type}
         </div>
@@ -119,20 +110,11 @@ const toastTemplates = {
     );
   },
 
-  board: (ticketId: string, boardName?: string, _?: string) => {
-    const icon = (
-      <FaClipboardList
-        style={{ color: "#FF9800", marginRight: "10px", fontSize: "24px" }}
-      />
-    );
-    const message = boardName
-      ? `Ticket ${ticketId} moved to ${boardName}`
-      : `Ticket ${ticketId} moved to Backlog`;
-
+  board: (ticketId: string, boardName: string, _?: string) => {
     return () => (
       <div style={{ display: "flex", alignItems: "center" }}>
-        {icon}
-        <div>{message}</div>
+        <div style={{ marginRight: "10px" }}>{doneIcon}</div>
+        <div>{`Ticket ${ticketId} moved to ${boardName}`}</div>
       </div>
     );
   },

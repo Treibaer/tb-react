@@ -30,12 +30,12 @@ export class BoardService {
       where: { project_id: project.id, isActive: true },
       order: [['position', 'ASC']],
     });
-    const backlog = await Ticket.findAll({
+    const inbox = await Ticket.findAll({
       where: { project_id: project.id, board_id: null, parentId: null },
       order: [['position', 'ASC']],
     });
-    const backlogTicketDTOs = await Promise.all(
-      backlog.map((ticket) => this.transformer.ticket(projectSlug, ticket)),
+    const inboxTicketDTOs = await Promise.all(
+      inbox.map((ticket) => this.transformer.ticket(projectSlug, ticket)),
     );
     const activeBoardDTOs = await Promise.all(
       activeBoards.map((board) => this.board(board)),
@@ -44,10 +44,10 @@ export class BoardService {
     return {
       projectId: project.id,
       activeBoards: activeBoardDTOs,
-      backlog: {
+      inbox: {
         id: 0,
-        title: 'Backlog',
-        tickets: backlogTicketDTOs,
+        title: 'Inbox',
+        tickets: inboxTicketDTOs,
       },
       hideDone: user.hideDoneProjects
         .split('_')
@@ -138,7 +138,7 @@ export class BoardService {
 
   async updateSettings(
     projectSlug: string,
-    settings: Record<string, any>,
+    settings: { hideDone: boolean },
   ): Promise<void> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
     const hideDone = settings.hideDone;
@@ -156,7 +156,7 @@ export class BoardService {
   async moveTicket(
     projectSlug: string,
     boardId: number,
-    data: Record<string, any>,
+    data: { origin: number; target: number },
   ): Promise<void> {
     const project = await Project.findOne({ where: { slug: projectSlug } });
     const user = this.userService.user;
@@ -233,7 +233,13 @@ export class BoardService {
     const originBoard = boards.find((b) => b.id === origin);
     const targetBoard = boards.find((b) => b.id === target);
 
-    console.log(boards.map((b)=>b.id), origin, target, projectSlug, project.id);
+    console.log(
+      boards.map((b) => b.id),
+      origin,
+      target,
+      projectSlug,
+      project.id,
+    );
 
     if (!originBoard || !targetBoard) {
       throw new Error('Board not found');

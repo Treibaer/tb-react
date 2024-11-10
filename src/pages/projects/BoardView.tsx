@@ -10,7 +10,7 @@ import TicketCreationDialog from "../../components/projects/tickets/TicketCreati
 import TitleView from "../../components/TitleView";
 import useContextMenu from "../../hooks/useContextMenu";
 import { useSocket } from "../../hooks/useSocket";
-import { Board } from "../../models/board-structure";
+import { Board } from "../../models/board-structure.dto";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { ProjectMeta } from "../../models/project-meta";
 import { ROUTES } from "../../routes";

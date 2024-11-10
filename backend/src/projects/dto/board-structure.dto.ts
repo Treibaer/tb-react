@@ -6,7 +6,7 @@ export class BoardStructureDto {
   activeBoards: BoardDto[];
   closed: string[];
   hideDone: boolean;
-  backlog: {
+  inbox: {
     id: number;
     title: string;
     tickets: TicketDto[];

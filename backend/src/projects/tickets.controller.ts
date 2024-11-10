@@ -52,11 +52,34 @@ export class TicketsController {
     @Param('ticketSlug') ticketSlug: string,
   ) {
     await this.ticketService.remove(slug, ticketSlug);
+    return {};
   }
 
   @Get(':slug/tickets/:ticketSlug/history')
   async getTicketHistory(@Param('ticketSlug') ticketSlug: string) {
     return this.ticketService.getTransformedHistory(ticketSlug);
+  }
+
+  @Get(':slug/tickets/:ticketSlug/links')
+  async getTicketLinks(
+    @Param('slug') slug: string,
+    @Param('ticketSlug') ticketSlug: string,
+  ) {
+    return this.ticketService.getLinkedTickets(slug, ticketSlug);
+  }
+
+  @Post(':slug/ticket-links')
+  async createTicketLink(
+    @Param('slug') slug: string,
+    @Body() { source, target }: { source: string; target: string },
+  ) {
+    return this.ticketService.createLink(slug, source, target);
+  }
+
+  @Delete(':slug/ticket-links/:linkId')
+  async removeTicketLink(@Param('linkId') linkId: number) {
+    await this.ticketService.unlink(linkId);
+    return {};
   }
 
   @Get(':slug/tickets/:ticketSlug/comments')
@@ -83,6 +106,7 @@ export class TicketsController {
     @Param('commentId') commentId: number,
   ) {
     await this.ticketService.removeComment(ticketSlug, commentId);
+    return {};
   }
 
   @Post(':slug/tickets/:ticketSlug/move')

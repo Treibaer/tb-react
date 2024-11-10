@@ -1,6 +1,7 @@
 import { Ticket } from "../models/ticket";
 import { TicketComment } from "../models/ticket-comment";
 import { TicketHistory } from "../models/ticket-history";
+import { TicketLink } from "../models/ticket-link";
 import { TicketStatus } from "../models/ticket-status";
 import Client from "./Client";
 
@@ -119,6 +120,11 @@ export default class TicketService {
     return this.client.get<TicketHistory[]>(url);
   }
 
+  async getLinks(projectSlug: string, ticketSlug: string) {
+    const url = `/projects/${projectSlug}/tickets/${ticketSlug}/links`;
+    return this.client.get<Ticket[]>(url);
+  }
+
   async getComments(projectSlug: string, ticketSlug: string) {
     const url = `/projects/${projectSlug}/tickets/${ticketSlug}/comments`;
     return this.client.get<TicketComment[]>(url);
@@ -156,5 +162,22 @@ export default class TicketService {
   ) {
     const url = `/projects/${projectSlug}/tickets/${ticketSlug}/move`;
     return this.client.post(url, { origin, target });
+  }
+
+  async linkTickets(
+    projectSlug: string,
+    ticketSlug: string,
+    targetTickSlug: string
+  ) {
+    const url = `/projects/${projectSlug}/ticket-links`;
+    return this.client.post(url, {
+      source: ticketSlug,
+      target: targetTickSlug,
+    });
+  }
+
+  async unlink(projectSlug: string, link: TicketLink) {
+    const url = `/projects/${projectSlug}/ticket-links/${link.id}`;
+    return this.client.delete(url);
   }
 }

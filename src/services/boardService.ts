@@ -1,4 +1,4 @@
-import { Board, BoardStructure } from "../models/board-structure";
+import { Board, BoardStructureDto } from "../models/board-structure.dto";
 import Client from "./Client";
 
 /**
@@ -44,7 +44,7 @@ export class BoardService {
    */
   async getBoardStructure(projectSlug: string) {
     const path = `/projects/${projectSlug}/tickets-board-structure`;
-    return this.client.get<BoardStructure>(path);
+    return this.client.get<BoardStructureDto>(path);
   }
 
   async update(

@@ -5,10 +5,13 @@ import { DropdownType } from "../../../models/dropdown-type";
 import { ProjectMeta } from "../../../models/project-meta";
 import { Ticket } from "../../../models/ticket";
 import { TicketHistory } from "../../../models/ticket-history";
+import { TicketLink } from "../../../models/ticket-link";
 import { TicketStatus } from "../../../models/ticket-status";
+import { ROUTES } from "../../../routes";
 import TicketService from "../../../services/ticketService";
 import { FormatType, formatUnixTimestamp } from "../../../utils/dataUtils";
 import { showToast } from "../../../utils/tbToast";
+import { doneIcon, inProgressIcon, openIcon } from "../../../utils/ticketUtils";
 import Button from "../../Button";
 import TicketAssigneeField from "./TicketAssigneeField";
 import TicketDetailsRow from "./TicketDetailsRow";
@@ -24,9 +27,21 @@ export const TicketDetailsSidebar: React.FC<{
   metadata: ProjectMeta;
   ticket: Ticket;
   history: TicketHistory[];
+  links: TicketLink[];
   update: (ticket: Ticket) => void;
   addSubtask: () => void;
-}> = ({ ticket, update, metadata, history, addSubtask }) => {
+  linkTicket: () => void;
+  unlinkTicket: (link: TicketLink) => void;
+}> = ({
+  ticket,
+  update,
+  metadata,
+  history,
+  addSubtask,
+  linkTicket,
+  links,
+  unlinkTicket,
+}) => {
   const { startParty } = useParty();
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
   const project = metadata.project;
@@ -95,11 +110,19 @@ export const TicketDetailsSidebar: React.FC<{
       { boardId }
     );
     update(updatedTicket);
-    showToast("board", ticket.slug, updatedTicket.board?.title);
+    showToast("board", ticket.slug, updatedTicket.board?.title ?? "Inbox");
   }
 
   function onAddSubtask() {
     addSubtask();
+  }
+
+  function onLinkTicket() {
+    linkTicket();
+  }
+
+  async function onRemoveLink(link: TicketLink) {
+    unlinkTicket(link);
   }
 
   return (
@@ -217,7 +240,49 @@ export const TicketDetailsSidebar: React.FC<{
       </div>
 
       {ticket.parent == null && (
-        <Button onClick={onAddSubtask} title="Add Subtask" />
+        <>
+          <div className="m-4 h-[1px] bg-border" />
+          <div className="flex justify-evenly">
+            <Button onClick={onAddSubtask} title="Add Subtask" />
+            <Button onClick={onLinkTicket} title="Link Ticket" />
+          </div>
+        </>
+      )}
+      {links.length > 0 && (
+        <>
+          <div className="my-4 h-[1px] bg-border" />
+          <div className="px-2">
+            <div className="text-gray-400 text-sm mb-4">Linked Tickets</div>
+            <div className="flex flex-col gap-1">
+              {links.map((link) => (
+                <div className="relative" key={link.id}>
+                  <NavLink
+                    to={ROUTES.TICKET_DETAILS(project.slug, link.target.slug)}
+                    className="flex hover:bg-hover flex-col border border-border rounded-lg justify-between p-2"
+                  >
+                    <div className="flex justify-between">
+                      <div className="flex gap-2 items-center">
+                        {link.target.status === "open" && openIcon}
+                        {link.target.status === "inProgress" && inProgressIcon}
+                        {link.target.status === "done" && doneIcon}
+                        <div>{link.target.slug}</div>
+                      </div>
+                      <TicketAssigneeField user={link.target.assignee} />
+                    </div>
+                    <div>{link.target.title}</div>
+                  </NavLink>
+                  <button
+                    onClick={() => onRemoveLink(link)}
+                    className="absolute right-2 hover:bg-border size-6 rounded-md bottom-1"
+                    title="X"
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

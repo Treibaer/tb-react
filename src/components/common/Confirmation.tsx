@@ -1,5 +1,5 @@
-import Button from "../Button";
 import { motion } from "framer-motion";
+import Button from "../Button";
 import BlurredBackground from "./BlurredBackground";
 
 const Confirmation: React.FC<{

@@ -1,4 +1,4 @@
-import { SmallBoard } from "./board-structure";
+import { SmallBoard } from "./board-structure.dto";
 import { Project } from "./project";
 import { TicketStatus } from "./ticket-status";
 import { User } from "./user";

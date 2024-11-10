@@ -38,8 +38,7 @@ const PageDetailView: React.FC = () => {
     { title: "Pages", link: ROUTES.PROJECTS_PAGES(project.slug) },
   ];
 
-  // const currentIcon = useRef<HTMLInputElement>(null);
-  const isOldVersion = false;
+  const isOldVersion = false
   const currentTitle = useRef<HTMLInputElement>(null);
   const currentContent = useRef(page.enrichedContent);
   const [isEditing, setIsEditing] = useState(false);

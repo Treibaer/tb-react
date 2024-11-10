@@ -1,6 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { SmallBoard } from "../../../models/board-structure";
+import { SmallBoard } from "../../../models/board-structure.dto";
 import { DropdownType } from "../../../models/dropdown-type";
 import { ProjectMeta } from "../../../models/project-meta";
 import { TicketStatus } from "../../../models/ticket-status";
@@ -83,10 +83,9 @@ export const TicketCreationDialog: React.FC<{
     }
     if (event.key === "w") {
       toggleStayOpen();
-      toggleRef.current!.checked = !toggleRef.current?.checked;
+      toggleRef.current!.value = "on";
     }
     if (dropdown === DropdownType.STATUS) {
-      console.log("Key pressedf", event.key);
       if (event.key === "1") {
         updateStatus("open");
       }
@@ -139,7 +138,7 @@ export const TicketCreationDialog: React.FC<{
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [dropdown]);
+  }, [dropdown, createTicket]);
 
   const [stayOpen, setStayOpen] = useState(false);
 
@@ -180,7 +179,6 @@ export const TicketCreationDialog: React.FC<{
       setSelectedAssignee(null);
       setSelectedStatus("open");
       setSelectedType("");
-      // setSelectedBoard(null);
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
@@ -311,8 +309,8 @@ export const TicketCreationDialog: React.FC<{
                 title={selectedBoard?.title}
                 onClick={() => toggleDropdown(DropdownType.BOARD)}
               >
-                <div className=" overflow-x-hidden whitespace-nowrap w-32">
-                  {selectedBoard?.title ?? "No board"}
+                <div className="overflow-x-hidden whitespace-nowrap w-32">
+                  {selectedBoard?.title ?? "Inbox"}
                 </div>
               </div>
             </div>
@@ -338,10 +336,10 @@ export const TicketCreationDialog: React.FC<{
           </div>
         )}
         <Toggle
-          title=""
-          defaultChecked={false}
-          onChange={toggleStayOpen}
           ref={toggleRef}
+          title=""
+          checked={stayOpen}
+          onChange={toggleStayOpen}
         />
       </div>
     </Dialog>

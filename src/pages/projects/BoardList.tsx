@@ -11,7 +11,7 @@ import DnDWrapper from "../../components/projects/tickets/DndWrapper";
 import TitleView from "../../components/TitleView";
 import { Toggle } from "../../components/Toggle";
 import { useSocket } from "../../hooks/useSocket";
-import { Board } from "../../models/board-structure";
+import { Board } from "../../models/board-structure.dto";
 import { Breadcrumb } from "../../models/breadcrumb";
 import { Project } from "../../models/project";
 import { ROUTES } from "../../routes";
@@ -172,7 +172,7 @@ export const Boards: React.FC = () => {
         <TitleView title="Boards" openDialog={openDialog} />
         <Toggle
           title="Archived"
-          defaultChecked={false}
+          checked={false}
           onChange={() => setShowAll(!showAll)}
         />
       </div>

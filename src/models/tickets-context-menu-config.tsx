@@ -1,4 +1,4 @@
-import { Board } from "./board-structure";
+import { Board } from "./board-structure.dto";
 import { AccountEntry } from "./finances/account-entry";
 import { Ticket } from "./ticket";
 

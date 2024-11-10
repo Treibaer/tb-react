@@ -1,12 +1,12 @@
 import { Ticket } from "./ticket";
 import { User } from "./user";
 
-export interface BoardStructure {
+export interface BoardStructureDto {
   projectId: number;
   activeBoards: Board[];
   closed: string[];
   hideDone: boolean;
-  backlog: {
+  inbox: {
     id: number;
     title: string;
     tickets: Ticket[];

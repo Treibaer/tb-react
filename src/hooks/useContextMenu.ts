@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TicketsContextMenuConfig } from "../models/tickets-context-menu-config";
 import { Ticket } from "../models/ticket";
-import { Board } from "../models/board-structure";
+import { Board } from "../models/board-structure.dto";
 import { AccountEntry } from "../models/finances/account-entry";
 
 interface UseContextMenuParams {
