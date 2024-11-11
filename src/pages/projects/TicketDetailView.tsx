@@ -50,7 +50,7 @@ export default function TicketDetailView() {
 
   function onClose(update: boolean) {
     if (update) {
-      revalidator.revalidate();
+      refresh();
     }
     setIsCreating(false);
   }

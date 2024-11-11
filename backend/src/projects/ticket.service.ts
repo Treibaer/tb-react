@@ -290,7 +290,7 @@ export class TicketService {
     });
     // switch source and target if target == ticket
     links.forEach((link) => {
-      if (link.targetId === ticket.id) {
+      if (link.target_id === ticket.id) {
         const source = link.source;
         link.source = link.target;
         link.target = source;
