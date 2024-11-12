@@ -63,17 +63,20 @@ export const ProjectCreationDialog: React.FC<{
           type="text"
           placeholder="Project title"
           className="tb-input"
+          name="title"
           ref={inputRef}
         />
         <textarea
           placeholder="Description"
           className="tb-input"
+          name="description"
           ref={descriptionRef}
         ></textarea>
         <input
           type="text"
           placeholder="Slug"
           className="tb-input"
+          name="slug"
           onChange={onSlugChange}
           ref={slugRef}
         />

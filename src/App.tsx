@@ -42,7 +42,7 @@ import Passwords, {
 import ProjectDetailView, {
   loader as projectDetailsLoader,
 } from "./pages/projects/ProjectDetailView";
-import Projects, { loader as projectsLoader } from "./pages/projects/Projects";
+import ProjectList, { loader as projectsLoader } from "./pages/projects/ProjectList";
 import TicketDetailView, {
   loader as ticketDetailsLoader,
 } from "./pages/projects/TicketDetailView";
@@ -78,7 +78,7 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       {
         path: "/projects",
-        element: <Projects />,
+        element: <ProjectList />,
         loader: projectsLoader,
       },
       {

@@ -9,6 +9,7 @@ export const NavigationLink: React.FC<{
   return (
     <NavLink
       to={to}
+      data-cy={`nav-link-${title.toLowerCase().split(" ").join("-")}`}
       // className="hover:bg-[#262736] h-[27px] px-1 items-center flex rounded gap-2"
       className={({ isActive }) =>
         `hover:bg-hover h-[34px] px-1 items-center flex rounded gap-2 ${

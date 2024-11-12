@@ -12,7 +12,7 @@ import ProjectService from "../../services/projectService";
 
 const projectService = ProjectService.shared;
 
-export default function Projects() {
+export default function ProjectList() {
   const [isCreating, setIsCreating] = useState(false);
   const data = useLoaderData() as Project[];
   const [projects, setProjects] = useState<Project[]>(data);

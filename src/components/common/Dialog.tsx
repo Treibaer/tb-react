@@ -33,6 +33,7 @@ const Dialog: React.FC<{
   return (
     <motion.div
       className="blurredBackground"
+      data-cy="dialog"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -57,7 +58,7 @@ const Dialog: React.FC<{
         </div>
         <div className="flex flex-col gap-2">{children}</div>
         <div className="absolute right-0 bottom-0 p-2">
-          <Button title={submitTitle ?? "Create"} onClick={onSubmit} />
+          <Button dataCy="dialog-submit-button" title={submitTitle ?? "Create"} onClick={onSubmit} />
         </div>
       </div>
     </motion.div>
