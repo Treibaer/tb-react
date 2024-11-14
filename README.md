@@ -24,11 +24,8 @@ This modern version of the application is built using a state-of-the-art tech st
 
 - **Backend**:
   - **Current**: 
-    - [PHP](https://www.php.net/) - A popular general-purpose scripting language that is especially suited to web development.
-    - [Symfony](https://symfony.com/) - A set of reusable PHP components and a PHP framework for web projects.
-  - **Planned**: 
     - [Node.js](https://nodejs.org/) - A JavaScript runtime built on Chrome's V8 JavaScript engine.
-    - [Express](https://expressjs.com/) - A minimal and flexible Node.js web application framework for building APIs.
+    - [NestJS](https://nestjs.com/) - A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.
 
 - **Database**: 
   - [MariaDB](https://mariadb.org/) - An open-source relational database management system, a fork of MySQL.
