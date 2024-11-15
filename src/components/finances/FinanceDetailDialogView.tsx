@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
+import useKeyDown from "../../hooks/useKeyDown";
 import { AccountEntry } from "../../models/finances/account-entry";
 import { AcccountTag } from "../../models/finances/account-tag";
 import { FinanceService } from "../../services/financeService";
-import Dialog from "../common/Dialog";
 import { showToast } from "../../utils/tbToast";
+import Dialog from "../common/Dialog";
 
 const FinanceDetailDialogView: React.FC<{
   onClose: (reload: boolean) => void;
@@ -17,6 +18,8 @@ const FinanceDetailDialogView: React.FC<{
   const tagRef = useRef<HTMLSelectElement>(null);
 
   const isNew = !editingEntry || editingEntry.id === 0;
+
+  useKeyDown("Enter", onSubmit);
 
   useEffect(() => {
     if (editingEntry) {

@@ -29,6 +29,7 @@ export const TicketCreationDialog: React.FC<{
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const toggleRef = useRef<HTMLInputElement>(null);
   const [dropdown, setDropdown] = useState<DropdownType>(DropdownType.NONE);
+  const [isCreating, setIsCreating] = useState(false);
 
   const project = metadata.project;
 
@@ -39,9 +40,7 @@ export const TicketCreationDialog: React.FC<{
     metadata.boards.find((b) => b.id === initialBoardId) || null
   );
 
-  function handleKeyDown(
-    event: React.KeyboardEvent<HTMLDivElement> | KeyboardEvent
-  ) {
+  function handleKeyDown(event: KeyboardEvent) {
     const { key } = event; // Destructure key from event for easier access
     const isInputFocused = document.activeElement === inputRef.current;
     const isDescriptionFocused =
@@ -154,8 +153,12 @@ export const TicketCreationDialog: React.FC<{
       showToast("error", "", "Title is required");
       return;
     }
+    if (isCreating) {
+      return;
+    }
     const description = descriptionRef.current?.value ?? "";
     try {
+      setIsCreating(true);
       const ticket = await ticketService.create(project.slug, {
         title,
         description,
@@ -168,6 +171,7 @@ export const TicketCreationDialog: React.FC<{
       showToast("success", "", `Ticket ${ticket.slug} Created`);
     } catch (err: any) {
       showToast("error", "", err.message);
+      setIsCreating(false);
       return;
     }
 
@@ -183,6 +187,7 @@ export const TicketCreationDialog: React.FC<{
         inputRef.current?.focus();
       }, 100);
       updateBoardView();
+      setIsCreating(false);
     }
   }
 

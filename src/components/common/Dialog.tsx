@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import useIsMobile from "../../hooks/useIsMobile";
-import Button from "../Button";
 import { motion } from "framer-motion";
+import useIsMobile from "../../hooks/useIsMobile";
+import useKeyDown from "../../hooks/useKeyDown";
+import Button from "../Button";
 
 const Dialog: React.FC<{
   error?: string;
@@ -20,15 +20,7 @@ const Dialog: React.FC<{
 }) => {
   const isMobile = useIsMobile();
 
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
-  }, [onClose]);
+  useKeyDown("Escape", onClose);
 
   return (
     <motion.div
@@ -58,7 +50,11 @@ const Dialog: React.FC<{
         </div>
         <div className="flex flex-col gap-2">{children}</div>
         <div className="absolute right-0 bottom-0 p-2">
-          <Button dataCy="dialog-submit-button" title={submitTitle ?? "Create"} onClick={onSubmit} />
+          <Button
+            dataCy="dialog-submit-button"
+            title={submitTitle ?? "Create"}
+            onClick={onSubmit}
+          />
         </div>
       </div>
     </motion.div>
