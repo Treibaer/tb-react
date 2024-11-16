@@ -242,11 +242,13 @@ export const TicketCreationDialog: React.FC<{
         type="text"
         placeholder="Title"
         className="tb-input"
+        data-cy="input-ticket-title"
         ref={inputRef}
       />
       <textarea
         placeholder="Description"
         className="tb-input h-32"
+        data-cy="input-ticket-description"
         ref={descriptionRef}
       ></textarea>
 
@@ -267,6 +269,7 @@ export const TicketCreationDialog: React.FC<{
             <div
               id="statusDropdown"
               className="select2-dropdown relative"
+              data-cy="status-dropdown"
               onClick={() => toggleDropdown(DropdownType.STATUS)}
             >
               <TicketStatusView status={selectedStatus} />
@@ -287,6 +290,7 @@ export const TicketCreationDialog: React.FC<{
             <div
               id="assigneeDropdown"
               className="select2-dropdown w-32"
+              data-cy="assignee-dropdown"
               onClick={() => toggleDropdown(DropdownType.ASSIGNEE)}
             >
               <TicketAssigneeField user={selectedAssignee} />
@@ -312,6 +316,7 @@ export const TicketCreationDialog: React.FC<{
                 id="boardDropdown"
                 className="select2-dropdown"
                 title={selectedBoard?.title}
+                data-cy="board-dropdown"
                 onClick={() => toggleDropdown(DropdownType.BOARD)}
               >
                 <div className="overflow-x-hidden whitespace-nowrap w-32">
@@ -333,6 +338,7 @@ export const TicketCreationDialog: React.FC<{
               <div
                 id="typeDropdown"
                 className="select2-dropdown w-32"
+                data-cy="type-dropdown"
                 onClick={() => toggleDropdown(DropdownType.TYPE)}
               >
                 {selectedType === "" ? "None" : selectedType}

@@ -20,6 +20,7 @@ export const StatusDropdown: React.FC<{
         <DropdownElement
           key={state}
           isSelected={selectedStatus === state}
+          dataCy={`status-${state}`}
           onClick={onClick.bind(this, state)}
         >
           <TicketStatusView status={state} />

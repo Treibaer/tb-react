@@ -29,6 +29,7 @@ export const AssigneeDropdown: React.FC<{
         <DropdownElement
           key={user.id}
           isSelected={user.id === selectedAssignee?.id}
+          dataCy={`assignee-${user.id}`}
           onClick={onClick.bind(this, user.id)}
         >
           <TicketAssigneeField user={user} />

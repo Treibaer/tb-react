@@ -151,6 +151,7 @@ export const TicketDetailsSidebar: React.FC<{
           <div
             id="statusDropdown"
             className="select2-dropdown"
+            data-cy="statusDropdown"
             onClick={() => setDropdown(DropdownType.STATUS)}
           >
             <TicketStatusView status={ticket.status} />
@@ -169,6 +170,7 @@ export const TicketDetailsSidebar: React.FC<{
           <div
             id="assigneeDropdown"
             className="select2-dropdown"
+            data-cy="assigneeDropdown"
             onClick={() => setDropdown(DropdownType.ASSIGNEE)}
           >
             <TicketAssigneeField user={ticket.assignee} />
@@ -189,6 +191,7 @@ export const TicketDetailsSidebar: React.FC<{
               id="boardDropdown"
               className="select2-dropdown overflow-x-hidden whitespace-nowrap"
               title={ticket.board?.title}
+              data-cy="boardDropdown"
               onClick={() => setDropdown(DropdownType.BOARD)}
             >
               {ticket.board?.title}
@@ -208,6 +211,7 @@ export const TicketDetailsSidebar: React.FC<{
           <div
             id="typeDropdown"
             className="select2-dropdown"
+            data-cy="typeDropdown"
             onClick={() => setDropdown(DropdownType.TYPE)}
           >
             {ticket.type}

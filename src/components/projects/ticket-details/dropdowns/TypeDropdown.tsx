@@ -21,6 +21,7 @@ export const TypeDropdown: React.FC<{
         <DropdownElement
           key={type}
           isSelected={type === selectedType}
+          dataCy={`type-${type}`}
           onClick={onChange.bind(this, type)}
         >
           {type}

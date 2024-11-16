@@ -275,7 +275,7 @@ export class TicketService {
     const ticket = await this.getBySlug(ticketSlug);
     const links = await TicketRelation.findAll({
       where: {
-        [Op.or]: [{ sourceId: ticket.id }, { targetId: ticket.id }],
+        [Op.or]: [{ source_id: ticket.id }, { target_id: ticket.id }],
       },
       include: [
         {
@@ -322,8 +322,8 @@ export class TicketService {
     const existingLinks = await TicketRelation.findAll({
       where: {
         [Op.or]: [
-          { sourceId: source.id, targetId: target.id },
-          { sourceId: target.id, targetId: source.id },
+          { source_id: source.id, target_id: target.id },
+          { source_id: target.id, target_id: source.id },
         ],
       },
     });
@@ -332,8 +332,8 @@ export class TicketService {
     }
     const user = this.userService.user;
     const link = await TicketRelation.create({
-      sourceId: source.id,
-      targetId: target.id,
+      source_id: source.id,
+      target_id: target.id,
       creator_id: user.id,
       type,
     });

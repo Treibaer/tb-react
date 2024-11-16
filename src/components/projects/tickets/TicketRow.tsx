@@ -31,6 +31,7 @@ export default function TicketRow({
       key={ticket.id}
       onContextMenu={(e) => onContextMenu && onContextMenu(e, ticket)}
       onTouchStart={(e) => onTouchStart && onTouchStart(e, ticket)}
+      data-cy={`ticket-${ticket.slug}`}
     >
       <div className="tb-row" style={{ opacity }}>
         <div className="flex-grow flex gap-2 sm:gap-4 items-center">

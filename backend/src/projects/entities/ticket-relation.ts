@@ -17,14 +17,14 @@ export class TicketRelation extends Model {
   @Column({ allowNull: false })
   id: number;
 
-  @BelongsTo(() => Ticket, { foreignKey: 'sourceId', as: 'source' })
+  @BelongsTo(() => Ticket, { foreignKey: 'source_id', as: 'source' })
   source: Ticket;
 
   @ForeignKey(() => Ticket)
   @Column
   source_id: number;
 
-  @BelongsTo(() => Ticket, { foreignKey: 'targetId', as: 'target' })
+  @BelongsTo(() => Ticket, { foreignKey: 'target_id', as: 'target' })
   target: Ticket;
 
   @ForeignKey(() => Ticket)

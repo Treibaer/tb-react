@@ -3,7 +3,8 @@ export const DropdownElement: React.FC<{
   isSelected: boolean;
   onClick?: () => void;
   onMouseOver?: () => void;
-}> = ({ children, isSelected, onClick, onMouseOver }) => {
+  dataCy?: string;
+}> = ({ children, isSelected, onClick, onMouseOver, dataCy }) => {
   return (
     <div
       className={`tb-dropdown-item cursor-pointer whitespace-nowrap overflow-hidden ${
@@ -11,6 +12,7 @@ export const DropdownElement: React.FC<{
       }`}
       onClick={onClick}
       onMouseOver={onMouseOver}
+      data-cy={dataCy}
     >
       {children}
     </div>
