@@ -100,7 +100,7 @@ const PasswordEntries: React.FC = () => {
         <div className="items-center flex gap-2">
           <Toggle
             title="Archived"
-            checked={false}
+            checked={showAll}
             onChange={() => setShowAll(!showAll)}
           />
           <input

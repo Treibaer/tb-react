@@ -1,51 +1,76 @@
 /// <reference types="cypress" />
 
 describe("Board view", () => {
-  it("test the ticket creation process", () => {
-    const now = Date.now();
-    cy.log(`Starting test at ${now}`);
-    localStorage.setItem("token", "abc");
+  beforeEach(() => {
+    cy.fixture("ticket-details.json").as("ticketDetails");
     cy.visit("http://localhost:3051");
+  });
 
-    cy.get("div.text-6xl").should("contain", "Welcome");
-    // check navigation
-    cy.get("nav").find("[data-cy=nav-link-board-view]").click();
-    cy.get('[data-cy="title"]').should("contain", "Board View");
+  it("test the ticket creation process", () => {
+    cy.get("@ticketDetails").then((ticketDetails) => {
+      const { title, description, status, assignee, assigneeId, type } =
+        ticketDetails;
+      const now = Date.now();
+      cy.log(`Starting test at ${now}`);
+      localStorage.setItem("token", "abc");
+      cy.visit("http://localhost:3051");
 
-    // create ticket by pressing c
-    cy.get("body").type("c");
-    cy.get('[data-cy="input-ticket-title"]').type(`Test Ticket ${now}`);
-    cy.get('[data-cy="input-ticket-description"]').type("Test Description");
+      cy.get("div.text-6xl").should("contain", "Welcome");
+      // check navigation
+      cy.get("nav").find("[data-cy=nav-link-board-view]").click();
+      cy.get('[data-cy="title"]').should("contain", "Board View");
 
-    // set status to in progress
-    cy.get('[data-cy="status-dropdown"]').click();
-    cy.get('[data-cy="status-inProgress"]').click();
+      // create ticket by pressing c
+      cy.get("body").type("c");
+      cy.getById("input-ticket-title").type(`${title} ${now}`);
+      cy.getById("input-ticket-description").type(description);
 
-    // set assignee to Hannes
-    cy.get('[data-cy="assignee-dropdown"]').click();
-    cy.get('[data-cy="assignee-1"]').click();
+      // set status to in progress
+      cy.getById("status-dropdown").click();
+      cy.getById(`status-${status}`).click();
 
-    // set type to unity
-    cy.get('[data-cy="type-dropdown"]').click();
-    cy.get('[data-cy="type-unity"]').click();
+      // set assignee to Hannes
+      cy.getById("assignee-dropdown").click();
+      cy.getById(`assignee-${assigneeId}`).click();
 
-    // submit
-    cy.get('[data-cy="dialog-submit-button"]').click();
+      // set type to unity
+      cy.getById("type-dropdown").click();
+      cy.getById(`type-${type}`).click();
 
-    // go to all tickets view
-    cy.get('[data-cy="nav-link-all-tickets"]').click();
+      cy.screenshot(`ticket-creation-dialog-${now}`);
 
-    // select the last ticket and go to the ticket detail view
-    cy.get('[data-cy="tickets-list"]').find("div").last().click();
+      // submit
+      cy.getById("dialog-submit-button").click();
 
-    // check if the ticket is in progress
-    cy.get('[data-cy="statusDropdown"]').should("contain", "inProgress");
+      // go to all tickets view
+      cy.getById("nav-link-all-tickets").click();
 
-    // check if the assignee is Hannes
-    cy.get('[data-cy="assigneeDropdown"]').should("contain", "Hannes");
+      // select the last ticket and go to the ticket detail view
+      cy.getById("tickets-list").find("a").last().click();
 
-    // check if the type is unity
-    cy.get('[data-cy="typeDropdown"]').should("contain", "unity");
-    cy.screenshot(`ticket-creation-${now}`);
+      // check if the ticket is in progress
+      cy.getById("statusDropdown").should("contain", status);
+
+      // check if the assignee is Hannes
+      cy.getById("assigneeDropdown").should("contain", assignee);
+
+      // check if the type is unity
+      cy.getById("typeDropdown").should("contain", type);
+
+      cy.getToast().should("contain", "Ticket");
+      cy.getToast().should("contain", "Created");
+
+      // get the ticket id from the toast ('Ticket HK-232 Created')
+      cy.getToast().then((toast) => {
+        const parts = toast.text().split(" ");
+        expect(parts[0]).to.equal("Ticket");
+        expect(parts[2]).to.equal("Created");
+
+        const ticketId = parts[1];
+        cy.log(`Ticket id: ${ticketId}`);
+      });
+
+      cy.screenshot(`ticket-detail-view-${now}`);
+    });
   });
 });

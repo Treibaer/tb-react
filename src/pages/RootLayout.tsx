@@ -35,7 +35,9 @@ export const RootLayout: React.FC = () => {
     <>
       {state === "loading" && <DelayedLoadingSpinner />}
       <PartyComponent />
-      <Toaster />
+      <div data-cy="toaster-wrapper">
+        <Toaster />
+      </div>
       {serverError && (
         <div className="text-red-500">
           Server error. Please try again later.

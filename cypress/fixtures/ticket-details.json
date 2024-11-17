@@ -1,0 +1,8 @@
+{
+  "title": "Ticket title",
+  "description": "Ticket description",
+  "assignee": "Hannes",
+  "assigneeId": "1",
+  "status": "inProgress",
+  "type": "unity"
+}

@@ -1,37 +1,27 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+declare namespace Cypress {
+  interface Chainable {
+    /**
+     * Custom command to get an element by its data-cy attribute.
+     * @param id - The value of the data-cy attribute to search for.
+     * @returns Cypress chainable element.
+     */
+    getById(id: string): Chainable<JQuery<HTMLElement>>;
+
+    /**
+     * Custom command to get the newest toast message.
+     * @returns Cypress chainable element.
+     */
+    getToast(): Chainable<JQuery<HTMLElement>>;
+  }
+}
+
+Cypress.Commands.add("getById", (id: string) => {
+  return cy.get(`[data-cy="${id}"]`);
+});
+
+// create a new commant, that gets the newest toast message
+Cypress.Commands.add("getToast", () => {
+  return cy.getById("toaster-wrapper").last().last();
+});

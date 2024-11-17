@@ -26,3 +26,7 @@ yarn-error.log*
 .env.sentry-build-plugin
 tsconfig.*.tsbuildinfo
 dist
+
+# local Cypress files
+cypress/screenshots
+cypress/videos
