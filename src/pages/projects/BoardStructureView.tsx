@@ -2,8 +2,10 @@ import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { FaX } from "react-icons/fa6";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import Button from "../../components/Button";
+import { ButtonIcon } from "../../components/ButtonIcon";
 import Dialog from "../../components/common/Dialog";
 import ContextMenu from "../../components/contextmenu/ContextMenu";
 import HeaderView from "../../components/HeaderView";
@@ -165,6 +167,14 @@ const BoardStructureView: React.FC = () => {
     setTicketPreview(ticket);
   }
 
+  function resetSearch() {
+    setSearchTerm("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+    inputRef.current?.focus();
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -198,7 +208,7 @@ const BoardStructureView: React.FC = () => {
         <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
           <TitleView title="Board View" openDialog={openDialog} />
           <div className="flex items-center gap-4 me-2 flex-col sm:flex-row my-2">
-            <div className="flex gap-4">
+            <div className="flex gap-4 relative">
               <Toggle
                 ref={toggleRef}
                 title="Hide done"
@@ -213,6 +223,11 @@ const BoardStructureView: React.FC = () => {
                 style={{ boxShadow: "none", outline: "none" }}
                 onChange={handleSearch}
               />
+              <div className="absolute right-2 top-2">
+                <ButtonIcon onClick={resetSearch}>
+                  <FaX />
+                </ButtonIcon>
+              </div>
             </div>
             <div className="hidden md:flex gap-4">
               <NavLink to={ROUTES.BOARDS(project.slug)}>

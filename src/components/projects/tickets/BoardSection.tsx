@@ -75,13 +75,15 @@ export const BoardSection: React.FC<{
               </NavLink>
             )}
           </div>
-          <ButtonIcon onClick={toggleBoard.bind(null, board.id)}>
-            {isBoardVisible ? (
-              <FaChevronDown className="w-5 h-5" />
-            ) : (
-              <FaChevronRight className="w-5 h-5" />
-            )}
-          </ButtonIcon>
+          {!searchTerm && (
+            <ButtonIcon onClick={toggleBoard.bind(null, board.id)}>
+              {isBoardVisible ? (
+                <FaChevronDown className="w-5 h-5" />
+              ) : (
+                <FaChevronRight className="w-5 h-5" />
+              )}
+            </ButtonIcon>
+          )}
         </div>
         <div className="flex gap-4 items-center">
           <div className="text-gray-400 w-12 text-right">
@@ -96,7 +98,7 @@ export const BoardSection: React.FC<{
         </div>
       </div>
       <div className="mb-1">
-        {isBoardVisible &&
+        {(isBoardVisible || searchTerm) &&
           tickets.map((ticket: Ticket) => (
             <DnDWrapper
               key={ticket.id}
