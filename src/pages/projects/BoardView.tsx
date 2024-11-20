@@ -16,6 +16,7 @@ import { ProjectMeta } from "../../models/project-meta";
 import { ROUTES } from "../../routes";
 import { BoardService } from "../../services/boardService";
 import ProjectService from "../../services/projectService";
+import useKeyDown from "../../hooks/useKeyDown";
 
 const projectService = ProjectService.shared;
 const boardService = BoardService.shared;
@@ -65,6 +66,8 @@ export const BoardDetails: React.FC = () => {
     { title: "Boards", link: ROUTES.BOARDS(project.slug) },
     { title: board.title, link: "" },
   ];
+
+  useKeyDown("c", openDialog);
 
   async function updateBoard() {
     const updatedBoard = await boardService.get(project.slug, board.id);

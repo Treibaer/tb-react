@@ -13,7 +13,7 @@ export const TitleView: React.FC<{ title: string; openDialog: () => void }> = ({
       <div data-cy="title" className="cursor-default text-3xl font-semibold">
         {title}
       </div>
-      <ButtonIcon onClick={openDialog}>
+      <ButtonIcon dataCy="title-view-create-button" onClick={openDialog}>
         <FaPenToSquare className="size-5" />
       </ButtonIcon>
     </div>

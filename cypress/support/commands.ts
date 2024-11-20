@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+/// <reference types="Cypress" />
 
 declare namespace Cypress {
   interface Chainable {
@@ -14,6 +14,11 @@ declare namespace Cypress {
      * @returns Cypress chainable element.
      */
     getToast(): Chainable<JQuery<HTMLElement>>;
+
+    /**
+     * Custom command to login.
+     */
+    login(): void;
   }
 }
 
@@ -24,4 +29,14 @@ Cypress.Commands.add("getById", (id: string) => {
 // create a new commant, that gets the newest toast message
 Cypress.Commands.add("getToast", () => {
   return cy.getById("toaster-wrapper").last().last();
+});
+
+Cypress.Commands.add("login", () => {
+  cy.visit("/");
+  cy.get("h1").should("contain", "Login");
+  cy.getById("login-input-email").type("test@treibaer.de");
+  cy.getById("login-input-password").type("9n8DEWNU()0");
+  cy.get("button").click();
+
+  cy.window().its("localStorage.token").should("exist");
 });

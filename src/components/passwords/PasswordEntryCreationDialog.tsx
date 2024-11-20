@@ -34,7 +34,6 @@ export const PasswordEntryCreationDialog: React.FC<{
     if (editingEntry) {
       inputRef.current!.value = editingEntry.title;
       loginRef.current!.value = editingEntry.login;
-      // passwordRef.current!.value = editingEntry.password;
       urlRef.current!.value = editingEntry.url;
       notesRef.current!.value = editingEntry.notes;
     } else {

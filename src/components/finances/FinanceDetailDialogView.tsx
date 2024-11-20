@@ -80,6 +80,7 @@ const FinanceDetailDialogView: React.FC<{
           type="text"
           placeholder="Title"
           className="tb-input"
+          data-cy="finance-detail-dialog-title"
           ref={titleRef}
         />
         <div className="flex items-center gap-2">
@@ -95,6 +96,7 @@ const FinanceDetailDialogView: React.FC<{
             type="number"
             placeholder="Value"
             className="tb-input"
+            data-cy="finance-detail-dialog-value"
             ref={valueRef}
           />
         </div>
@@ -108,6 +110,7 @@ const FinanceDetailDialogView: React.FC<{
         />
         <select
           className="bg-section border border-border rounded-md p-1 mt-1 ml-1 w-48"
+          data-cy="finance-detail-dialog-tag"
           ref={tagRef}
         >
           <option value={0}>None</option>

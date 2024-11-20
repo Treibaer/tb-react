@@ -1,9 +1,9 @@
-/// <reference types="cypress" />
+/// <reference types="Cypress" />
 
 describe("Board view", () => {
   beforeEach(() => {
     cy.fixture("ticket-details.json").as("ticketDetails");
-    cy.visit("http://localhost:3051");
+    cy.visit("/");
   });
 
   it("test the ticket creation process", () => {
@@ -13,7 +13,6 @@ describe("Board view", () => {
       const now = Date.now();
       cy.log(`Starting test at ${now}`);
       localStorage.setItem("token", "abc");
-      cy.visit("http://localhost:3051");
 
       cy.get("div.text-6xl").should("contain", "Welcome");
       // check navigation

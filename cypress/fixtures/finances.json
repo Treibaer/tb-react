@@ -1,0 +1,67 @@
+{
+  "entries": [
+      {
+          "id": 3711,
+          "title": "Hamburg Wasser",
+          "createdAt": 1704737247,
+          "valueInCents": -2200,
+          "purchasedAt": 1704078000,
+          "tagId": 30,
+          "icon": "🪭",
+          "tag": "Notwendig"
+      },
+      {
+          "id": 3709,
+          "title": "Strom",
+          "createdAt": 1703863390,
+          "valueInCents": -19900,
+          "purchasedAt": 1704078000,
+          "tagId": 30,
+          "icon": "🪭",
+          "tag": "Notwendig"
+      },
+      {
+          "id": 3707,
+          "title": "Gehalt",
+          "createdAt": 1703863304,
+          "valueInCents": 123456,
+          "purchasedAt": 1704078000,
+          "tagId": 10,
+          "icon": "👝",
+          "tag": "Einnahmen"
+      },
+      {
+          "id": 3706,
+          "title": "Miete",
+          "createdAt": 1703863284,
+          "valueInCents": -250000,
+          "purchasedAt": 1704078000,
+          "tagId": 30,
+          "icon": "🪭",
+          "tag": "Notwendig"
+      }
+  ],
+  "tags": [
+      {
+          "id": 19,
+          "title": "Einnahmen",
+          "icon": "👝"
+      },
+      {
+          "id": 29,
+          "title": "Bildung",
+          "icon": "🎓"
+      },
+      {
+          "id": 30,
+          "title": "Notwendig",
+          "icon": "🪭"
+      },
+      {
+          "id": 31,
+          "title": "Freizeit",
+          "icon": "🪃"
+      }
+  ],
+  "balanceInCents": 100001
+}

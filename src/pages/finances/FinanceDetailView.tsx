@@ -45,8 +45,6 @@ const FinanceDetailView = () => {
     }
   }, [isMobile]);
 
-
-
   const { config, openContextMenu, openContextMenuTouch, closeContextMenu } =
     useContextMenu({ refresh });
 

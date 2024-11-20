@@ -1,4 +1,4 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from "Cypress";
 
 export default defineConfig({
   screenshotOnRunFailure: true,

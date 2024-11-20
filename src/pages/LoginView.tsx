@@ -31,6 +31,7 @@ export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
           className="tb-input"
           type="text"
           placeholder="Email"
+          data-cy="login-input-email"
           ref={inputRef}
           onChange={(event) => setEmail(event.target.value)}
           onKeyDown={handleKeyDown}
@@ -39,6 +40,7 @@ export const LoginView: React.FC<{ setIsLoggedIn: React.Dispatch<any> }> = ({
           className="tb-input mb-10"
           type="password"
           placeholder="Password"
+          data-cy="login-input-password"
           onChange={(event) => setPassword(event.target.value)}
           onKeyDown={handleKeyDown}
         />
