@@ -108,6 +108,7 @@ export const PasswordEntryCreationDialog: React.FC<{
           autoComplete="new-password"
           placeholder="Title"
           className="tb-input"
+          data-cy="password-entries-dialog-title"
           ref={inputRef}
         />
         <div className="flex gap-1 items-center">
@@ -116,6 +117,7 @@ export const PasswordEntryCreationDialog: React.FC<{
             autoComplete="new-password"
             placeholder="Login"
             className="tb-input"
+            data-cy="password-entries-dialog-login"
             ref={loginRef}
           />
           <Button title="Copy" onClick={copyUser} />
@@ -126,6 +128,7 @@ export const PasswordEntryCreationDialog: React.FC<{
             autoComplete="new-password"
             placeholder="Password"
             className="tb-input"
+            data-cy="password-entries-dialog-password"
             ref={passwordRef}
           />
 
@@ -134,6 +137,7 @@ export const PasswordEntryCreationDialog: React.FC<{
               <Button
                 title={isShowingPassword ? "Hide" : "Show"}
                 onClick={showPass}
+                dataCy="password-entries-dialog-show-password"
               />
             )}
             <Button title="Copy" onClick={copyPass} />
