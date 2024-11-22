@@ -1,4 +1,5 @@
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import Col from "../../components/finances/Col";
 import HeaderView from "../../components/HeaderView";
 import { Breadcrumb } from "../../models/breadcrumb";
 import {
@@ -7,7 +8,6 @@ import {
 } from "../../models/finances/finance-summary";
 import { ROUTES } from "../../routes";
 import { FinanceService } from "../../services/financeService";
-import Col from "./Col";
 
 enum SearchType {
   income = "income",

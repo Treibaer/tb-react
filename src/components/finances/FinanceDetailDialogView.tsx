@@ -33,9 +33,7 @@ const FinanceDetailDialogView: React.FC<{
       tagRef.current!.value = editingEntry.tagId.toString();
       signRef.current!.value = editingEntry.valueInCents < 0 ? "-1" : "1";
     } else {
-      setTimeout(() => {
-        titleRef.current?.focus();
-      }, 100);
+      setTimeout(() => titleRef.current?.focus(), 100);
     }
   }, [editingEntry]);
 

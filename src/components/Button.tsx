@@ -17,6 +17,3 @@ export default function Button({ title, onClick, dataCy }: ButtonProps) {
     </button>
   );
 }
-
-// export const Button: React.FC<ButtonProps> = ({ title, onClick }) => {
-// };

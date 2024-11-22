@@ -15,7 +15,7 @@ const Col: React.FC<{
   if (link) {
     return (
       <td className="py-2 px-2 border border-slate-800">
-        <Link to={link}>{content}</Link>
+        {link ? <Link to={link}>{content}</Link> : content}
       </td>
     );
   }

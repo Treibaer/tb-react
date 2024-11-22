@@ -142,9 +142,7 @@ export const TicketCreationDialog: React.FC<{
   const [stayOpen, setStayOpen] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
+    setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
 
   async function createTicket() {
@@ -183,9 +181,7 @@ export const TicketCreationDialog: React.FC<{
       setSelectedAssignee(null);
       setSelectedStatus("open");
       setSelectedType("");
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+      setTimeout(() => inputRef.current?.focus(), 100);
       updateBoardView();
       setIsCreating(false);
     }

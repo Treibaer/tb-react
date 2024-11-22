@@ -40,9 +40,7 @@ export const Boards: React.FC = () => {
   const project = data.project;
 
   useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
+    setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
 
   useEffect(() => {
@@ -62,9 +60,7 @@ export const Boards: React.FC = () => {
 
   function openDialog() {
     setIsCreating(true);
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
+    setTimeout(() => inputRef.current?.focus(), 100);
   }
 
   async function handleCreateBoard() {

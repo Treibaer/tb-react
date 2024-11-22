@@ -7,7 +7,6 @@ export const DelayedLoadingSpinner = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSpinner(true), 300);
-
     return () => clearTimeout(timer);
   }, []);
 

@@ -6,6 +6,7 @@ import { Breadcrumb } from "../../models/breadcrumb";
 import { AccountEntry } from "../../models/finances/account-entry";
 import { ROUTES } from "../../routes";
 import { FinanceService } from "../../services/financeService";
+import DashboardCard from "../../components/finances/FinanceDashboardCard";
 
 const FinanceDashboard = () => {
   const breadcrumbs: Breadcrumb[] = [
@@ -21,35 +22,28 @@ const FinanceDashboard = () => {
     chartValues: number[];
   };
 
-  const m = new Date().getMonth() + 1;
+  const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
 
   const expensesInPercent = Math.abs(
     (data.currentExpensesInCents / data.currentIncomeInCents) * 100
   );
   const savingsInPercent = 100 - expensesInPercent;
-  const savings =
+  const totalSavings =
     (data.currentIncomeInCents + data.currentExpensesInCents) / 100;
 
   return (
     <div>
       <HeaderView breadcrumbs={breadcrumbs} />
       <div className="text-5xl text-center mt-2">Finances</div>
-
       <div className="flex flex-col gap-4 mt-2">
         <div className="flex flex-col sm:flex-row justify-between md:justify-normal gap-2 mx-2">
-          <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
-            <div>Current Balance</div>
-            <div className="text-4xl">
-              {(data.balanceInCents / 100).toFixed(2)}€
-            </div>
-          </div>
-          <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
-            <div>Savings {currentYear}</div>
-            <div className="text-4xl text-[rgb(30,142,72)]">
-              {savings.toFixed(2)}€
-            </div>
-          </div>
+          <DashboardCard title="Balance" value={data.balanceInCents / 100} />
+          <DashboardCard
+            title={`Savings ${currentYear}`}
+            value={totalSavings}
+            valueClass="text-[rgb(30,142,72)]"
+          />
         </div>
         <div className="sm:h-72">
           <FinanceChart data={data.chartValues} />
@@ -66,33 +60,23 @@ const FinanceDashboard = () => {
           ))}
         </div>
       </div>
-
       <div className="flex flex-col sm:flex-row justify-between md:justify-normal gap-2 m-2">
-        <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
-          <div>Income</div>
-          <div className="text-2xl">
-            {(data.currentIncomeInCents / m / 100).toFixed(2)}€
-          </div>
-        </div>
-        <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
-          <div>Expanses</div>
-          <div className="text-2xl">
-            {(Math.abs(data.currentExpensesInCents) / m / 100).toFixed(2)}€{" "}
-            <span className="text-sm text-gray-400">
-              ({expensesInPercent.toFixed(2)}%)
-            </span>
-          </div>
-        </div>
-        <div className="flex flex-col p-4 gap-2 bg-row rounded-xl hover:bg-hover cursor-default select-none">
-          <div>
-            Savings{" "}
-            <span className="text-sm text-gray-400">
-              ({savingsInPercent.toFixed(2)}%)
-            </span>
-          </div>
-
-          <div className="text-2xl">{(savings / m).toFixed(2)}€</div>
-        </div>
+        <DashboardCard
+          title="Income"
+          value={data.currentIncomeInCents / currentMonth / 100}
+          valueClass="!text-2xl"
+        />
+        <DashboardCard
+          title="Expenses"
+          value={Math.abs(data.currentExpensesInCents) / currentMonth / 100}
+          subText={`(${expensesInPercent.toFixed(2)}%)`}
+          valueClass="!text-2xl"
+        />
+        <DashboardCard
+          title={`Savings (${savingsInPercent.toFixed(2)}%)`}
+          value={totalSavings / currentMonth}
+          valueClass="!text-2xl"
+        />
       </div>
     </div>
   );

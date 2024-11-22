@@ -161,9 +161,7 @@ export class FinanceService {
     const year = rawYear ? Number(rawYear) : new Date().getFullYear();
     const accountEntries = await this.getAllEntries(year);
 
-    accountEntries.filter((entry) => {
-      return entry.tag_id !== 9;
-    });
+    accountEntries.filter((entry) => entry.tag_id !== 9);
 
     const tags = await AccountTag.findAll();
 

@@ -28,9 +28,7 @@ const TicketLinkDialog: React.FC<{
 
   useEffect(() => {
     if (!isMobile) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isMobile]);
 

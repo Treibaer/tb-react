@@ -1,6 +1,14 @@
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { FaBorderAll, FaChartBar, FaChartPie, FaCoins, FaFile, FaImages, FaLock } from "react-icons/fa";
+import {
+  FaBorderAll,
+  FaChartBar,
+  FaChartPie,
+  FaCoins,
+  FaFile,
+  FaImages,
+  FaLock,
+} from "react-icons/fa";
 import { FaChartSimple, FaHouse, FaTicket } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/storeHooks";
@@ -21,10 +29,7 @@ export default function MainNavigation() {
 
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
-  const toggleSettings = () => {
-    setShowSettings((prev) => !prev);
-  };
-
+  const toggleSettings = () => setShowSettings((prev) => !prev);
   const backgroundColor =
     import.meta.env.MODE === "development" ? "bg-border" : "bg-section";
 
@@ -48,11 +53,7 @@ export default function MainNavigation() {
         />
       </div>
       <nav className="flex flex-col w-full gap-1">
-        <NavigationLink
-          to={ROUTES.HOME}
-          title="Dashboard"
-          icon={<FaHouse />}
-        />
+        <NavigationLink to={ROUTES.HOME} title="Dashboard" icon={<FaHouse />} />
         <NavigationLink
           to={ROUTES.PROJECTS}
           title="Projects"

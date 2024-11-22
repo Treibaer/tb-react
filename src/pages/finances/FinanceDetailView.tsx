@@ -39,9 +39,7 @@ const FinanceDetailView = () => {
 
   useEffect(() => {
     if (!isMobile) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isMobile]);
 
@@ -50,14 +48,6 @@ const FinanceDetailView = () => {
 
   function openDialog() {
     setIsCreating(true);
-  }
-
-  async function onClose(reload: boolean) {
-    if (reload) {
-      await refresh();
-    }
-    setIsCreating(false);
-    setEditingEntry(null);
   }
 
   async function refresh() {
@@ -89,6 +79,10 @@ const FinanceDetailView = () => {
     setSearchTerm(e.target.value);
   }
 
+  const filteredEntries = entries.filter((entry) =>
+    entry.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
       <AnimatePresence>
@@ -96,7 +90,11 @@ const FinanceDetailView = () => {
           <FinanceDetailDialogView
             editingEntry={editingEntry}
             tags={data.tags}
-            onClose={onClose}
+            onClose={async (reload) => {
+              setIsCreating(false);
+              setEditingEntry(null);
+              if (reload) await refresh();
+            }}
           />
         )}
       </AnimatePresence>
@@ -138,21 +136,17 @@ const FinanceDetailView = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          {entries
-            .filter((entry) =>
-              entry.title.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((entry) => (
-              <div
-                className="w-full"
-                key={entry.id}
-                onTouchStart={(e) => openContextMenuTouch(e, entry)}
-                onClick={() => openEditDialog(entry)}
-                onContextMenu={(e) => openContextMenu(e, entry)}
-              >
-                <FinanceEntryRow entry={entry} />
-              </div>
-            ))}
+          {filteredEntries.map((entry) => (
+            <div
+              className="w-full"
+              key={entry.id}
+              onTouchStart={(e) => openContextMenuTouch(e, entry)}
+              onClick={() => openEditDialog(entry)}
+              onContextMenu={(e) => openContextMenu(e, entry)}
+            >
+              <FinanceEntryRow entry={entry} />
+            </div>
+          ))}
         </div>
       </div>
     </div>

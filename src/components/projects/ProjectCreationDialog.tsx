@@ -16,9 +16,7 @@ export const ProjectCreationDialog: React.FC<{
   );
 
   useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
+    setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
 
   async function handleCreateProject() {

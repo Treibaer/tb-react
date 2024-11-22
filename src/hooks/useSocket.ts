@@ -6,6 +6,7 @@ import socket from "../services/socket";
 export const useSocket = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const matchListeners: Listener[] = [];
+  const pendingRequests: Record<string, (value: any) => void> = {};
 
   function listenOn(
     event: string,
@@ -16,6 +17,7 @@ export const useSocket = () => {
       matchListeners.push({ event, type, fn });
     }
   }
+
   function listenOff(event: string, type: string) {
     if (event === "matches") {
       matchListeners.splice(
@@ -24,7 +26,6 @@ export const useSocket = () => {
       );
     }
   }
-  const pendingRequests: Record<string, (value: any) => void> = {}; // Store callbacks
 
   function emit(event: string, type: string, data: any, requestId?: string) {
     socket.emit(event, { type, data, requestId });
