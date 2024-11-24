@@ -11,14 +11,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
+import * as fs from "fs";
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
+import { Public } from 'src/auth/auth.guard';
 import { AssetService } from './asset.service';
 import { AssetDto } from './dtos/asset.dto';
-import { Response } from 'express';
 import { ImageService } from './image.service';
-import { Public } from 'src/auth/auth.guard';
-import * as fs from "fs";
 
 @Controller('api/v3/assets')
 export class AssetsController {
@@ -64,7 +64,7 @@ export class AssetsController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: (req, file, callback) => {
+        destination: (_req, _file, callback) => {
           const uploadPath = join(__dirname, '..', '..', 'cache');
           if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });

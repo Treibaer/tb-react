@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { Op } from 'sequelize';
 import { User } from 'src/users/entities/user.entity';
 import { UserService } from 'src/users/user.service';
 import { BoardService } from './board.service';
 import { TicketCommentDto } from './dto/ticket-comment.dto';
 import { TicketHistoryDto } from './dto/ticket-history.dto';
+import { TicketLinkDto } from './dto/ticket-link.dto';
 import { TicketDto } from './dto/ticket.dto';
 import { Project } from './entities/project';
 import { Ticket } from './entities/ticket';
 import { TicketComment } from './entities/ticket-comment';
 import { TicketHistory } from './entities/ticket-history';
-import { TransformService } from './transform.service';
-import { TicketLinkDto } from './dto/ticket-link.dto';
 import { TicketRelation } from './entities/ticket-relation';
-import { Op } from 'sequelize';
+import { TransformService } from './transform.service';
 
 @Injectable()
 export class TicketService {
@@ -68,14 +68,6 @@ export class TicketService {
       });
       position = maxPosition !== null ? maxPosition + 1 : 0;
     }
-
-    const boardTickets = await Ticket.findAll({
-      where: {
-        project_id: project.id,
-        board_id: boardId,
-        parentId: ticket.parentId ?? null,
-      },
-    });
 
     const maxTicketId: number = await Ticket.max('ticket_id', {
       where: { project_id: project.id },
@@ -314,7 +306,6 @@ export class TicketService {
     targetSlug: string,
     type: string = 'blocks',
   ): Promise<TicketLinkDto> {
-    const project = await this.findProjectBySlug(projectSlug);
     const source = await this.getBySlug(sourceSlug);
     const target = await this.getBySlug(targetSlug);
 

@@ -1,20 +1,19 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
-import { TicketDto } from './dto/ticket.dto';
-import { Board } from './entities/board';
-import { Ticket } from './entities/ticket';
-import { TicketStatus } from './models/ticket-status';
 import { UserService } from 'src/users/user.service';
-import { Page } from './entities/page';
-import { Project } from './entities/project';
 import { PageDto } from './dto/page.dto';
 import { SmallBoardDto } from './dto/small-board.dto';
+import { TicketDto } from './dto/ticket.dto';
+import { Board } from './entities/board';
+import { Page } from './entities/page';
+import { Project } from './entities/project';
+import { Ticket } from './entities/ticket';
+import { TicketStatus } from './models/ticket-status';
 
 @Injectable({ scope: Scope.REQUEST })
 export class TransformService {
   private userMap: Map<number, User> = new Map();
   private boardMap: Map<number, Board> = new Map();
-  private projectMap: Map<number, Project> = new Map();
 
   constructor(private readonly userService: UserService) {
     console.log('initializting transfor');
@@ -28,9 +27,6 @@ export class TransformService {
 
     const boards = await Board.findAll();
     this.boardMap = new Map(boards.map((board) => [board.id, board]));
-
-    const projects = await Project.findAll();
-    this.projectMap = new Map(projects.map((project) => [project.id, project]));
   }
 
   async ticket(projectSlug: String, ticket: Ticket): Promise<TicketDto> {

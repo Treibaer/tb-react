@@ -35,8 +35,6 @@ export class AssetService {
     });
   }
 
-  async fetchAssetEntries(assetId: number) {}
-
   async fetchAssetEntry(entryId: number) {
     return await AssetEntry.findOne({
       where: { id: entryId },

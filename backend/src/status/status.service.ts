@@ -49,9 +49,9 @@ export class StatusService {
         resolve(true);
       });
 
-      socket.on('error', (error) => resolve(false));
+      socket.on('error', (_error) => resolve(false));
 
-      socket.on('close', (code, reason) => {
+      socket.on('close', (code, _reason) => {
         if (code !== 1000) {
           resolve(false);
         } else {

@@ -1,4 +1,3 @@
-import { DataTypes } from 'sequelize';
 import {
   AutoIncrement,
   BelongsTo,
@@ -37,9 +36,6 @@ export class AssetEntry extends Model {
 
   @Column({ allowNull: false })
   path: string;
-
-  // @Column({ allowNull: false })
-  // url: string;
 
   @Column({
     field: 'created_at',

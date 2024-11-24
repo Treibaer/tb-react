@@ -1,4 +1,3 @@
-// image.service.ts
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { promises as fsPromises } from 'fs';

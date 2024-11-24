@@ -1,7 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AppController } from './app.controller';
+import { AssetsModule } from './assets/assets.module';
+import { Asset } from './assets/entities/asset';
+import { AssetEntry } from './assets/entities/asset-entry';
 import { AuthModule } from './auth/auth.module';
 import { AccessToken } from './auth/entities/access-token';
 import { Account } from './finances/entities/account';
@@ -20,6 +24,7 @@ import { Project } from './projects/entities/project';
 import { Ticket } from './projects/entities/ticket';
 import { TicketComment } from './projects/entities/ticket-comment';
 import { TicketHistory } from './projects/entities/ticket-history';
+import { TicketRelation } from './projects/entities/ticket-relation';
 import { PageService } from './projects/page.service';
 import { ProjectsModule } from './projects/projects.module';
 import { TransformService } from './projects/transform.service';
@@ -29,11 +34,6 @@ import { StatusModule } from './status/status.module';
 import { User } from './users/entities/user.entity';
 import { UserService } from './users/user.service';
 import { UsersModule } from './users/users.module';
-import { AssetsModule } from './assets/assets.module';
-import { Asset } from './assets/entities/asset';
-import { AssetEntry } from './assets/entities/asset-entry';
-import { MulterModule } from '@nestjs/platform-express';
-import { TicketRelation } from './projects/entities/ticket-relation';
 
 @Module({
   imports: [
@@ -103,7 +103,7 @@ import { TicketRelation } from './projects/entities/ticket-relation';
   providers: [UserService, BoardService, TransformService, PageService],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
+  configure(_consumer: MiddlewareConsumer) {
     return;
     TicketRelation.sync({ alter: true });
     Asset.sync({ alter: true });

@@ -1,20 +1,15 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
   SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
+  WebSocketGateway
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { AccessToken } from 'src/auth/entities/access-token';
-import { Connection } from './models/connection';
 import { User } from 'src/users/entities/user.entity';
-import { ProjectService } from './project.service';
-import { BoardService } from './board.service';
-import { Board } from './entities/board';
-import { ModuleRef, NestFactory } from '@nestjs/core';
+import { Connection } from './models/connection';
 
 @WebSocketGateway(3000, {
   cors: {
@@ -28,9 +23,6 @@ import { ModuleRef, NestFactory } from '@nestjs/core';
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer()
-  private server: Server;
-
   private clients = new Map<string, Socket>();
   private connections = new Map<string, Connection>();
 
@@ -40,7 +32,7 @@ export class EventsGateway
     console.log('EventsGateway constructor');
   }
 
-  afterInit(server: Server) {
+  afterInit(_server: Server) {
     const port = Number(process.env.WS_PORT ?? '3000');
     console.log('WebSocket server initialized on port ' + port);
   }
@@ -71,11 +63,6 @@ export class EventsGateway
     this.log('Sent requestAuthentication event to client');
   }
 
-  private send(client: Socket | Socket[], event: string, data: any) {
-    const clients = Array.isArray(client) ? client : [client];
-    clients.forEach((c) => c.emit(event, data));
-  }
-
   private log(message: string) {
     console.log(message);
     this.logger.log(message);
@@ -99,9 +86,8 @@ export class EventsGateway
   @SubscribeMessage('realtime')
   async handleMessageMessagesrealtime(
     client: Socket,
-    wrapper: any & { data: { type: string }, requestId?: string },
+    wrapper: any & { data: { type: string }; requestId?: string },
   ) {
-
     const type = wrapper.type;
     const connection = this.connections.get(client.id);
     if (!connection) {
@@ -114,9 +100,9 @@ export class EventsGateway
       return;
     }
     // if (!connection.hasAuthenticated) {
-      // console.error('Not authenticated:', connection);
-      // client.disconnect(true);
-      // return;
+    // console.error('Not authenticated:', connection);
+    // client.disconnect(true);
+    // return;
     // }
     console.log('realtime message received', wrapper);
 
@@ -146,7 +132,6 @@ export class EventsGateway
     }
 
     if (type === 'authentication') {
-      const data: { type: string; id: number } = wrapper.data;
       this.log('Authentication received');
 
       connection.hasAuthenticated = true;
@@ -194,7 +179,6 @@ export class EventsGateway
       return;
     }
     if (type === 'authentication') {
-      const data: { type: string; id: number } = wrapper.data;
       this.log('Authentication received');
 
       connection.userId = 1;

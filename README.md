@@ -17,7 +17,6 @@ This modern version of the application is built using a state-of-the-art tech st
 
 - **Frontend**: 
   - [React](https://reactjs.org/) - A JavaScript library for building user interfaces.
-  - [Next.js](https://nextjs.org/) - A React framework for production, providing server-side rendering and static site generation.
   - [Redux](https://redux.js.org/) - A predictable state container for JavaScript apps, used to manage the application state.
   - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework for rapidly building custom user interfaces.
   - [TypeScript](https://www.typescriptlang.org/) - A strongly typed programming language that builds on JavaScript.
@@ -72,10 +71,6 @@ Ensure you have the following installed:
 ### Wiki
 
 - Use the integrated wiki to keep all project documentation organized and easily accessible.
-
-### User Management
-
-- Admins can manage users and roles under the "User Management" section.
 
 ## Acknowledgements
 

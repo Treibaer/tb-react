@@ -9,8 +9,6 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { User } from 'src/users/entities/user.entity';
-import { Project } from './project';
-import { Board } from './board';
 import { Ticket } from './ticket';
 
 @Table({ tableName: 'ticket_comment', timestamps: false })

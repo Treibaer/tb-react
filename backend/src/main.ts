@@ -44,7 +44,7 @@ function configureStaticAssets(app) {
 
 function configureWebSocket(app) {
   const configService = app.get(ConfigService);
-  app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
+  app.useWebSocketAdapter(new SocketIoAdapter(configService));
 }
 
 bootstrap();

@@ -1,16 +1,15 @@
+import { DataTypes } from 'sequelize';
 import {
   AutoIncrement,
   BelongsTo,
   Column,
   ForeignKey,
-  Index,
   Model,
   PrimaryKey,
-  Table,
+  Table
 } from 'sequelize-typescript';
 import { User } from 'src/users/entities/user.entity';
 import { PasswordEnvironment } from './password-environment';
-import { DataTypes } from 'sequelize';
 
 @Table({ tableName: 'password_entry', timestamps: false })
 export class PasswordEntry extends Model {
