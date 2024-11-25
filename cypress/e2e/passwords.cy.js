@@ -11,6 +11,7 @@ describe("Passwords", () => {
     const now = Date.now();
     const title = `Test Entry ${now}`;
     const password = `password`;
+    const password2 = `password2`;
     // check that the entry does not exist
     cy.contains(title).should("not.exist");
 
@@ -31,5 +32,21 @@ describe("Passwords", () => {
       "have.value",
       password
     );
+
+    cy.getById("password-entries-dialog-password").clear();
+    cy.getById("password-entries-dialog-password").type(password2);
+    cy.getById("dialog-submit-button").click();
+    cy.getToast().should("contain", "Entry updated");
+
+    cy.contains(title).should("exist");
+    cy.contains(title).click();
+    cy.getById("password-entries-dialog-title").should("have.value", title);
+    cy.getById("password-entries-dialog-password").should("have.value", "");
+    cy.getById("password-entries-dialog-show-password").click();
+    cy.getById("password-entries-dialog-password").should(
+      "have.value",
+      password2
+    );
+
   });
 });

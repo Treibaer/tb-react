@@ -60,7 +60,7 @@ const FinanceDetailDialogView: React.FC<{
         tagId
       );
       onClose(true);
-      showToast("success", "", "Entry " + (isNew ? "Created" : "Updated"));
+      showToast("success", "", "Entry " + (isNew ? "created" : "updated"));
     } catch (error: Error | any) {
       showToast("error", "", error.message);
     }
@@ -69,7 +69,7 @@ const FinanceDetailDialogView: React.FC<{
   return (
     <>
       <Dialog
-        title={`Finances > ${isNew ? "Create" : "Update"} Entry`}
+        title={`Finances > ${isNew ? "Create" : "Update"} entry`}
         onClose={() => onClose(false)}
         onSubmit={onSubmit}
         submitTitle={isNew ? "Create" : "Update"}
