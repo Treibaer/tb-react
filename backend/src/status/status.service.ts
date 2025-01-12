@@ -5,7 +5,7 @@ import { Status } from './entities/status';
 @Injectable()
 export class StatusService {
   async fetchStatus() {
-    return await Status.findAll();
+    return await Status.findAll({ order: [['title', 'ASC']] });
   }
 
   async getLiveStatus() {

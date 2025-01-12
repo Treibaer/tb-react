@@ -29,7 +29,7 @@ export class FinanceService {
 
     const dateTo = filter?.dateTo
       ? new Date(filter.dateTo).getTime() / 1000 + 4 * 3600
-      : new Date(year, 11, 31, 23, 59, 59).getTime() / 1000;
+      : new Date(year + 1, 11, 31, 23, 59, 59).getTime() / 1000;
 
     const moreWhere: any = {};
     if (filter?.tag_id) {
