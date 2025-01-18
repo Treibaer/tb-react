@@ -7,6 +7,7 @@ import { AccountEntry } from "../../models/finances/account-entry";
 import { ROUTES } from "../../routes";
 import { FinanceService } from "../../services/financeService";
 import DashboardCard from "../../components/finances/FinanceDashboardCard";
+import Button from "../../components/Button";
 
 const FinanceDashboard = () => {
   const breadcrumbs: Breadcrumb[] = [
@@ -35,7 +36,12 @@ const FinanceDashboard = () => {
   return (
     <div>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <div className="text-5xl text-center mt-2">Finances</div>
+      <div className="flex gap-4 items-center justify-center">
+        <div className="text-5xl text-center mt-2">Finances</div>
+        <NavLink to={ROUTES.FINANCE_SUMMARY}>
+          <Button title="Summary" />
+        </NavLink>
+      </div>
       <div className="flex flex-col gap-4 mt-2">
         <div className="flex flex-col sm:flex-row justify-between md:justify-normal gap-2 mx-2">
           <DashboardCard title="Balance" value={data.balanceInCents / 100} />

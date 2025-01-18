@@ -10,7 +10,7 @@ const prod: Config = {
 
 const dev: Config = {
   loginBackendUrl: `https://mac.treibaer.de`,
-  backendUrl: `http://192.168.2.47:3052`,
+  backendUrl: `http://192.168.2.101:3052`,
   // backendUrl: `https://portfolio.treibaer.de:3063`,
 };
 

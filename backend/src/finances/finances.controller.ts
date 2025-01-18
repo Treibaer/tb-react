@@ -40,7 +40,8 @@ export class FinancesController {
     @Query('tag') tag: number,
     @Query('type') type: string,
   ) {
-    const accountEntries = await this.financeService.getAllEntries(2024, {
+    const currentYear = new Date().getFullYear();
+    const accountEntries = await this.financeService.getAllEntries(currentYear, {
       tag_id: tag ?? undefined,
       dateFrom,
       dateTo,
@@ -70,8 +71,9 @@ export class FinancesController {
       limit: 10,
     });
     // find all entries of current month
+    const currentYear = new Date().getFullYear();
     const currentMonthEntries = await this.financeService.getAllEntries(
-      2024,
+      currentYear,
       {},
     );
     const currentIncomeInCents = currentMonthEntries.reduce((acc, entry) => {

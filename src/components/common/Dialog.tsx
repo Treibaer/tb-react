@@ -31,7 +31,7 @@ const Dialog: React.FC<{
       exit={{ opacity: 0 }}
       onClick={() => {
         if (!isMobile) {
-          onClose();
+          // onClose();
         }
       }}
     >

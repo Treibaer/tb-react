@@ -160,7 +160,7 @@ export const loader = async ({ request }: any) => {
   const tag = queryParameters.get("tag")
     ? Number(queryParameters.get("tag"))
     : undefined;
-  const dateFrom = queryParameters.get("dateFrom") ?? undefined;
+  const dateFrom = queryParameters.get("dateFrom") ?? "2024-01-01";
   const dateTo = queryParameters.get("dateTo") ?? undefined;
   const type = queryParameters.get("type") ?? undefined;
   return await FinanceService.shared.getAccountEntries({
