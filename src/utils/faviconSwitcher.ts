@@ -4,9 +4,9 @@ const setFavicon = () => {
   favicon.type = "image/x-icon";
 
   if (import.meta.env.MODE === "production") {
-    favicon.href = `/favicon_prod.ico`;
+    favicon.href = `/tbreact.png`;
   } else {
-    favicon.href = `/favicon_dev.ico`;
+    favicon.href = `/tbreact-gray.png`;
   }
 
   const head = document.querySelector("head");

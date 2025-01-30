@@ -21,6 +21,9 @@ export class FinanceService {
     if (filter?.dateFrom) {
       suffix += suffix ? "&" : "?";
       suffix += `dateFrom=${filter.dateFrom}`;
+    } else {
+      suffix += suffix ? "&" : "?";
+      suffix += `dateFrom=$2024-01-01`;
     }
     if (filter?.dateTo) {
       suffix += suffix ? "&" : "?";
