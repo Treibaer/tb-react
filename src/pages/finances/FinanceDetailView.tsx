@@ -119,7 +119,7 @@ const FinanceDetailView = () => {
         )}
       </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <div className="overflow-auto max-h-[calc(100vh-57px)] mx-2">
+      <div className="max-h-[calc(100vh-57px)] mx-2">
         <div className="flex flex-col sm:flex-row items-center justify-between me-2">
           <TitleView title="Finances" openDialog={openDialog} />
           <div className="flex items-center">
@@ -135,7 +135,7 @@ const FinanceDetailView = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center mt-4">
           {filteredEntries.map((entry) => (
             <div
               className="w-full"

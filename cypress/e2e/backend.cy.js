@@ -13,11 +13,11 @@ describe("backend", () => {
       expect(response.body.allowed).to.eq(true);
       expect(response.body.icon).to.be.a("string");
       expect(response.body.icon).to.eq(
-        "http://192.168.2.47:3052/avatars/hannes_n.png"
+        "http://192.168.2.101:3052/avatars/hannes_n.png"
       );
       expect(response.body).to.deep.eq({
         allowed: true,
-        icon: "http://192.168.2.47:3052/avatars/hannes_n.png",
+        icon: "http://192.168.2.101:3052/avatars/hannes_n.png",
       });
     });
   });

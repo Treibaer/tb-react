@@ -8,7 +8,7 @@ export default function MobileNavigation() {
     import.meta.env.MODE === "development" ? "bg-border" : undefined;
 
   return (
-    <div className={`flex justify-between w-full ${backgroundColor}`}>
+    <div className={`flex justify-between pb- w-full ${backgroundColor}`}>
       <NavLink
         to={ROUTES.TICKETS_BOARD_VIEW("HK")}
         className="flex-1 flex justify-center items-center"

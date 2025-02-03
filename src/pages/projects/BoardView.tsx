@@ -104,7 +104,7 @@ export const BoardDetails: React.FC = () => {
         )}
         <HeaderView breadcrumbs={breadcrumbs} />
         <TitleView title={board.title} openDialog={openDialog} />
-        <div className="flex mx-2 mt-2 gap-2">
+        <div className="flex mx-2 mt-2 gap-2 overflow-x-scroll">
           <BoardColumn
             status="open"
             project={project}

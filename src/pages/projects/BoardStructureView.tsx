@@ -204,7 +204,7 @@ const BoardStructureView: React.FC = () => {
         )}
       </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
-      <div className="overflow-auto max-h-[calc(100vh-57px)]">
+      <div>
         <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
           <TitleView title="Board View" openDialog={openDialog} />
           <div className="flex items-center gap-4 me-2 flex-col sm:flex-row my-2">

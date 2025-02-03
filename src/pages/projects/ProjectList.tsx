@@ -39,7 +39,7 @@ export default function ProjectList() {
       </AnimatePresence>
       <HeaderView breadcrumbs={breadcrumbs} />
       <TitleView title="Projects" openDialog={openDialog} />
-      <div className="flex flex-wrap mx-2 gap-2">
+      <div className="flex flex-wrap mx-2 gap-2 justify-center mt-2">
         {projects.map((project: any) => (
           <ProjectCard key={project.id} project={project} />
         ))}

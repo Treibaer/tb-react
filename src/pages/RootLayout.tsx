@@ -44,16 +44,16 @@ export const RootLayout: React.FC = () => {
         </div>
       )}
       {isLoggedIn && (
-        <main className="flex">
+        <main className="flex h-[100dvh] w-[100dvw] md:w-auto">
           <div id="menu" className="hidden md:block w-[250px]">
             <MainNavigation />
           </div>
-          <div className="flex flex-col h-full w-full md:w-[calc(100%-250px)]">
-            <div className="w-full max-h-screen overflow-auto h-[calc(100vh-58px)] md:h-full">
+          <div className="flex flex-col w-full md:w-[calc(100%-250px)] justify-between h-full">
+            <div className="w-full flex-1 h-full overflow-y-scroll overflow-x-scroll md:h-full">
               <Outlet />
             </div>
             {!Constants.isDemoMode && (
-              <div className="h-[58px] pb-2 md:hidden border-t border-t-border text-white text-center flex">
+              <div className="h-[74px] md:hidden border-t border-t-border text-white text-center flex bg-border pb-4">
                 <MobileNavigation />
               </div>
             )}

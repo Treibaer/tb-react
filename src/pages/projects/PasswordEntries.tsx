@@ -112,7 +112,7 @@ const PasswordEntries: React.FC = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full mt-2">
         {entries
           .filter((entry) =>
             entry.title.toLowerCase().includes(searchTerm.toLowerCase())
